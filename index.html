@@ -64,8 +64,8 @@
     .btn-orange:hover i { transform: translateY(-2px); }
 
     /* LAYOUT & SIDEBAR */
-    .app-container { display: flex; min-height: 100vh; }
-    .sidebar { width: 280px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; z-index: 10; box-shadow: 4px 0 20px rgba(0,0,0,0.02); }
+    .app-container { display: flex; min-height: 100vh; position: relative; }
+    .sidebar { width: 280px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 20px rgba(0,0,0,0.02); }
     
     .brand-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 35px; gap: 12px; }
     .brand-header img { max-width: 140px; height: auto; transition: var(--transition); }
@@ -135,7 +135,7 @@
     .btn-edit { color: var(--primary); } .btn-edit:hover { background: #eff6ff; transform: scale(1.1); }
     .btn-delete { color: #ef4444; } .btn-delete:hover { background: #fef2f2; transform: scale(1.1); }
     
-    .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
     .modal.active { display: flex; animation: fadeIn 0.3s ease-out; }
     .modal-content { background: #ffffff; border-radius: var(--radius-lg); padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
@@ -149,7 +149,7 @@
     /* CETAK / PRINT STYLES */
     @media print {
       body { background: white; color: black; }
-      .sidebar, .controls-bar, #loginOverlay, .user-profile, .datetime-display, .btn-action { display: none !important; }
+      .sidebar, .controls-bar, #loginOverlay, .user-profile, .datetime-display, .btn-action, #menuToggle { display: none !important; }
       .app-container { display: block; }
       .content-area { padding: 0; width: 100%; overflow: visible; }
       .top-bar { margin-bottom: 15px; }
@@ -159,6 +159,73 @@
       th, td { padding: 8px; font-size: 12px; }
       /* Hapus Kolom Aksi Saat Print */
       th:last-child, td:last-child { display: none; }
+    }
+
+    /* ======= RESPONSIVE MOBILE & TABLET ======= */
+    @media (max-width: 1024px) {
+      .controls-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+      .search-box { width: 100%; }
+      .controls-right { width: 100%; display: flex; gap: 10px; }
+      .controls-right button { flex: 1; justify-content: center; }
+    }
+
+    @media (max-width: 768px) {
+      body { overflow-x: hidden; }
+      
+      .sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 280px;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+      }
+      .sidebar.active-mobile { left: 0; }
+      
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .sidebar-overlay.active { display: block; opacity: 1; }
+      
+      .content-area { padding: 20px 15px; width: 100%; }
+      
+      .top-bar-left { display: flex; align-items: center; gap: 15px; width: 100%; }
+      
+      #menuToggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-sm);
+        color: var(--primary);
+        font-size: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        cursor: pointer;
+        padding: 0;
+      }
+      
+      .top-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
+      .datetime-display { width: 100%; justify-content: center; }
+      
+      .modal-content { padding: 25px 20px; width: 95%; margin: 20px auto; max-height: 85vh; }
+      .modal-grid { grid-template-columns: 1fr; }
+      
+      .login-card { padding: 35px 25px; width: 90%; }
+      
+      th, td { padding: 12px 10px; font-size: 12.5px; }
+      .table-responsive { width: 100%; overflow-x: auto; }
     }
   </style>
 </head>
@@ -188,6 +255,9 @@
 
   <!-- MAIN APP -->
   <div class="app-container">
+    <!-- OVERLAY UNTUK SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+    
     <div class="sidebar">
       <!-- PENAMBAHAN LOGO MSB -->
       <div class="brand-header">
@@ -218,9 +288,15 @@
 
     <div class="content-area">
       <div class="top-bar">
-        <div>
-          <h1 id="tabTitle">Master Audit</h1>
-          <p style="font-size:13px; color:var(--text-muted);" id="tabSubtitle">Pengelolaan Data & Informasi Audit</p>
+        <!-- WRAPPER BARU UNTUK MOBILE MENU & TITLE -->
+        <div class="top-bar-left">
+          <button id="menuToggle" style="display: none;" onclick="toggleMobileMenu()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h1 id="tabTitle">Master Audit</h1>
+            <p style="font-size:13px; color:var(--text-muted);" id="tabSubtitle">Pengelolaan Data & Informasi Audit</p>
+          </div>
         </div>
         <!-- PENAMBAHAN WAKTU LIVE -->
         <div class="datetime-display">
@@ -386,9 +462,15 @@
     function switchTab(tabName) {
       currentTab = tabName;
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      if(event && event.currentTarget) event.currentTarget.classList.add('active');
       document.getElementById('tabTitle').innerText = tabName.replace('_', ' ');
       renderTable();
+      
+      // Tutup menu otomatis di mobile saat tab dipilih
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar && sidebar.classList.contains('active-mobile')) {
+         toggleMobileMenu();
+      }
     }
 
     function renderTable() {
@@ -506,6 +588,22 @@
       if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
         const res = await callAPI({ action: 'delete', sheetName: currentTab, rowIndex: rowIndex });
         if (res && res.success) loadAllData();
+      }
+    }
+
+    // ======= FUNGSI RESPONSIVE MOBILE =======
+    function toggleMobileMenu() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active-mobile');
+      
+      if (overlay.classList.contains('active')) {
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
+      } else {
+        overlay.style.display = 'block';
+        setTimeout(() => { overlay.classList.add('active'); }, 10);
       }
     }
   </script>
