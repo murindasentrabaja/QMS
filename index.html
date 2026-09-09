@@ -1,611 +1,1440 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>ISO Audit Management System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    /* DESAIN MEWAH - BIRU, ORANYE, HIJAU ELEGAN */
-    :root {
-      --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --glass-border: rgba(255, 255, 255, 0.7);
-      
-      /* Palette Warna Lembut */
-      --primary: #3b82f6;          /* Biru Lembut */
-      --primary-hover: #2563eb;
-      --accent-green: #10b981;     /* Hijau Lembut */
-      --accent-green-hover: #059669;
-      --accent-orange: #f59e0b;    /* Oranye Lembut */
-      --accent-orange-hover: #d97706;
-      
-      --accent-soft: #eff6ff; 
-      --text-main: #1e293b; 
-      --text-muted: #64748b;
-      
-      --shadow-lux: 0 15px 35px rgba(59, 130, 246, 0.05), 0 5px 15px rgba(0, 0, 0, 0.03);
-      --radius-lg: 18px; 
-      --radius-sm: 10px;
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
-    
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#F2F6FC">
+<title>QMS ISO 9001 · PT Murinda Sentra Baja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.js" defer></script>
+<style>
+:root{
+  --bg-base:#F2F6FC; --bg-elevated:#FFFFFF;
+  --glass-bg:rgba(255,255,255,.60); --glass-bg-strong:rgba(255,255,255,.82);
+  --glass-border:rgba(255,255,255,.65); --glass-highlight:rgba(255,255,255,.95);
 
-    /* LOGIN OVERLAY */
-    #loginOverlay { position: fixed; inset: 0; background: linear-gradient(135deg, #eff6ff 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px); }
-    .login-card { background: rgba(255, 255, 255, 0.92); border: 1px solid var(--glass-border); padding: 45px; border-radius: 24px; box-shadow: var(--shadow-lux); width: 100%; max-width: 420px; text-align: center; animation: fadeIn 0.6s ease-out; }
-    .login-card .logo-icon { width: 75px; height: 75px; background: var(--accent-soft); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--primary); font-size: 32px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15); }
-    .login-card h2 { font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-size: 24px; letter-spacing: -0.5px; }
-    .login-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
-    
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .input-control { width: 100%; padding: 13px 16px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; background: #f8fafc; font-size: 14px; transition: var(--transition); outline: none; color: var(--text-main); }
-    .input-control:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
-    
-    /* BUTTONS */
-    .btn-lux { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 14px; cursor: pointer; transition: var(--transition); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-lux:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35); }
-    .btn-lux i { transition: transform 0.3s ease; }
-    .btn-lux:hover i { transform: scale(1.15); }
-    
-    .btn-green { background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-hover) 100%); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); }
-    .btn-green:hover { box-shadow: 0 12px 25px rgba(16, 185, 129, 0.35); }
-    .btn-green:hover i { transform: rotate(180deg); } /* Animasi spin untuk refresh */
-    
-    .btn-orange { background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-orange-hover) 100%); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25); }
-    .btn-orange:hover { box-shadow: 0 12px 25px rgba(245, 158, 11, 0.35); }
-    .btn-orange:hover i { transform: translateY(-2px); }
+  /* Palet aksen: biru, ungu, pink, orange, hijau (nama variabel lama dipertahankan agar semua komponen tetap tersambung) */
+  --cyan:#2563EB;    --cyan-dim:rgba(37,99,235,.14);     /* BIRU (primer) */
+  --amber:#F97316;   --amber-dim:rgba(249,115,22,.15);   /* ORANGE */
+  --rose:#EC4899;    --rose-dim:rgba(236,72,153,.14);    /* PINK */
+  --emerald:#10B981; --emerald-dim:rgba(16,185,129,.15); /* HIJAU */
+  --indigo:#8B5CF6;  --indigo-dim:rgba(139,92,246,.14);  /* UNGU */
+  --slate:#64748B;   --slate-dim:rgba(100,116,139,.12);
 
-    /* LAYOUT & SIDEBAR */
-    .app-container { display: flex; min-height: 100vh; position: relative; }
-    .sidebar { width: 280px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 20px rgba(0,0,0,0.02); }
-    
-    .brand-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 35px; gap: 12px; }
-    .brand-header img { max-width: 140px; height: auto; transition: var(--transition); }
-    .brand-header img:hover { transform: scale(1.05); }
-    .brand-header h3 { font-size: 17px; font-weight: 700; color: var(--primary-hover); letter-spacing: 0.5px; }
-    
-    .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
-    .nav-item { padding: 12px 18px; border-radius: var(--radius-sm); color: var(--text-muted); font-size: 14px; font-weight: 500; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 12px; }
-    
-    /* Interactive Icons di Sidebar */
-    .nav-item i { width: 20px; text-align: center; font-size: 16px; transition: var(--transition); }
-    .nav-item:nth-child(1) i { color: #3b82f6; } /* Biru */
-    .nav-item:nth-child(2) i { color: #f59e0b; } /* Oranye */
-    .nav-item:nth-child(3) i { color: #10b981; } /* Hijau */
-    .nav-item:nth-child(4) i { color: #8b5cf6; } /* Ungu */
-    .nav-item:nth-child(5) i { color: #ec4899; } /* Pink */
-    .nav-item:nth-child(6) i { color: #ef4444; } /* Merah */
-    .nav-item:nth-child(7) i { color: #14b8a6; } /* Teal */
-    .nav-item:nth-child(8) i { color: #64748b; } /* Slate */
+  --text-1:#0F172A; --text-2:#51607A; --text-3:#8996AC;
+  --r-lg:22px; --r-md:16px; --r-sm:10px;
+  --font:'Manrope',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:var(--font); color:var(--text-1); min-height:100vh;
+  background:var(--bg-base);
+  background-attachment:fixed;
+  overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:""; position:fixed; inset:-12% -8%; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(16,185,129,.40), transparent 38%),
+    radial-gradient(circle at 85% 10%, rgba(37,99,235,.36), transparent 38%),
+    radial-gradient(circle at 88% 78%, rgba(139,92,246,.32), transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(249,115,22,.28), transparent 38%),
+    radial-gradient(circle at 52% 48%, rgba(236,72,153,.20), transparent 45%);
+  filter:blur(60px) saturate(150%);
+  animation:liquidDrift 24s ease-in-out infinite alternate;
+  will-change:transform;
+}
+@keyframes liquidDrift{
+  0%{ transform:translate3d(0,0,0) scale(1) rotate(0deg); }
+  50%{ transform:translate3d(-2.5%,2%,0) scale(1.07) rotate(4deg); }
+  100%{ transform:translate3d(2.5%,-2%,0) scale(1) rotate(-3deg); }
+}
+.grid-overlay{
+  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+  background-image:
+    linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,.035) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(circle at 30% 0%, #000 0%, transparent 70%);
+}
+::-webkit-scrollbar{width:8px; height:8px;}
+::-webkit-scrollbar-thumb{background:rgba(37,99,235,.22); border-radius:8px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(37,99,235,.4);}
+:focus-visible{outline:2px solid var(--cyan); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
 
-    .nav-item:hover, .nav-item.active { background: var(--accent-soft); color: var(--primary); font-weight: 600; }
-    .nav-item:hover i, .nav-item.active i { transform: scale(1.2); animation: float 1s ease-in-out infinite; }
-    
-    .user-profile { padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .avatar { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
-    
-    /* CONTENT AREA */
-    .content-area { flex-grow: 1; padding: 30px 40px; overflow-y: auto; display: flex; flex-direction: column; }
-    
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
-    .top-bar h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
-    
-    /* Waktu dan Hari Ini */
-    .datetime-display {
-      background: var(--card-bg); padding: 10px 20px; border-radius: 50px; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;
-      display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600; color: var(--primary);
-    }
-    
-    .glass-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow-lux); margin-bottom: 25px; animation: fadeIn 0.4s ease-out; flex-grow: 1; }
-    
-    .controls-bar { display: flex; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .search-box { position: relative; width: 320px; max-width: 100%; }
-    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-    .search-box input { padding-left: 40px; border-radius: 30px; }
-    
-    .controls-right { display: flex; gap: 10px; }
+.glass{
+  position:relative; isolation:isolate; overflow:hidden;
+  background:var(--glass-bg); border:1px solid var(--glass-border);
+  border-radius:var(--r-lg); backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  box-shadow:inset 0 1px 0 0 var(--glass-highlight), inset 0 0 0 1px rgba(255,255,255,.4), 0 12px 32px -10px rgba(30,41,68,.18);
+  transition:box-shadow .25s ease, transform .25s ease;
+}
+.glass::before{
+  content:""; position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.8), transparent 62%);
+  mix-blend-mode:soft-light; transition:opacity .35s ease;
+}
+.glass:hover::before{ opacity:1; }
 
-    /* TABEL & EFEK VISUAL */
-    .table-responsive { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid #e2e8f0; background: #fff; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
-    th { background: #f8fafc; color: var(--text-muted); font-weight: 600; padding: 15px 18px; border-bottom: 1px solid #e2e8f0; text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.5px; white-space: nowrap; }
-    td { padding: 15px 18px; border-bottom: 1px solid #e2e8f0; color: var(--text-main); }
-    
-    /* Efek Hover Animasi pada Data Tabel */
-    tbody tr { transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: default; }
-    tbody tr:hover { 
-      background-color: rgba(59, 130, 246, 0.04); 
-      transform: translateY(-2px) scale(1.002);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-      position: relative;
-      z-index: 1;
-    }
-    
-    .btn-action { background: none; border: none; font-size: 15px; cursor: pointer; padding: 8px; border-radius: 8px; transition: var(--transition); }
-    .btn-edit { color: var(--primary); } .btn-edit:hover { background: #eff6ff; transform: scale(1.1); }
-    .btn-delete { color: #ef4444; } .btn-delete:hover { background: #fef2f2; transform: scale(1.1); }
-    
-    .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-    .modal.active { display: flex; animation: fadeIn 0.3s ease-out; }
-    .modal-content { background: #ffffff; border-radius: var(--radius-lg); padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
-    .modal-header h3 { color: var(--text-main); font-weight: 700; }
-    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    
-    .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-open { background: #dcfce7; color: #15803d; }
-    .badge-close { background: #fee2e2; color: #b91c1c; }
+#app{position:relative; z-index:1; display:grid; grid-template-columns:280px 1fr; min-height:100vh;}
+#sidebar{
+  margin:14px 0 14px 14px; padding:18px 14px; display:flex; flex-direction:column; gap:14px;
+  height:calc(100vh - 28px); position:sticky; top:14px; overflow-y:auto;
+}
+.brand{display:flex; align-items:center; gap:11px; padding:4px 6px 12px; border-bottom:1px solid var(--glass-border);}
+.brand-mark{
+  width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--cyan), var(--indigo)); color:#fff; flex:none; position:relative;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.55), inset 0 -3px 5px rgba(0,0,0,.18), 0 8px 18px -5px rgba(99,102,241,.55);
+}
+.brand-mark::before{
+  content:""; position:absolute; inset:2px 2px 52% 2px; border-radius:9px 9px 30px 30px/9px 9px 16px 16px;
+  background:linear-gradient(rgba(255,255,255,.6), rgba(255,255,255,0)); pointer-events:none;
+}
+.brand-mark svg{width:20px; height:20px; position:relative; z-index:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,.2));}
+.brand-title{font-weight:800; font-size:.92rem; letter-spacing:.01em;}
+.brand-sub{font-size:.72rem; color:var(--text-3); margin-top:1px;}
 
-    /* CETAK / PRINT STYLES */
-    @media print {
-      body { background: white; color: black; }
-      .sidebar, .controls-bar, #loginOverlay, .user-profile, .datetime-display, .btn-action, #menuToggle { display: none !important; }
-      .app-container { display: block; }
-      .content-area { padding: 0; width: 100%; overflow: visible; }
-      .top-bar { margin-bottom: 15px; }
-      .glass-card { box-shadow: none; border: none; padding: 0; margin: 0; }
-      .table-responsive { border: none; }
-      table, th, td { border: 1px solid #000; }
-      th, td { padding: 8px; font-size: 12px; }
-      /* Hapus Kolom Aksi Saat Print */
-      th:last-child, td:last-child { display: none; }
-    }
+.sidebar-search{
+  display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.55);
+  border:1px solid var(--glass-border); border-radius:var(--r-sm); padding:8px 10px;
+}
+.sidebar-search svg{width:15px; height:15px; color:var(--text-3); flex:none;}
+.sidebar-search input{background:none; border:none; color:var(--text-1); font-family:var(--font); font-size:.8rem; width:100%; outline:none;}
+.sidebar-search input::placeholder{color:var(--text-3);}
 
-    /* ======= RESPONSIVE MOBILE & TABLET ======= */
-    @media (max-width: 1024px) {
-      .controls-bar { flex-direction: column; align-items: stretch; gap: 15px; }
-      .search-box { width: 100%; }
-      .controls-right { width: 100%; display: flex; gap: 10px; }
-      .controls-right button { flex: 1; justify-content: center; }
-    }
+.nav-item{
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:none; border:none;
+  color:var(--text-2); font-family:var(--font); font-size:.83rem; font-weight:600; padding:9px 10px;
+  border-radius:var(--r-sm); cursor:pointer; transition:background .15s, color .15s;
+}
+.nav-item svg{width:16px; height:16px; flex:none;}
+.nav-item:hover{background:rgba(37,99,235,.08); color:var(--text-1);}
+.nav-item.active{background:linear-gradient(135deg, var(--cyan-dim), var(--indigo-dim)); color:var(--cyan); box-shadow:inset 0 0 0 1px rgba(37,99,235,.18);}
+#navGroups{display:flex; flex-direction:column; gap:3px; overflow-y:auto; flex:1;}
+.nav-group-header{
+  display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none;
+  color:var(--text-2); font-family:var(--font); font-size:.71rem; font-weight:700; letter-spacing:.01em;
+  padding:10px 10px 6px; cursor:pointer;
+}
+.nav-group-label{display:flex; align-items:center; gap:8px;}
+.group-icon-chip{
+  width:22px; height:22px; border-radius:7px; flex:none; color:#fff;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.5), inset 0 -2px 3px rgba(0,0,0,.15), 0 3px 8px -2px var(--chip-shadow, rgba(37,99,235,.5));
+}
+.group-icon-chip svg{width:12px; height:12px;}
+.accent-blue{ background:linear-gradient(135deg, var(--cyan), #60A5FA); --chip-shadow:rgba(37,99,235,.55); }
+.accent-purple{ background:linear-gradient(135deg, var(--indigo), #C4B5FD); --chip-shadow:rgba(139,92,246,.55); }
+.accent-pink{ background:linear-gradient(135deg, var(--rose), #F9A8D4); --chip-shadow:rgba(236,72,153,.55); }
+.accent-orange{ background:linear-gradient(135deg, var(--amber), #FDBA74); --chip-shadow:rgba(249,115,22,.55); }
+.accent-green{ background:linear-gradient(135deg, var(--emerald), #6EE7B7); --chip-shadow:rgba(16,185,129,.55); }
+.nav-group-header .chev{width:13px; height:13px; transition:transform .2s; color:var(--text-3);}
+.nav-group.open .chev{transform:rotate(180deg);}
+.nav-group-items{max-height:0; overflow:hidden; transition:max-height .25s ease; display:flex; flex-direction:column; gap:1px;}
+.nav-group.open .nav-group-items{max-height:600px;}
+.nav-subitem{font-size:.78rem; font-weight:500; padding-left:22px;}
 
-    @media (max-width: 768px) {
-      body { overflow-x: hidden; }
-      
-      .sidebar {
-        position: fixed;
-        left: -320px;
-        top: 0;
-        bottom: 0;
-        height: 100vh;
-        width: 280px;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1001;
-      }
-      .sidebar.active-mobile { left: 0; }
-      
-      .sidebar-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.5);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .sidebar-overlay.active { display: block; opacity: 1; }
-      
-      .content-area { padding: 20px 15px; width: 100%; }
-      
-      .top-bar-left { display: flex; align-items: center; gap: 15px; width: 100%; }
-      
-      #menuToggle {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-sm);
-        color: var(--primary);
-        font-size: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        cursor: pointer;
-        padding: 0;
-      }
-      
-      .top-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
-      .datetime-display { width: 100%; justify-content: center; }
-      
-      .modal-content { padding: 25px 20px; width: 95%; margin: 20px auto; max-height: 85vh; }
-      .modal-grid { grid-template-columns: 1fr; }
-      
-      .login-card { padding: 35px 25px; width: 90%; }
-      
-      th, td { padding: 12px 10px; font-size: 12.5px; }
-      .table-responsive { width: 100%; overflow-x: auto; }
-    }
-  </style>
+#main{display:flex; flex-direction:column; min-height:100vh; padding:14px 14px 14px 0;}
+#topbar{
+  display:flex; align-items:center; justify-content:space-between; padding:14px 20px; margin-bottom:14px;
+  position:sticky; top:14px; z-index:20;
+}
+.topbar-title{font-weight:700; font-size:.95rem;}
+.topbar-actions{display:flex; align-items:center; gap:10px;}
+#menuToggle{display:none;}
+
+.sync-pill{
+  display:flex; align-items:center; gap:7px; font-size:.74rem; color:var(--text-2); font-weight:600;
+  background:rgba(255,255,255,.55); border:1px solid var(--glass-border); padding:6px 12px; border-radius:999px;
+}
+.sync-pill .dot{width:7px; height:7px; border-radius:50%; background:var(--slate); flex:none;}
+.sync-pill.sync-ok .dot{background:var(--emerald); box-shadow:0 0 0 0 rgba(16,185,129,.5); animation:pulse 2s infinite;}
+.sync-pill.sync-off .dot{background:var(--rose);}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.45);} 70%{box-shadow:0 0 0 6px rgba(16,185,129,0);} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+
+.btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; gap:7px; font-family:var(--font); font-size:.8rem; font-weight:700;
+  padding:9px 15px; border-radius:var(--r-sm); border:1px solid transparent; cursor:pointer; white-space:nowrap;
+  transition:transform .12s, background .15s, border-color .15s, box-shadow .2s;
+}
+.btn svg{width:15px; height:15px;}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:linear-gradient(135deg, var(--cyan), var(--indigo)); color:#fff; box-shadow:0 6px 18px -4px rgba(37,99,235,.45), inset 0 1px 1px rgba(255,255,255,.3);}
+.btn-primary:hover{filter:brightness(1.08); transform:translateY(-1px); box-shadow:0 10px 22px -4px rgba(37,99,235,.55), inset 0 1px 1px rgba(255,255,255,.35);}
+.btn-ghost{background:rgba(255,255,255,.55); border-color:var(--glass-border); color:var(--text-1);}
+.btn-ghost:hover{background:rgba(255,255,255,.85); transform:translateY(-1px);}
+.btn-danger{background:var(--rose-dim); border-color:rgba(236,72,153,.35); color:var(--rose);}
+.btn-danger:hover{background:rgba(236,72,153,.24);}
+.icon-btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:var(--r-sm);
+  background:rgba(255,255,255,.55); border:1px solid var(--glass-border); color:var(--text-2); cursor:pointer;
+  transition:background .15s, color .15s, transform .15s, box-shadow .2s;
+}
+.icon-btn svg{width:15px; height:15px;}
+.icon-btn:hover{background:rgba(37,99,235,.1); color:var(--cyan); transform:translateY(-1px);}
+.icon-btn-danger:hover{background:var(--rose-dim); color:var(--rose); border-color:rgba(236,72,153,.3);}
+#topbar .icon-btn{background:linear-gradient(135deg, rgba(37,99,235,.14), rgba(139,92,246,.14)); border-color:rgba(37,99,235,.22); color:var(--cyan);}
+#topbar .icon-btn:hover{background:linear-gradient(135deg, var(--cyan), var(--indigo)); color:#fff; box-shadow:0 8px 18px -6px rgba(37,99,235,.6); transform:translateY(-2px);}
+
+#content{flex:1; display:flex; flex-direction:column; gap:18px; padding:0 6px 20px;}
+.view-header{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.breadcrumb{font-size:.72rem; font-weight:700; color:var(--cyan); letter-spacing:.02em; margin-bottom:4px;}
+.view-header h1{font-size:1.5rem; font-weight:800; letter-spacing:-.01em;}
+.view-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.search-box{
+  display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.55); border:1px solid var(--glass-border);
+  border-radius:var(--r-sm); padding:8px 12px; min-width:220px;
+}
+.search-box svg{width:15px; height:15px; color:var(--text-3); flex:none;}
+.search-box input{background:none; border:none; outline:none; color:var(--text-1); font-family:var(--font); font-size:.82rem; width:100%;}
+
+/* Dashboard */
+.dash-grid{display:grid; grid-template-columns:300px 1fr; gap:16px;}
+.hero-gauge{padding:26px 22px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;}
+.gauge-wrap{width:180px; height:180px; position:relative; margin-bottom:6px;}
+.gauge-wrap svg{width:100%; height:100%;}
+.gauge-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.gauge-score{font-size:2.1rem; font-weight:800; font-variant-numeric:tabular-nums; line-height:1;}
+.gauge-score-sub{font-size:.65rem; color:var(--text-3); margin-top:3px; font-weight:700; letter-spacing:.03em;}
+.gauge-label{font-weight:700; font-size:.88rem; margin-top:6px;}
+.gauge-sub{font-size:.72rem; color:var(--text-3);}
+.quick-links{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:14px;}
+.quick-chip{
+  position:relative; overflow:hidden; isolation:isolate;
+  font-size:.7rem; font-weight:700; padding:6px 11px; border-radius:999px; cursor:pointer;
+  background:rgba(255,255,255,.55); border:1px solid var(--glass-border); color:var(--text-2);
+  transition:background .15s, color .15s, transform .15s;
+}
+.quick-chip:hover{background:linear-gradient(135deg,var(--cyan),var(--indigo)); color:#fff; transform:translateY(-1px);}
+
+.kpi-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(168px,1fr)); gap:12px;}
+.kpi-card{
+  position:relative; overflow:hidden; isolation:isolate;
+  padding:16px; border-radius:var(--r-md); cursor:pointer; background:var(--glass-bg); border:1px solid var(--glass-border);
+  backdrop-filter:blur(16px) saturate(160%); -webkit-backdrop-filter:blur(16px) saturate(160%);
+  border-left:3px solid var(--slate); transition:transform .18s, background .15s, box-shadow .2s;
+}
+.kpi-card::before{
+  content:""; position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0;
+  background:radial-gradient(200px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.75), transparent 62%);
+  mix-blend-mode:soft-light; transition:opacity .35s ease;
+}
+.kpi-card:hover::before{ opacity:1; }
+.kpi-card:hover{transform:translateY(-3px); background:var(--glass-bg-strong); box-shadow:0 14px 28px -12px rgba(30,41,68,.28);}
+.kpi-icon{
+  width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:10px;
+  position:relative; color:#fff;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.55), inset 0 -3px 5px rgba(0,0,0,.14), 0 6px 14px -4px var(--icon-shadow, rgba(37,99,235,.5));
+}
+.kpi-icon::before{
+  content:""; position:absolute; inset:2px 2px 52% 2px; border-radius:8px 8px 30px 30px/8px 8px 16px 16px;
+  background:linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,0)); pointer-events:none;
+}
+.kpi-icon svg{width:17px; height:17px; position:relative; z-index:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,.18));}
+.kpi-value{font-size:1.65rem; font-weight:800; font-variant-numeric:tabular-nums; line-height:1; position:relative; z-index:1;}
+.kpi-label{font-size:.72rem; color:var(--text-3); font-weight:600; margin-top:5px; position:relative; z-index:1;}
+.kpi-rose{border-left-color:var(--rose);} .kpi-rose .kpi-icon{background:linear-gradient(135deg,var(--rose),#F9A8D4); --icon-shadow:rgba(236,72,153,.55);}
+.kpi-amber{border-left-color:var(--amber);} .kpi-amber .kpi-icon{background:linear-gradient(135deg,var(--amber),#FDBA74); --icon-shadow:rgba(249,115,22,.55);}
+.kpi-emerald{border-left-color:var(--emerald);} .kpi-emerald .kpi-icon{background:linear-gradient(135deg,var(--emerald),#6EE7B7); --icon-shadow:rgba(16,185,129,.55);}
+.kpi-indigo{border-left-color:var(--indigo);} .kpi-indigo .kpi-icon{background:linear-gradient(135deg,var(--indigo),#C4B5FD); --icon-shadow:rgba(139,92,246,.55);}
+.kpi-cyan{border-left-color:var(--cyan);} .kpi-cyan .kpi-icon{background:linear-gradient(135deg,var(--cyan),#93C5FD); --icon-shadow:rgba(37,99,235,.55);}
+
+.chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.chart-card{padding:20px;}
+.chart-card h3{font-size:.85rem; font-weight:700; margin-bottom:16px; color:var(--text-1); position:relative; z-index:1;}
+.bar-row{display:grid; grid-template-columns:120px 1fr 32px; align-items:center; gap:10px; margin-bottom:11px; font-size:.74rem; position:relative; z-index:1;}
+.bar-label{color:var(--text-2); font-weight:600;}
+.bar-track{height:8px; border-radius:6px; background:rgba(15,23,42,.06); overflow:hidden;}
+.bar-fill{height:100%; border-radius:6px; transition:width .5s ease;}
+.bar-value{text-align:right; font-weight:700; font-variant-numeric:tabular-nums; color:var(--text-1);}
+.chart-empty{color:var(--text-3); font-size:.78rem; padding:10px 0; position:relative; z-index:1;}
+
+/* Table */
+.table-wrap{overflow:auto; max-height:calc(100vh - 220px);}
+table{width:100%; border-collapse:collapse; font-size:.81rem;}
+thead th{
+  position:sticky; top:0; background:rgba(255,255,255,.88); backdrop-filter:blur(8px); text-align:left; font-weight:700;
+  color:var(--text-3); font-size:.68rem; letter-spacing:.02em; padding:11px 14px; border-bottom:1px solid var(--glass-border); white-space:nowrap;
+}
+tbody td{padding:11px 14px; border-bottom:1px solid rgba(15,23,42,.055); color:var(--text-1); vertical-align:top; max-width:260px;}
+tbody tr:hover{background:rgba(37,99,235,.045);}
+tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
+.col-actions{white-space:nowrap; text-align:right;}
+.col-actions .icon-btn{display:inline-flex;}
+.empty-state{text-align:center; color:var(--text-3); padding:40px 20px !important; font-size:.85rem;}
+.table-footer{font-size:.74rem; color:var(--text-3); padding:2px 6px;}
+
+.badge{display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:.7rem; font-weight:700; white-space:nowrap;}
+.badge-rose{background:var(--rose-dim); color:var(--rose);}
+.badge-amber{background:var(--amber-dim); color:var(--amber);}
+.badge-emerald{background:var(--emerald-dim); color:var(--emerald);}
+.badge-indigo{background:var(--indigo-dim); color:var(--indigo);}
+.badge-cyan{background:var(--cyan-dim); color:var(--cyan);}
+.badge-slate{background:var(--slate-dim); color:var(--slate);}
+.chip{display:inline-block; padding:2px 8px; margin:1px 3px 1px 0; border-radius:6px; background:rgba(15,23,42,.055); font-size:.68rem; color:var(--text-2);}
+.file-link{display:inline-flex; align-items:center; gap:4px; color:var(--cyan); font-weight:700; font-size:.76rem; text-decoration:none;}
+.file-link svg{width:13px; height:13px;}
+
+/* Modal */
+.modal-overlay{position:fixed; inset:0; background:rgba(15,23,42,.35); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;}
+.modal{width:100%; max-width:640px; max-height:88vh; display:flex; flex-direction:column;}
+.modal-header{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--glass-border); position:relative; z-index:1;}
+.modal-header h2{font-size:1.02rem; font-weight:800;}
+.modal-body{padding:20px 22px; overflow-y:auto; position:relative; z-index:1;}
+.modal-footer{display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--glass-border); position:relative; z-index:1;}
+#recordForm{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.form-group{display:flex; flex-direction:column; gap:6px;}
+.form-group.full{grid-column:1 / -1;}
+.form-group label{font-size:.74rem; font-weight:700; color:var(--text-2);}
+.form-group label .req{color:var(--rose); margin-left:3px;}
+.form-group input[type=text], .form-group input[type=email], .form-group input[type=number],
+.form-group input[type=date], .form-group select, .form-group textarea{
+  background:rgba(255,255,255,.7); border:1px solid var(--glass-border); border-radius:var(--r-sm);
+  color:var(--text-1); font-family:var(--font); font-size:.83rem; padding:9px 11px; outline:none; width:100%;
+  transition:border-color .15s, box-shadow .15s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus{border-color:var(--cyan); box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+.form-group input:disabled{opacity:.55; cursor:not-allowed;}
+.form-group textarea{resize:vertical; min-height:64px;}
+.form-group .hint{font-size:.68rem; color:var(--text-3);}
+.checklist{display:flex; flex-direction:column; gap:6px; max-height:150px; overflow-y:auto; background:rgba(255,255,255,.5); border:1px solid var(--glass-border); border-radius:var(--r-sm); padding:10px;}
+.chk{display:flex; align-items:center; gap:8px; font-size:.78rem; color:var(--text-2); cursor:pointer;}
+.chk input{accent-color:var(--cyan);}
+.file-field{display:flex; flex-direction:column; gap:6px;}
+.file-field input[type=file]{font-size:.75rem; color:var(--text-2);}
+.file-link-existing{font-size:.72rem; color:var(--cyan); font-weight:700;}
+
+/* Toast */
+#toastRoot{position:fixed; bottom:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:10px;}
+.toast{
+  display:flex; align-items:center; gap:9px; padding:12px 16px; border-radius:var(--r-md); font-size:.82rem; font-weight:600;
+  background:rgba(255,255,255,.92); backdrop-filter:blur(14px); border:1px solid var(--glass-border); box-shadow:0 14px 34px -8px rgba(30,41,68,.28);
+  opacity:0; transform:translateY(8px); transition:opacity .25s, transform .25s; max-width:340px;
+}
+.toast.show{opacity:1; transform:translateY(0);}
+.toast svg{width:16px; height:16px; flex:none;}
+.toast-success{border-color:rgba(16,185,129,.4);} .toast-success svg{color:var(--emerald);}
+.toast-error{border-color:rgba(236,72,153,.4);} .toast-error svg{color:var(--rose);}
+.toast-info svg{color:var(--cyan);}
+
+.setup-banner{padding:16px 20px; display:flex; align-items:center; gap:14px; border-left:3px solid var(--amber);}
+.setup-banner svg{width:20px; height:20px; color:var(--amber); flex:none; position:relative; z-index:1;}
+.setup-banner p{font-size:.8rem; color:var(--text-2); position:relative; z-index:1;}
+.setup-banner b{color:var(--text-1);}
+
+/* PENTING — perbaikan bug "judul & summary bertumpuk setelah discroll":
+   #app pakai display:grid (2 kolom: sidebar 280px + main 1fr). .sidebar-backdrop
+   adalah ANAK LANGSUNG #app, persis di antara #sidebar dan #main di HTML.
+   Sebelumnya aturan position:fixed+display:none untuk elemen ini HANYA ada di
+   dalam @media (max-width:860px), sehingga di lebar desktop/tablet elemen ini
+   ikut jadi "kotak kosong" yang menempati slot kolom ke-2 pada baris grid
+   pertama — akibatnya #main (berisi topbar+konten) terdorong ke baris ke-2
+   kolom ke-1, tepat bertumpuk di bawah #sidebar. Definisikan di luar media
+   query supaya elemen ini SELALU position:fixed (keluar dari alur grid) di
+   semua lebar layar. */
+.sidebar-backdrop{position:fixed; inset:0; z-index:55; display:none; background:rgba(15,23,42,.45);}
+.sidebar-backdrop.show{display:block;}
+
+/* Efek klik: ripple */
+.ripple-fx{
+  position:absolute; border-radius:50%; z-index:6; pointer-events:none; transform:scale(0); opacity:.9;
+  background:radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,0) 70%);
+  animation:rippleAnim .6s ease-out forwards;
+}
+@keyframes rippleAnim{ to{ transform:scale(1); opacity:0; } }
+
+@media (max-width:960px){
+  .dash-grid{grid-template-columns:1fr;}
+  .chart-grid{grid-template-columns:1fr;}
+}
+@media (max-width:860px){
+  #app{grid-template-columns:1fr;}
+  #sidebar{
+    position:fixed; left:0; top:0; height:100vh; width:270px; margin:0; z-index:60; border-radius:0;
+    transform:translateX(-100%); transition:transform .25s ease;
+  }
+  #sidebar.open{transform:translateX(0);}
+  #main{padding:10px;}
+  #menuToggle{display:inline-flex;}
+  #recordForm{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .sidebar-backdrop{display:none; position:fixed; inset:0; background:rgba(15,23,42,.45); z-index:55;}
+  .sidebar-backdrop.show{display:block;}
+}
+
+</style>
 </head>
 <body>
-
-  <!-- LOGIN OVERLAY -->
-  <div id="loginOverlay">
-    <div class="login-card">
-      <div class="logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <h2>Portal Audit ISO</h2>
-      <p>Masukkan akses akun terdaftar Anda</p>
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label>Username</label>
-          <select id="loginUser" class="input-control" required>
-            <option value="">Memuat daftar user...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="loginPass" class="input-control" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="btn-lux" id="btnLogin"><i class="fa-solid fa-right-to-bracket"></i> Masuk System</button>
-      </form>
-    </div>
+<div class="grid-overlay"></div>
+<div id="app">
+  <aside id="sidebar" class="glass"></aside>
+  <div class="sidebar-backdrop" data-action="close-sidebar"></div>
+  <div id="main">
+    <header id="topbar" class="glass">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button id="menuToggle" class="icon-btn" data-action="open-sidebar"><i data-lucide="menu"></i></button>
+        <div class="topbar-title">Sistem Manajemen Mutu · ISO 9001:2015</div>
+      </div>
+      <div class="topbar-actions">
+        <div id="syncIndicator" class="sync-pill sync-off"><span class="dot"></span>Belum tersambung</div>
+        <button class="icon-btn" data-action="open-settings" title="Pengaturan koneksi"><i data-lucide="settings"></i></button>
+      </div>
+    </header>
+    <main id="content"></main>
   </div>
+</div>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
 
-  <!-- MAIN APP -->
-  <div class="app-container">
-    <!-- OVERLAY UNTUK SIDEBAR MOBILE -->
-    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
-    
-    <div class="sidebar">
-      <!-- PENAMBAHAN LOGO MSB -->
-      <div class="brand-header">
-        <img src="MSB Logo.png" alt="Logo MSB">
-        <h3>ISO AUDIT SUITE</h3>
-      </div>
-      <ul class="nav-menu">
-        <li class="nav-item active" onclick="switchTab('Master Audit')"><i class="fa-solid fa-clipboard-list"></i> Master Audit</li>
-        <li class="nav-item" onclick="switchTab('Checklist_ISO')"><i class="fa-solid fa-list-check"></i> Checklist ISO</li>
-        <li class="nav-item" onclick="switchTab('Auditee')"><i class="fa-solid fa-building-user"></i> Data Auditee</li>
-        <li class="nav-item" onclick="switchTab('Auditor')"><i class="fa-solid fa-user-tie"></i> Data Auditor</li>
-        <li class="nav-item" onclick="switchTab('Hasil_Audit')"><i class="fa-solid fa-square-poll-vertical"></i> Hasil Audit</li>
-        <li class="nav-item" onclick="switchTab('Temuan')"><i class="fa-solid fa-triangle-exclamation"></i> Temuan</li>
-        <li class="nav-item" onclick="switchTab('Corrective Action')"><i class="fa-solid fa-wrench"></i> Corrective Action</li>
-        <li class="nav-item" onclick="switchTab('Lampiran')"><i class="fa-solid fa-paperclip"></i> Lampiran</li>
-      </ul>
-      <div class="user-profile">
-        <div class="user-info">
-          <div class="avatar" id="userAvatar">A</div>
-          <div>
-            <div style="font-size:13px; font-weight:700;" id="userName">User</div>
-            <div style="font-size:11px; color:var(--text-muted);" id="userRole">Hak Akses</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-power-off" style="cursor:pointer; color:#ef4444; font-size:18px;" onclick="location.reload()" title="Logout"></i>
-      </div>
-    </div>
+<script>
+// ==========================================================================
+// CONFIG
+// ==========================================================================
+// URL Web App Google Apps Script disematkan langsung di sini agar aplikasi siap pakai tanpa setup manual.
+// Bisa tetap diganti lewat ikon Pengaturan (⚙) di kanan atas bila suatu saat Anda deploy ulang/ganti URL.
+const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycby7QhbG8X27pRmozy3jQPNuGBXtcWcj19gfCBVhyHmv9Tuk7UzD_OP42Hq_2rcBPkjfBg/exec";
+const CONFIG = {
+  API_URL: "",           // diisi dari localStorage jika pernah diubah, kalau tidak pakai DEFAULT_API_URL
+  POLL_MS: 25000,
+  FETCH_TIMEOUT_MS: 30000
+};
 
-    <div class="content-area">
-      <div class="top-bar">
-        <!-- WRAPPER BARU UNTUK MOBILE MENU & TITLE -->
-        <div class="top-bar-left">
-          <button id="menuToggle" style="display: none;" onclick="toggleMobileMenu()">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <div>
-            <h1 id="tabTitle">Master Audit</h1>
-            <p style="font-size:13px; color:var(--text-muted);" id="tabSubtitle">Pengelolaan Data & Informasi Audit</p>
-          </div>
-        </div>
-        <!-- PENAMBAHAN WAKTU LIVE -->
-        <div class="datetime-display">
-          <i class="fa-regular fa-calendar-check" style="color:var(--accent-orange);"></i>
-          <span id="liveDateTime">Memuat Waktu...</span>
-        </div>
-      </div>
-      
-      <div class="glass-card">
-        <div class="controls-bar">
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="input-control" placeholder="Cari data..." onkeyup="filterTable()">
-          </div>
-          
-          <!-- TOMBOL REFRESH, PRINT & TAMBAH -->
-          <div class="controls-right">
-            <button class="btn-lux btn-green" style="width:auto; padding: 11px 18px;" onclick="loadAllData()" title="Refresh Data">
-              <i class="fa-solid fa-rotate"></i>
-            </button>
-            <button class="btn-lux btn-orange" style="width:auto; padding: 11px 18px;" onclick="window.print()" title="Print Halaman">
-              <i class="fa-solid fa-print"></i>
-            </button>
-            <button class="btn-lux" id="btnAddData" style="width:auto; padding: 11px 22px;" onclick="openAddModal()">
-              <i class="fa-solid fa-plus"></i> Tambah Data Baru
-            </button>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table id="dataTable">
-            <thead><tr id="tableHeader"></tr></thead>
-            <tbody id="tableBody">
-              <tr><td colspan="10" style="text-align:center; padding:30px;">Memuat data...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+// ==========================================================================
+// SCHEMA (identik dengan Code.gs)
+// ==========================================================================
+const SCHEMA = {
+  groups: [
+    { key:"master", label:"A. Data Master", icon:"database" },
+    { key:"planning", label:"B. Perencanaan Audit", icon:"calendar" },
+    { key:"execution", label:"C. Pelaksanaan Audit", icon:"clipboard-check" },
+    { key:"capa", label:"D. Tindak Lanjut (CAPA)", icon:"wrench" },
+    { key:"nc", label:"E. Ketidaksesuaian & Komplain", icon:"alert-triangle" },
+    { key:"risk", label:"F. Manajemen Risiko", icon:"shield-alert" },
+    { key:"doc", label:"G. Kontrol Dokumen", icon:"file-text" },
+    { key:"review", label:"H. Tinjauan Manajemen", icon:"users" },
+    { key:"kpi", label:"I. Sasaran Mutu & KPI", icon:"target" },
+    { key:"competency", label:"J. Kompetensi & Pelatihan", icon:"graduation-cap" },
+    { key:"calibration", label:"K. Kalibrasi", icon:"gauge" },
+    { key:"supplier", label:"L. Evaluasi Supplier", icon:"truck" },
+    { key:"cert", label:"M. Sertifikasi", icon:"award" }
+  ],
+  tables: {
+    Master_Departemen:{label:"Departemen",group:"master",key:"ID_Departemen",idPrefix:"DEPT",display:"Nama_Departemen",fields:[
+      {name:"ID_Departemen",label:"ID Departemen",type:"text",auto:true},
+      {name:"Nama_Departemen",label:"Nama Departemen",type:"text",required:true},
+      {name:"Kepala_Departemen",label:"Kepala Departemen",type:"ref",ref:"Master_Karyawan"},
+      {name:"Area_Proses",label:"Area Proses",type:"text"}
+    ]},
+    Master_Karyawan:{label:"Karyawan",group:"master",key:"ID_Karyawan",idPrefix:"KAR",display:"Nama",fields:[
+      {name:"ID_Karyawan",label:"ID Karyawan",type:"text",auto:true},
+      {name:"Nama",label:"Nama",type:"text",required:true},
+      {name:"Jabatan",label:"Jabatan",type:"text"},
+      {name:"Departemen",label:"Departemen",type:"ref",ref:"Master_Departemen"},
+      {name:"Email",label:"Email",type:"email"},
+      {name:"No_HP",label:"No. HP",type:"text"},
+      {name:"Role_Sistem",label:"Role Sistem",type:"enum",options:["Admin","Auditor","Auditee","Manajemen","QA"]},
+      {name:"Status_Aktif",label:"Status Aktif",type:"yesno"}
+    ]},
+    Master_Auditor:{label:"Auditor",group:"master",key:"ID_Auditor",idPrefix:"AUD",display:"ID_Auditor",fields:[
+      {name:"ID_Auditor",label:"ID Auditor",type:"text",auto:true},
+      {name:"Karyawan",label:"Karyawan",type:"ref",ref:"Master_Karyawan",required:true},
+      {name:"Level",label:"Level",type:"enum",options:["Lead Auditor","Auditor","Auditor Trainee"]},
+      {name:"Sertifikat_Auditor",label:"Sertifikat Auditor",type:"file"},
+      {name:"Tgl_Sertifikasi",label:"Tgl Sertifikasi",type:"date"},
+      {name:"Tgl_Kadaluarsa",label:"Tgl Kadaluarsa",type:"date"},
+      {name:"Area_Kompetensi",label:"Area Kompetensi",type:"enumlist",options:["Manajemen Mutu","Produksi","Gudang","Maintenance","HR","QA/QC","K3","Umum"]}
+    ]},
+    Master_Klausul_ISO9001:{label:"Klausul ISO 9001",group:"master",key:"Kode_Klausul",idPrefix:"",display:"Judul_Klausul",fields:[
+      {name:"Kode_Klausul",label:"Kode Klausul",type:"text",required:true,note:"cth. 8.5.1"},
+      {name:"Judul_Klausul",label:"Judul Klausul",type:"text",required:true},
+      {name:"Kategori",label:"Kategori",type:"enum",options:["Konteks Organisasi","Kepemimpinan","Perencanaan","Dukungan","Operasi","Evaluasi Kinerja","Peningkatan"]},
+      {name:"Deskripsi_Persyaratan",label:"Deskripsi Persyaratan",type:"textarea"}
+    ]},
+    Master_Proses_Bisnis:{label:"Proses Bisnis",group:"master",key:"ID_Proses",idPrefix:"PRS",display:"Nama_Proses",fields:[
+      {name:"ID_Proses",label:"ID Proses",type:"text",auto:true},
+      {name:"Nama_Proses",label:"Nama Proses",type:"text",required:true},
+      {name:"Pemilik_Proses",label:"Pemilik Proses",type:"ref",ref:"Master_Karyawan"},
+      {name:"Klausul_Terkait",label:"Klausul Terkait",type:"refmulti",ref:"Master_Klausul_ISO9001"},
+      {name:"Input_Proses",label:"Input Proses",type:"textarea"},
+      {name:"Output_Proses",label:"Output Proses",type:"textarea"},
+      {name:"Indikator_Kinerja",label:"Indikator Kinerja",type:"text"}
+    ]},
+    Master_Dokumen:{label:"Dokumen",group:"master",key:"No_Dokumen",idPrefix:"",display:"Judul_Dokumen",fields:[
+      {name:"No_Dokumen",label:"No. Dokumen",type:"text",required:true},
+      {name:"Judul_Dokumen",label:"Judul Dokumen",type:"text",required:true},
+      {name:"Jenis",label:"Jenis",type:"enum",options:["Manual Mutu","Prosedur","Instruksi Kerja","Formulir","Rekaman"]},
+      {name:"Klausul_Terkait",label:"Klausul Terkait",type:"refmulti",ref:"Master_Klausul_ISO9001"},
+      {name:"Revisi_Saat_Ini",label:"Revisi Saat Ini",type:"text"},
+      {name:"Tgl_Efektif",label:"Tgl Efektif",type:"date"},
+      {name:"Pemilik_Dokumen",label:"Pemilik Dokumen",type:"ref",ref:"Master_Karyawan"},
+      {name:"File_Dokumen",label:"File Dokumen",type:"file"},
+      {name:"Status",label:"Status",type:"enum",options:["Draft","Review","Approved","Obsolete"]}
+    ]},
+    Master_Supplier:{label:"Supplier",group:"master",key:"ID_Supplier",idPrefix:"SUP",display:"Nama_Supplier",fields:[
+      {name:"ID_Supplier",label:"ID Supplier",type:"text",auto:true},
+      {name:"Nama_Supplier",label:"Nama Supplier",type:"text",required:true},
+      {name:"Kategori_Barang_Jasa",label:"Kategori Barang/Jasa",type:"text"},
+      {name:"Kontak",label:"Kontak",type:"text"},
+      {name:"Status_Approved",label:"Status Approved",type:"yesno"}
+    ]},
+    Master_Pelanggan:{label:"Pelanggan",group:"master",key:"ID_Pelanggan",idPrefix:"PLG",display:"Nama_Pelanggan",fields:[
+      {name:"ID_Pelanggan",label:"ID Pelanggan",type:"text",auto:true},
+      {name:"Nama_Pelanggan",label:"Nama Pelanggan",type:"text",required:true},
+      {name:"Kontak",label:"Kontak",type:"text"},
+      {name:"Kategori",label:"Kategori",type:"text"}
+    ]},
+    Master_Alat_Mesin:{label:"Alat & Mesin (sync ERP Maintenance)",group:"master",key:"ID_Alat",idPrefix:"ALT",display:"Nama_Alat",fields:[
+      {name:"ID_Alat",label:"ID Alat",type:"text",required:true,note:"Samakan dgn ID Alat di ERP Maintenance"},
+      {name:"Nama_Alat",label:"Nama Alat",type:"text",required:true},
+      {name:"Departemen",label:"Departemen",type:"ref",ref:"Master_Departemen"},
+      {name:"Keterangan",label:"Keterangan",type:"textarea"}
+    ]},
+    Audit_Program_Tahunan:{label:"Program Audit Tahunan",group:"planning",key:"ID_Program",idPrefix:"PRG",display:"Nama_Program",fields:[
+      {name:"ID_Program",label:"ID Program",type:"text",auto:true},
+      {name:"Tahun",label:"Tahun",type:"number",required:true},
+      {name:"Nama_Program",label:"Nama Program",type:"text",required:true},
+      {name:"Ruang_Lingkup",label:"Ruang Lingkup",type:"textarea"},
+      {name:"Frekuensi_Audit",label:"Frekuensi Audit",type:"text"},
+      {name:"Status",label:"Status",type:"enum",options:["Draft","Approved"]},
+      {name:"Disetujui_Oleh",label:"Disetujui Oleh",type:"ref",ref:"Master_Karyawan"}
+    ]},
+    Audit_Jadwal:{label:"Jadwal Audit",group:"planning",key:"ID_Jadwal",idPrefix:"JDW",display:"ID_Jadwal",fields:[
+      {name:"ID_Jadwal",label:"ID Jadwal",type:"text",auto:true},
+      {name:"Program",label:"Program",type:"ref",ref:"Audit_Program_Tahunan"},
+      {name:"Departemen_Proses_Diaudit",label:"Departemen/Proses Diaudit",type:"ref",ref:"Master_Departemen"},
+      {name:"Tgl_Rencana",label:"Tgl Rencana",type:"date"},
+      {name:"Tgl_Aktual",label:"Tgl Aktual",type:"date"},
+      {name:"Jenis_Audit",label:"Jenis Audit",type:"enum",options:["Internal","Eksternal","Surveillance","Sertifikasi","Follow-up"]},
+      {name:"Lead_Auditor",label:"Lead Auditor",type:"ref",ref:"Master_Karyawan"},
+      {name:"Status",label:"Status",type:"enum",options:["Terjadwal","Berlangsung","Selesai","Ditunda"]}
+    ]},
+    Audit_Tim:{label:"Tim Audit",group:"planning",key:"ID_Tim",idPrefix:"TIM",display:"ID_Tim",fields:[
+      {name:"ID_Tim",label:"ID Tim",type:"text",auto:true},
+      {name:"Jadwal",label:"Jadwal",type:"ref",ref:"Audit_Jadwal"},
+      {name:"Anggota_Auditor",label:"Anggota Auditor",type:"ref",ref:"Master_Karyawan"},
+      {name:"Peran",label:"Peran",type:"enum",options:["Lead","Member","Observer"]}
+    ]},
+    Audit_Checklist_Master:{label:"Checklist Audit (Master)",group:"execution",key:"ID_Checklist",idPrefix:"CKM",display:"Nama_Checklist",fields:[
+      {name:"ID_Checklist",label:"ID Checklist",type:"text",auto:true},
+      {name:"Nama_Checklist",label:"Nama Checklist",type:"text",required:true},
+      {name:"Klausul_Terkait",label:"Klausul Terkait",type:"ref",ref:"Master_Klausul_ISO9001"},
+      {name:"Proses_Terkait",label:"Proses Terkait",type:"ref",ref:"Master_Proses_Bisnis"},
+      {name:"Versi",label:"Versi",type:"text"}
+    ]},
+    Audit_Checklist_Detail:{label:"Checklist Audit (Detail)",group:"execution",key:"ID_Item",idPrefix:"CKD",display:"Pertanyaan_Audit",fields:[
+      {name:"ID_Item",label:"ID Item",type:"text",auto:true},
+      {name:"Checklist_Master",label:"Checklist Master",type:"ref",ref:"Audit_Checklist_Master"},
+      {name:"No_Urut",label:"No. Urut",type:"number"},
+      {name:"Pertanyaan_Audit",label:"Pertanyaan Audit",type:"textarea",required:true},
+      {name:"Referensi_Klausul",label:"Referensi Klausul",type:"ref",ref:"Master_Klausul_ISO9001"},
+      {name:"Metode_Verifikasi",label:"Metode Verifikasi",type:"enum",options:["Wawancara","Observasi","Dokumen"]}
+    ]},
+    Audit_Pelaksanaan:{label:"Pelaksanaan Audit",group:"execution",key:"ID_Audit",idPrefix:"PLK",display:"ID_Audit",fields:[
+      {name:"ID_Audit",label:"ID Audit",type:"text",auto:true},
+      {name:"Jadwal",label:"Jadwal",type:"ref",ref:"Audit_Jadwal"},
+      {name:"Tgl_Pelaksanaan",label:"Tgl Pelaksanaan",type:"date"},
+      {name:"Auditor",label:"Auditor",type:"ref",ref:"Master_Karyawan"},
+      {name:"Auditee",label:"Auditee",type:"ref",ref:"Master_Karyawan"},
+      {name:"Checklist_Digunakan",label:"Checklist Digunakan",type:"ref",ref:"Audit_Checklist_Master"},
+      {name:"Catatan_Umum",label:"Catatan Umum",type:"textarea"}
+    ]},
+    Audit_Temuan:{label:"Temuan Audit",group:"execution",key:"ID_Temuan",idPrefix:"TMN",display:"Deskripsi_Temuan",highlight:true,fields:[
+      {name:"ID_Temuan",label:"ID Temuan",type:"text",auto:true},
+      {name:"Audit_Pelaksanaan",label:"Pelaksanaan Audit",type:"ref",ref:"Audit_Pelaksanaan"},
+      {name:"Klausul_Terkait",label:"Klausul Terkait",type:"ref",ref:"Master_Klausul_ISO9001"},
+      {name:"Deskripsi_Temuan",label:"Deskripsi Temuan",type:"textarea",required:true},
+      {name:"Klasifikasi",label:"Klasifikasi",type:"enum",options:["Major NC","Minor NC","Observation","OFI","Positive Practice"]},
+      {name:"Bukti_Objektif",label:"Bukti Objektif",type:"textarea"},
+      {name:"Departemen_Terkait",label:"Departemen Terkait",type:"ref",ref:"Master_Departemen"},
+      {name:"PIC_Tindak_Lanjut",label:"PIC Tindak Lanjut",type:"ref",ref:"Master_Karyawan"},
+      {name:"Batas_Waktu",label:"Batas Waktu",type:"date"},
+      {name:"Status",label:"Status",type:"enum",options:["Open","In Progress","Closed","Verified","Overdue"]},
+      {name:"CAPA_Terkait",label:"CAPA Terkait",type:"ref",ref:"CAPA_Register"}
+    ],overdueField:{dateField:"Batas_Waktu",statusField:"Status",closedValues:["Closed","Verified"]}},
+    Audit_Evidence:{label:"Evidence Audit",group:"execution",key:"ID_Evidence",idPrefix:"EVD",display:"Deskripsi",fields:[
+      {name:"ID_Evidence",label:"ID Evidence",type:"text",auto:true},
+      {name:"Temuan_Terkait",label:"Temuan Terkait",type:"ref",ref:"Audit_Temuan"},
+      {name:"File_Foto",label:"File Foto",type:"file"},
+      {name:"Deskripsi",label:"Deskripsi",type:"text"},
+      {name:"Tgl_Ambil",label:"Tgl Ambil",type:"date"}
+    ]},
+    CAPA_Register:{label:"CAPA Register",group:"capa",key:"ID_CAPA",idPrefix:"CAPA",display:"Deskripsi_Masalah",highlight:true,fields:[
+      {name:"ID_CAPA",label:"ID CAPA",type:"text",auto:true},
+      {name:"Sumber",label:"Sumber",type:"enum",options:["Audit Internal","Audit Eksternal","Komplain Pelanggan","Ketidaksesuaian Produk","Risk Assessment","Lainnya"]},
+      {name:"Referensi_Sumber",label:"Referensi Sumber",type:"text"},
+      {name:"Deskripsi_Masalah",label:"Deskripsi Masalah",type:"textarea",required:true},
+      {name:"Jenis",label:"Jenis",type:"enum",options:["Korektif","Preventif"]},
+      {name:"PIC",label:"PIC",type:"ref",ref:"Master_Karyawan"},
+      {name:"Target_Selesai",label:"Target Selesai",type:"date"},
+      {name:"Status",label:"Status",type:"enum",options:["Open","Analisa","Tindakan","Verifikasi","Closed"]}
+    ],overdueField:{dateField:"Target_Selesai",statusField:"Status",closedValues:["Closed"]}},
+    CAPA_RootCause:{label:"Root Cause Analysis",group:"capa",key:"ID_RCA",idPrefix:"RCA",display:"Analisa_Akar_Masalah",fields:[
+      {name:"ID_RCA",label:"ID RCA",type:"text",auto:true},
+      {name:"CAPA",label:"CAPA",type:"ref",ref:"CAPA_Register",required:true},
+      {name:"Metode",label:"Metode",type:"enum",options:["5 Why","Fishbone","Lainnya"]},
+      {name:"Analisa_Akar_Masalah",label:"Analisa Akar Masalah",type:"textarea"},
+      {name:"Tindakan_Korektif_Diusulkan",label:"Tindakan Korektif Diusulkan",type:"textarea"},
+      {name:"Tindakan_Preventif_Diusulkan",label:"Tindakan Preventif Diusulkan",type:"textarea"}
+    ]},
+    CAPA_Verifikasi:{label:"Verifikasi CAPA",group:"capa",key:"ID_Verifikasi",idPrefix:"VER",display:"ID_Verifikasi",fields:[
+      {name:"ID_Verifikasi",label:"ID Verifikasi",type:"text",auto:true},
+      {name:"CAPA",label:"CAPA",type:"ref",ref:"CAPA_Register",required:true},
+      {name:"Tgl_Verifikasi",label:"Tgl Verifikasi",type:"date"},
+      {name:"Verifikator",label:"Verifikator",type:"ref",ref:"Master_Karyawan"},
+      {name:"Hasil",label:"Hasil",type:"enum",options:["Efektif","Tidak Efektif","Perlu Tindakan Lanjutan"]},
+      {name:"Catatan",label:"Catatan",type:"textarea"}
+    ]},
+    Ketidaksesuaian_Produk_Jasa:{label:"Ketidaksesuaian Produk/Jasa",group:"nc",key:"ID_NC_Produk",idPrefix:"NCP",display:"Deskripsi_Ketidaksesuaian",fields:[
+      {name:"ID_NC_Produk",label:"ID NC Produk",type:"text",auto:true},
+      {name:"Tanggal",label:"Tanggal",type:"date"},
+      {name:"Produk_Jasa_Terkait",label:"Produk/Jasa Terkait",type:"text"},
+      {name:"Deskripsi_Ketidaksesuaian",label:"Deskripsi Ketidaksesuaian",type:"textarea",required:true},
+      {name:"Sumber_Deteksi",label:"Sumber Deteksi",type:"enum",options:["Inspeksi Internal","Komplain Pelanggan","Audit"]},
+      {name:"Disposisi",label:"Disposisi",type:"enum",options:["Rework","Reject","Use As Is","Return to Supplier"]},
+      {name:"CAPA_Terkait",label:"CAPA Terkait",type:"ref",ref:"CAPA_Register"}
+    ]},
+    Komplain_Pelanggan:{label:"Komplain Pelanggan",group:"nc",key:"ID_Komplain",idPrefix:"KPL",display:"Deskripsi_Komplain",fields:[
+      {name:"ID_Komplain",label:"ID Komplain",type:"text",auto:true},
+      {name:"Pelanggan",label:"Pelanggan",type:"ref",ref:"Master_Pelanggan"},
+      {name:"Tgl_Terima",label:"Tgl Terima",type:"date"},
+      {name:"Deskripsi_Komplain",label:"Deskripsi Komplain",type:"textarea",required:true},
+      {name:"Kategori",label:"Kategori",type:"text"},
+      {name:"PIC",label:"PIC",type:"ref",ref:"Master_Karyawan"},
+      {name:"Status",label:"Status",type:"enum",options:["Open","Investigasi","Closed"]},
+      {name:"CAPA_Terkait",label:"CAPA Terkait",type:"ref",ref:"CAPA_Register"}
+    ]},
+    Survey_Kepuasan_Pelanggan:{label:"Survey Kepuasan Pelanggan",group:"nc",key:"ID_Survey",idPrefix:"SVY",display:"ID_Survey",fields:[
+      {name:"ID_Survey",label:"ID Survey",type:"text",auto:true},
+      {name:"Pelanggan",label:"Pelanggan",type:"ref",ref:"Master_Pelanggan"},
+      {name:"Periode",label:"Periode",type:"text"},
+      {name:"Skor_Kepuasan",label:"Skor Kepuasan",type:"number"},
+      {name:"Catatan",label:"Catatan",type:"textarea"}
+    ]},
+    Risk_Register:{label:"Risk Register",group:"risk",key:"ID_Risiko",idPrefix:"RSK",display:"Deskripsi_Risiko_Peluang",highlight:true,fields:[
+      {name:"ID_Risiko",label:"ID Risiko",type:"text",auto:true},
+      {name:"Proses_Terkait",label:"Proses Terkait",type:"ref",ref:"Master_Proses_Bisnis"},
+      {name:"Deskripsi_Risiko_Peluang",label:"Deskripsi Risiko/Peluang",type:"textarea",required:true},
+      {name:"Jenis",label:"Jenis",type:"enum",options:["Risiko","Peluang"]},
+      {name:"Kemungkinan",label:"Kemungkinan (1-5)",type:"number",min:1,max:5},
+      {name:"Dampak",label:"Dampak (1-5)",type:"number",min:1,max:5},
+      {name:"Rencana_Mitigasi",label:"Rencana Mitigasi",type:"textarea"},
+      {name:"PIC",label:"PIC",type:"ref",ref:"Master_Karyawan"},
+      {name:"Status",label:"Status",type:"enum",options:["Open","Monitoring","Closed"]}
+    ],riskCalc:{likelihood:"Kemungkinan",impact:"Dampak"}},
+    Dokumen_Riwayat_Revisi:{label:"Riwayat Revisi Dokumen",group:"doc",key:"ID_Revisi",idPrefix:"REV",display:"No_Revisi",fields:[
+      {name:"ID_Revisi",label:"ID Revisi",type:"text",auto:true},
+      {name:"Dokumen",label:"Dokumen",type:"ref",ref:"Master_Dokumen",required:true},
+      {name:"No_Revisi",label:"No. Revisi",type:"text"},
+      {name:"Tgl_Revisi",label:"Tgl Revisi",type:"date"},
+      {name:"Perubahan",label:"Perubahan",type:"textarea"},
+      {name:"Disetujui_Oleh",label:"Disetujui Oleh",type:"ref",ref:"Master_Karyawan"}
+    ]},
+    Dokumen_Distribusi:{label:"Distribusi Dokumen",group:"doc",key:"ID_Distribusi",idPrefix:"DST",display:"ID_Distribusi",fields:[
+      {name:"ID_Distribusi",label:"ID Distribusi",type:"text",auto:true},
+      {name:"Dokumen",label:"Dokumen",type:"ref",ref:"Master_Dokumen",required:true},
+      {name:"Departemen_Penerima",label:"Departemen Penerima",type:"ref",ref:"Master_Departemen"},
+      {name:"Tgl_Distribusi",label:"Tgl Distribusi",type:"date"},
+      {name:"Format",label:"Format",type:"enum",options:["Hardcopy","Softcopy"]}
+    ]},
+    Rapat_Tinjauan_Manajemen:{label:"Rapat Tinjauan Manajemen",group:"review",key:"ID_Rapat",idPrefix:"RTM",display:"Agenda",fields:[
+      {name:"ID_Rapat",label:"ID Rapat",type:"text",auto:true},
+      {name:"Tanggal",label:"Tanggal",type:"date"},
+      {name:"Peserta",label:"Peserta",type:"refmulti",ref:"Master_Karyawan"},
+      {name:"Agenda",label:"Agenda",type:"textarea"},
+      {name:"Input_Tinjauan",label:"Input Tinjauan",type:"textarea"},
+      {name:"Output_Keputusan",label:"Output Keputusan",type:"textarea"}
+    ]},
+    Tindak_Lanjut_Tinjauan:{label:"Tindak Lanjut Tinjauan",group:"review",key:"ID_TL",idPrefix:"TLT",display:"Item_Tindak_Lanjut",fields:[
+      {name:"ID_TL",label:"ID Tindak Lanjut",type:"text",auto:true},
+      {name:"Rapat",label:"Rapat",type:"ref",ref:"Rapat_Tinjauan_Manajemen"},
+      {name:"Item_Tindak_Lanjut",label:"Item Tindak Lanjut",type:"textarea",required:true},
+      {name:"PIC",label:"PIC",type:"ref",ref:"Master_Karyawan"},
+      {name:"Target_Selesai",label:"Target Selesai",type:"date"},
+      {name:"Status",label:"Status",type:"enum",options:["Open","In Progress","Closed"]}
+    ],overdueField:{dateField:"Target_Selesai",statusField:"Status",closedValues:["Closed"]}},
+    Sasaran_Mutu:{label:"Sasaran Mutu",group:"kpi",key:"ID_Sasaran",idPrefix:"SAS",display:"Deskripsi_Sasaran",fields:[
+      {name:"ID_Sasaran",label:"ID Sasaran",type:"text",auto:true},
+      {name:"Departemen_Proses",label:"Departemen/Proses",type:"ref",ref:"Master_Departemen"},
+      {name:"Deskripsi_Sasaran",label:"Deskripsi Sasaran",type:"textarea",required:true},
+      {name:"Target",label:"Target",type:"text"},
+      {name:"Periode",label:"Periode",type:"text"},
+      {name:"Indikator_Pengukuran",label:"Indikator Pengukuran",type:"text"}
+    ]},
+    Monitoring_KPI:{label:"Monitoring KPI",group:"kpi",key:"ID_Monitoring",idPrefix:"MON",display:"ID_Monitoring",fields:[
+      {name:"ID_Monitoring",label:"ID Monitoring",type:"text",auto:true},
+      {name:"Sasaran",label:"Sasaran",type:"ref",ref:"Sasaran_Mutu",required:true},
+      {name:"Periode",label:"Periode",type:"text"},
+      {name:"Realisasi",label:"Realisasi",type:"text"},
+      {name:"Status_Pencapaian",label:"Status Pencapaian",type:"enum",options:["Tercapai","Tidak Tercapai"]},
+      {name:"Analisa_Catatan",label:"Analisa/Catatan",type:"textarea"}
+    ]},
+    Training_Record:{label:"Training Record",group:"competency",key:"ID_Training",idPrefix:"TRN",display:"Nama_Pelatihan",fields:[
+      {name:"ID_Training",label:"ID Training",type:"text",auto:true},
+      {name:"Karyawan",label:"Karyawan",type:"ref",ref:"Master_Karyawan",required:true},
+      {name:"Nama_Pelatihan",label:"Nama Pelatihan",type:"text",required:true},
+      {name:"Tanggal",label:"Tanggal",type:"date"},
+      {name:"Penyelenggara",label:"Penyelenggara",type:"text"},
+      {name:"Hasil_Sertifikat",label:"Hasil/Sertifikat",type:"file"},
+      {name:"Evaluasi_Efektivitas",label:"Evaluasi Efektivitas",type:"textarea"}
+    ]},
+    Matriks_Kompetensi:{label:"Matriks Kompetensi",group:"competency",key:"ID_Matriks",idPrefix:"MTX",display:"Jabatan",fields:[
+      {name:"ID_Matriks",label:"ID Matriks",type:"text",auto:true},
+      {name:"Jabatan",label:"Jabatan",type:"text",required:true},
+      {name:"Kompetensi_Dibutuhkan",label:"Kompetensi Dibutuhkan",type:"textarea"},
+      {name:"Level_Minimum",label:"Level Minimum",type:"text"}
+    ]},
+    Kalibrasi_Alat_Ukur:{label:"Kalibrasi Alat Ukur",group:"calibration",key:"ID_Kalibrasi",idPrefix:"KAL",display:"ID_Kalibrasi",fields:[
+      {name:"ID_Kalibrasi",label:"ID Kalibrasi",type:"text",auto:true},
+      {name:"Alat",label:"Alat",type:"ref",ref:"Master_Alat_Mesin",required:true},
+      {name:"Tgl_Kalibrasi",label:"Tgl Kalibrasi",type:"date"},
+      {name:"Lembaga_Kalibrasi",label:"Lembaga Kalibrasi",type:"text"},
+      {name:"Hasil",label:"Hasil",type:"text"},
+      {name:"Tgl_Jatuh_Tempo_Berikutnya",label:"Tgl Jatuh Tempo Berikutnya",type:"date"},
+      {name:"Sertifikat",label:"Sertifikat",type:"file"}
+    ],overdueField:{dateField:"Tgl_Jatuh_Tempo_Berikutnya",statusField:null,closedValues:[]}},
+    Evaluasi_Supplier:{label:"Evaluasi Supplier",group:"supplier",key:"ID_Evaluasi",idPrefix:"EVS",display:"ID_Evaluasi",fields:[
+      {name:"ID_Evaluasi",label:"ID Evaluasi",type:"text",auto:true},
+      {name:"Supplier",label:"Supplier",type:"ref",ref:"Master_Supplier",required:true},
+      {name:"Periode",label:"Periode",type:"text"},
+      {name:"Kriteria_Penilaian",label:"Kriteria Penilaian",type:"textarea"},
+      {name:"Skor",label:"Skor",type:"number"},
+      {name:"Kategori_Hasil",label:"Kategori Hasil",type:"enum",options:["A","B","C"]},
+      {name:"Tindak_Lanjut",label:"Tindak Lanjut",type:"textarea"}
+    ]},
+    Sertifikasi_ISO:{label:"Sertifikasi ISO",group:"cert",key:"ID_Sertifikat",idPrefix:"CRT",display:"No_Sertifikat",fields:[
+      {name:"ID_Sertifikat",label:"ID Sertifikat",type:"text",auto:true},
+      {name:"Badan_Sertifikasi",label:"Badan Sertifikasi",type:"text"},
+      {name:"No_Sertifikat",label:"No. Sertifikat",type:"text"},
+      {name:"Ruang_Lingkup",label:"Ruang Lingkup",type:"textarea"},
+      {name:"Tgl_Terbit",label:"Tgl Terbit",type:"date"},
+      {name:"Tgl_Kadaluarsa",label:"Tgl Kadaluarsa",type:"date"},
+      {name:"File_Sertifikat",label:"File Sertifikat",type:"file"}
+    ],overdueField:{dateField:"Tgl_Kadaluarsa",statusField:null,closedValues:[]}}
+  }
+};
 
-  <!-- DYNAMIC MODAL FORM -->
-  <div class="modal" id="dataModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modalTitle">Form Data</h3>
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:22px; color:var(--text-muted);" onclick="closeModal()"></i>
-      </div>
-      <form id="dynamicForm" onsubmit="handleFormSubmit(event)">
-        <div class="modal-grid" id="formFields"></div>
-        <br>
-        <button type="submit" class="btn-lux" id="btnSave"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
-      </form>
-    </div>
-  </div>
+// ==========================================================================
+// STATE + DOM refs
+// ==========================================================================
+const STATE = { view:"dashboard", currentTable:null, allData:{}, lastSync:null, tableSearch:"" };
+const $content = document.getElementById("content");
+const $sidebar = document.getElementById("sidebar");
+const $modalRoot = document.getElementById("modalRoot");
+const $toastRoot = document.getElementById("toastRoot");
+const $syncIndicator = document.getElementById("syncIndicator");
+const MONTHS_ID = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
 
-  <script>
-    // =========================================================
-    // PASTIKAN GANTI LINK INI DENGAN URL WEB APP MILIK ANDA
-    // =========================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxqEGZ0b8GqWM-t8lInMU9gXiG0rIyPhHq_28EwvukZAvUgyqgM364AhYA2p6n8SE6q/exec";
+// ==========================================================================
+// UTIL
+// ==========================================================================
+// Pembungkus aman untuk lucide.createIcons(). Jika library ikon dari CDN gagal
+// dimuat/berubah versi, ini mencegah error tersebut menghentikan fungsi lain
+// (mis. tombol "Simpan & Sambungkan" jadi terlihat tidak bereaksi sama sekali).
+function renderIcons(){
+  try{
+    if(window.lucide && typeof lucide.createIcons==="function") window.lucide.createIcons();
+  }catch(err){
+    console.warn("Ikon gagal dirender (diabaikan agar aplikasi tetap jalan):", err);
+  }
+}
+function esc(v){
+  return String(v===undefined||v===null?"":v).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+  });
+}
+function truncate(s,n){ s=String(s||""); return s.length>n ? s.slice(0,n)+"…" : s; }
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function fmtDate(v){
+  if(!v) return "—";
+  const p = String(v).split("-");
+  if(p.length!==3) return esc(v);
+  return parseInt(p[2],10)+" "+MONTHS_ID[parseInt(p[1],10)-1]+" "+p[0];
+}
+function timeAgo(d){
+  const s = Math.floor((Date.now()-d.getTime())/1000);
+  if(s<10) return "baru saja";
+  if(s<60) return s+" detik lalu";
+  const m = Math.floor(s/60);
+  if(m<60) return m+" menit lalu";
+  const h = Math.floor(m/60);
+  return h+" jam lalu";
+}
+function debounce(fn,ms){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a),ms); }; }
+function csvEscape(v){ v = v===undefined||v===null?"":String(v); if(/[",\n]/.test(v)) v = '"'+v.replace(/"/g,'""')+'"'; return v; }
 
-    let dbData = {};
-    let currentTab = 'Master Audit';
-    let editingRowIndex = null;
-    let currentUserRole = '';
+function resolveRef(tableName,key){
+  if(!key) return "";
+  const t = SCHEMA.tables[tableName]; if(!t) return key;
+  const rows = STATE.allData[tableName]||[];
+  const row = rows.find(r=>String(r[t.key])===String(key));
+  return row ? (row[t.display]||key) : key;
+}
+function resolveRefMulti(tableName,val){
+  if(!val) return [];
+  return String(val).split(",").map(s=>s.trim()).filter(Boolean).map(k=>resolveRef(tableName,k));
+}
+const BADGE_MAP = {
+  "Major NC":"rose","Minor NC":"amber","Observation":"indigo","OFI":"cyan","Positive Practice":"emerald",
+  "Tinggi":"rose","Sedang":"amber","Rendah":"emerald",
+  "A":"emerald","B":"amber","C":"rose",
+  "Efektif":"emerald","Tidak Efektif":"rose","Perlu Tindakan Lanjutan":"amber",
+  "Tercapai":"emerald","Tidak Tercapai":"rose",
+  "Closed":"emerald","Verified":"emerald","Approved":"emerald","Ya":"emerald",
+  "Open":"indigo","Draft":"indigo","Terjadwal":"indigo",
+  "In Progress":"amber","Berlangsung":"amber","Tindakan":"amber","Analisa":"amber","Review":"amber","Investigasi":"amber","Verifikasi":"amber",
+  "Overdue":"rose","Ditunda":"rose","Reject":"rose","Obsolete":"rose","Tidak":"rose"
+};
+function badgeClass(v){
+  const s = String(v||"").trim();
+  if(BADGE_MAP[s]) return BADGE_MAP[s];
+  const l = s.toLowerCase();
+  if(l.includes("overdue")||l.includes("terlambat")) return "rose";
+  return "slate";
+}
 
-    // SCRIPT LIVE CLOCK
-    function updateDateTime() {
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      document.getElementById('liveDateTime').innerText = now.toLocaleDateString('id-ID', options);
-    }
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-
-    async function callAPI(payload) {
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        return await response.json();
-      } catch (error) {
-        console.error("API Error:", error);
-        alert("Gagal terhubung ke Database. Pastikan API URL sudah benar.");
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", async function() {
-      if(API_URL.includes("MASUKKAN_LINK")) return alert("PENTING: Anda belum memasukkan API_URL di Script HTML!");
-      const res = await callAPI({ action: 'getUsers' });
-      if (res && res.success) populateUserDropdown(res.data);
+// ==========================================================================
+// API
+// ==========================================================================
+function fetchWithTimeout(url, options){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), CONFIG.FETCH_TIMEOUT_MS);
+  return fetch(url, Object.assign({}, options, {signal:ctrl.signal}))
+    .catch(err=>{
+      if(err.name==="AbortError") throw new Error("Waktu koneksi ke server habis (>"+Math.round(CONFIG.FETCH_TIMEOUT_MS/1000)+" detik). Periksa deployment Apps Script Anda.");
+      throw new Error("Gagal menghubungi server. Periksa koneksi internet atau URL Web App.");
+    })
+    .finally(()=>clearTimeout(timer));
+}
+const api = {
+  async get(action, params){
+    if(!CONFIG.API_URL) throw new Error("URL Web App belum diisi.");
+    const url = new URL(CONFIG.API_URL);
+    url.searchParams.set("action", action);
+    if(params) Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+    const res = await fetchWithTimeout(url.toString());
+    let json;
+    try{ json = await res.json(); }
+    catch(e){ throw new Error("Respons server tidak valid (bukan JSON). Pastikan Code.gs sudah di-deploy ulang sebagai Web App."); }
+    if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
+    return json;
+  },
+  async post(payload){
+    if(!CONFIG.API_URL) throw new Error("URL Web App belum diisi.");
+    const res = await fetchWithTimeout(CONFIG.API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
     });
+    let json;
+    try{ json = await res.json(); }
+    catch(e){ throw new Error("Respons server tidak valid (bukan JSON). Pastikan Code.gs sudah di-deploy ulang sebagai Web App."); }
+    if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
+    return json;
+  }
+};
 
-    function populateUserDropdown(users) {
-      const select = document.getElementById('loginUser');
-      if (users.length === 0) { select.innerHTML = '<option value="">Data user kosong</option>'; return; }
-      select.innerHTML = '<option value="">-- Pilih Username --</option>';
-      users.forEach(user => {
-        let opt = document.createElement('option');
-        opt.value = user; opt.textContent = user;
-        select.appendChild(opt);
-      });
+async function loadAll(silent){
+  if(!CONFIG.API_URL) return;
+  try{
+    const res = await api.get("getAll");
+    STATE.allData = res.data;
+    STATE.lastSync = new Date();
+    updateSyncIndicator(true);
+  }catch(err){
+    updateSyncIndicator(false);
+    if(!silent) toast("Gagal memuat data: "+err.message,"error");
+  }
+}
+function updateSyncIndicator(ok){
+  $syncIndicator.className = "sync-pill "+(ok?"sync-ok":"sync-off");
+  $syncIndicator.innerHTML = '<span class="dot"></span>'+(ok && STATE.lastSync ? "Tersinkron · "+timeAgo(STATE.lastSync) : "Tidak tersambung");
+}
+setInterval(()=>{ if(STATE.lastSync) updateSyncIndicator(true); }, 15000);
+
+async function pollTick(){
+  if(!CONFIG.API_URL) return;
+  await loadAll(true);
+  if(STATE.view==="dashboard") renderDashboard();
+  else if(STATE.view==="table" && STATE.currentTable) renderTableView(STATE.currentTable);
+}
+
+// ==========================================================================
+// TOAST
+// ==========================================================================
+function toast(msg,type){
+  const el = document.createElement("div");
+  el.className = "toast toast-"+(type||"info");
+  const iconName = type==="success"?"check-circle":type==="error"?"alert-circle":"info";
+  el.innerHTML = '<i data-lucide="'+iconName+'"></i><span>'+esc(msg)+"</span>";
+  $toastRoot.appendChild(el);
+  renderIcons();
+  requestAnimationFrame(()=>el.classList.add("show"));
+  setTimeout(()=>{ el.classList.remove("show"); setTimeout(()=>el.remove(),300); }, 3800);
+}
+
+// ==========================================================================
+// SIDEBAR
+// ==========================================================================
+const NAV_ACCENTS = ["accent-blue","accent-purple","accent-pink","accent-orange","accent-green"];
+function renderSidebar(){
+  let html = '<div class="brand"><div class="brand-mark"><i data-lucide="shield-check"></i></div>'+
+    '<div><div class="brand-title">QMS ISO 9001</div><div class="brand-sub">PT Murinda Sentra Baja</div></div></div>';
+  html += '<button class="nav-item '+(STATE.view==="dashboard"?"active":"")+'" data-action="nav-dashboard"><i data-lucide="layout-dashboard"></i>Dashboard</button>';
+  html += '<div class="sidebar-search"><i data-lucide="search"></i><input id="sidebarSearch" placeholder="Cari modul / tabel..."/></div>';
+  html += '<div id="navGroups">';
+  SCHEMA.groups.forEach((g,gi)=>{
+    const tables = Object.entries(SCHEMA.tables).filter(([k,t])=>t.group===g.key);
+    const isOpen = STATE.currentTable && SCHEMA.tables[STATE.currentTable] && SCHEMA.tables[STATE.currentTable].group===g.key;
+    const accent = NAV_ACCENTS[gi % NAV_ACCENTS.length];
+    html += '<div class="nav-group'+(isOpen?" open":"")+'" data-group="'+g.key+'">'+
+      '<button class="nav-group-header" data-action="toggle-group" data-group="'+g.key+'">'+
+        '<span class="nav-group-label"><span class="group-icon-chip '+accent+'"><i data-lucide="'+g.icon+'"></i></span>'+esc(g.label)+'</span>'+
+        '<i data-lucide="chevron-down" class="chev"></i></button>'+
+      '<div class="nav-group-items">'+
+      tables.map(([k,t])=>'<button class="nav-item nav-subitem '+(STATE.currentTable===k?"active":"")+'" data-action="nav-table" data-table="'+k+'">'+esc(t.label)+'</button>').join("")+
+      '</div></div>';
+  });
+  html += "</div>";
+  $sidebar.innerHTML = html;
+  renderIcons();
+  document.getElementById("sidebarSearch").addEventListener("input", e=>filterSidebar(e.target.value));
+}
+function filterSidebar(q){
+  q = q.trim().toLowerCase();
+  document.querySelectorAll(".nav-group").forEach(g=>{
+    let any=false;
+    g.querySelectorAll(".nav-subitem").forEach(item=>{
+      const match = !q || item.textContent.toLowerCase().includes(q);
+      item.style.display = match?"":"none";
+      if(match && q) any=true;
+    });
+    if(q) g.classList.toggle("open", any);
+  });
+}
+function toggleGroup(key){
+  const g = document.querySelector('.nav-group[data-group="'+key+'"]');
+  if(g) g.classList.toggle("open");
+}
+function setSidebarActive(){
+  document.querySelectorAll(".nav-item").forEach(el=>el.classList.remove("active"));
+  if(STATE.view==="dashboard"){
+    document.querySelector('[data-action="nav-dashboard"]').classList.add("active");
+  } else if(STATE.currentTable){
+    const el = document.querySelector('[data-action="nav-table"][data-table="'+STATE.currentTable+'"]');
+    if(el){ el.classList.add("active"); const grp = el.closest(".nav-group"); if(grp) grp.classList.add("open"); }
+  }
+}
+
+// ==========================================================================
+// DASHBOARD
+// ==========================================================================
+function computeDashboardClient(){
+  const T = STATE.allData;
+  const temuan = T.Audit_Temuan||[], capa = T.CAPA_Register||[], risk = T.Risk_Register||[],
+        jadwal = T.Audit_Jadwal||[], kalibrasi = T.Kalibrasi_Alat_Ukur||[], sertifikat = T.Sertifikasi_ISO||[],
+        komplain = T.Komplain_Pelanggan||[];
+  const today = new Date(); const in30 = new Date(); in30.setDate(in30.getDate()+30);
+  const in30Str = isoDate(in30);
+  return {
+    temuan_open: temuan.filter(r=>["Open","In Progress"].includes(r.Status)).length,
+    temuan_overdue: temuan.filter(r=>r._overdue).length,
+    temuan_major: temuan.filter(r=>r.Klasifikasi==="Major NC" && !["Closed","Verified"].includes(r.Status)).length,
+    temuan_total: temuan.length,
+    capa_open: capa.filter(r=>r.Status!=="Closed").length,
+    capa_overdue: capa.filter(r=>r._overdue).length,
+    capa_total: capa.length,
+    risk_tinggi: risk.filter(r=>r.Level_Risiko_Label==="Tinggi" && r.Status!=="Closed").length,
+    audit_bulan_ini: jadwal.filter(r=>{ if(!r.Tgl_Rencana) return false; const d=new Date(r.Tgl_Rencana); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).length,
+    kalibrasi_jatuh_tempo: kalibrasi.filter(r=> r.Tgl_Jatuh_Tempo_Berikutnya && String(r.Tgl_Jatuh_Tempo_Berikutnya)<=in30Str).length,
+    sertifikat_akan_expired: sertifikat.filter(r=> r.Tgl_Kadaluarsa && String(r.Tgl_Kadaluarsa)<=in30Str).length,
+    komplain_open: komplain.filter(r=>r.Status!=="Closed").length
+  };
+}
+function computeCompletionScore(){
+  const temuan = STATE.allData.Audit_Temuan||[], capa = STATE.allData.CAPA_Register||[];
+  const total = temuan.length + capa.length;
+  if(total===0) return null;
+  const done = temuan.filter(r=>["Closed","Verified"].includes(r.Status)).length + capa.filter(r=>r.Status==="Closed").length;
+  return Math.round(done/total*100);
+}
+function gaugeSvg(score){
+  const r=70, c=2*Math.PI*r;
+  if(score===null){
+    return '<svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="'+r+'" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14"/></svg>'+
+      '<div class="gauge-center"><div class="gauge-score" style="color:var(--text-3)">—</div><div class="gauge-score-sub">Belum ada data</div></div>';
+  }
+  const color = score>=80?"var(--emerald)":score>=50?"var(--amber)":"var(--rose)";
+  const offset = c*(1-score/100);
+  return '<svg viewBox="0 0 180 180">'+
+    '<circle cx="90" cy="90" r="'+r+'" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14"/>'+
+    '<circle cx="90" cy="90" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round" '+
+    'stroke-dasharray="'+c+'" stroke-dashoffset="'+offset+'" transform="rotate(-90 90 90)" style="transition:stroke-dashoffset .6s ease"/>'+
+    "</svg>"+
+    '<div class="gauge-center"><div class="gauge-score" style="color:'+color+'">'+score+"%</div><div class=\"gauge-score-sub\">SELESAI</div></div>";
+}
+function highlightChips(){
+  const items = Object.entries(SCHEMA.tables).filter(([k,t])=>t.highlight);
+  return items.map(([k,t])=>'<button class="quick-chip" data-action="nav-table" data-table="'+k+'">'+esc(t.label)+"</button>").join("");
+}
+function barChart(rows, field, options, colorFn){
+  const counts = options.map(o=>rows.filter(r=>r[field]===o).length);
+  const max = Math.max(1,...counts);
+  if(rows.length===0) return '<div class="chart-empty">Belum ada data.</div>';
+  return options.map((o,i)=>{
+    const c = colorFn(o);
+    return '<div class="bar-row"><div class="bar-label">'+esc(o)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+(counts[i]/max*100)+'%;background:var(--'+c+')"></div></div><div class="bar-value">'+counts[i]+"</div></div>";
+  }).join("");
+}
+function renderDashboard(){
+  STATE.view = "dashboard"; STATE.currentTable = null;
+  const d = computeDashboardClient();
+  const score = computeCompletionScore();
+  const temuan = STATE.allData.Audit_Temuan||[], capaRows = STATE.allData.CAPA_Register||[];
+
+  let banner = "";
+  if(!CONFIG.API_URL){
+    banner = '<div class="glass setup-banner"><i data-lucide="plug-zap"></i><p><b>Belum tersambung ke Google Sheets.</b> Klik ikon pengaturan di kanan atas untuk menempelkan URL Web App Apps Script yang sudah di-deploy.</p></div>';
+  }
+
+  $content.innerHTML = banner + `
+    <div class="view-header">
+      <div><div class="breadcrumb">Ringkasan</div><h1>Dashboard QMS</h1></div>
+      <div class="view-actions">
+        <button class="btn btn-ghost" data-action="refresh"><i data-lucide="refresh-cw"></i>Refresh</button>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="glass hero-gauge">
+        <div class="gauge-wrap">${gaugeSvg(score)}</div>
+        <div class="gauge-label">Skor Penyelesaian Tindak Lanjut</div>
+        <div class="gauge-sub">${score===null?"Belum ada temuan/CAPA tercatat":"dari "+(d.temuan_total+d.capa_total)+" total temuan &amp; CAPA"}</div>
+        <div class="quick-links">${highlightChips()}</div>
+      </div>
+      <div class="kpi-grid">
+        ${kpiCard("alert-triangle","Temuan Open",d.temuan_open,"rose","Audit_Temuan")}
+        ${kpiCard("clock-alert","Temuan Terlambat",d.temuan_overdue,"rose","Audit_Temuan")}
+        ${kpiCard("flame","Major NC Aktif",d.temuan_major,"amber","Audit_Temuan")}
+        ${kpiCard("wrench","CAPA Open",d.capa_open,"indigo","CAPA_Register")}
+        ${kpiCard("clock-alert","CAPA Terlambat",d.capa_overdue,"rose","CAPA_Register")}
+        ${kpiCard("shield-alert","Risiko Level Tinggi",d.risk_tinggi,"amber","Risk_Register")}
+        ${kpiCard("calendar-check","Audit Bulan Ini",d.audit_bulan_ini,"cyan","Audit_Jadwal")}
+        ${kpiCard("gauge","Kalibrasi Jatuh Tempo",d.kalibrasi_jatuh_tempo,"amber","Kalibrasi_Alat_Ukur")}
+        ${kpiCard("award","Sertifikat Akan Expired",d.sertifikat_akan_expired,"amber","Sertifikasi_ISO")}
+        ${kpiCard("message-square-warning","Komplain Open",d.komplain_open,"indigo","Komplain_Pelanggan")}
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="glass chart-card"><h3>Temuan Berdasarkan Klasifikasi</h3>${barChart(temuan,"Klasifikasi",["Major NC","Minor NC","Observation","OFI","Positive Practice"],badgeClass)}</div>
+      <div class="glass chart-card"><h3>Status CAPA</h3>${barChart(capaRows,"Status",["Open","Analisa","Tindakan","Verifikasi","Closed"],badgeClass)}</div>
+    </div>
+  `;
+  renderIcons();
+  setSidebarActive();
+}
+function kpiCard(icon,label,value,color,table){
+  return '<div class="kpi-card kpi-'+color+'" data-action="nav-table" data-table="'+table+'">'+
+    '<div class="kpi-icon"><i data-lucide="'+icon+'"></i></div>'+
+    '<div class="kpi-value">'+value+'</div><div class="kpi-label">'+esc(label)+"</div></div>";
+}
+
+// ==========================================================================
+// TABLE VIEW
+// ==========================================================================
+function buildColumns(table){
+  const cols = table.fields.filter(f=>f.type!=="file" || true).map(f=>({name:f.name,label:f.label,type:f.type,ref:f.ref}));
+  if(table.riskCalc) cols.push({name:"Level_Risiko_Label",label:"Level Risiko",type:"computed_risk"});
+  if(table.overdueField) cols.push({name:"_overdue",label:"Keterangan Waktu",type:"computed_overdue"});
+  return cols;
+}
+function renderCell(col,row){
+  switch(col.type){
+    case "ref": return row[col.name] ? esc(resolveRef(col.ref,row[col.name])) : "—";
+    case "refmulti": { const arr=resolveRefMulti(col.ref,row[col.name]); return arr.length? arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join(""):"—"; }
+    case "enum": return row[col.name] ? '<span class="badge badge-'+badgeClass(row[col.name])+'">'+esc(row[col.name])+"</span>" : "—";
+    case "enumlist": { const arr=String(row[col.name]||"").split(",").map(s=>s.trim()).filter(Boolean); return arr.length? arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join(""):"—"; }
+    case "yesno": return row[col.name]==="Ya" ? '<span class="badge badge-emerald">Ya</span>' : row[col.name]==="Tidak" ? '<span class="badge badge-slate">Tidak</span>' : "—";
+    case "date": return fmtDate(row[col.name]);
+    case "file": return row[col.name] ? '<a class="file-link" href="'+esc(row[col.name])+'" target="_blank" rel="noopener"><i data-lucide="paperclip"></i>Lihat</a>' : "—";
+    case "number": return (row[col.name]!==undefined && row[col.name]!=="") ? row[col.name] : "—";
+    case "textarea": { const v=row[col.name]||""; return v? '<span title="'+esc(v)+'">'+esc(truncate(v,70))+"</span>" : "—"; }
+    case "computed_risk": { const l=row.Level_Risiko_Label; return l && l!=="-" ? '<span class="badge badge-'+badgeClass(l)+'">'+esc(l)+" ("+row.Level_Risiko+")</span>" : "—"; }
+    case "computed_overdue": {
+      const cfgRow = row; if(!cfgRow) return "—";
+      const hasDate = true;
+      if(row._overdue) return '<span class="badge badge-rose">Terlambat</span>';
+      return '<span class="badge badge-emerald">Sesuai Jadwal</span>';
     }
+    default: return row[col.name] ? esc(row[col.name]) : "—";
+  }
+}
+function renderTableView(tableName){
+  STATE.view = "table"; STATE.currentTable = tableName;
+  const table = SCHEMA.tables[tableName];
+  const columns = buildColumns(table);
+  const group = SCHEMA.groups.find(g=>g.key===table.group);
 
-    const sheetSchemas = {
-      'Master Audit': ['ID Audit', 'Tanggal', 'Standar', 'Lokasi', 'ID Auditee', 'Lead Auditor', 'Status'],
-      'Checklist_ISO': ['ID Checklist', 'Klausul', 'Sub Klausul', 'Pertanyaan', 'Kategori'],
-      'Auditee': ['ID Auditee', 'Departemen', 'PIC', 'Email'],
-      'Auditor': ['ID Auditor', 'Nama', 'Jabatan', 'Email'],
-      'Hasil_Audit': ['ID Hasil', 'ID Audit', 'ID Checklist', 'Status', 'Bukti', 'Auditor', 'Tanggal'],
-      'Temuan': ['ID Temuan', 'ID Hasil', 'Jenis', 'Deskripsi', 'Severity'],
-      'Corrective Action': ['ID CAR', 'ID Temuan', 'Akar Penyebab', 'Action', 'PIC', 'Due Date', 'Status'],
-      'Lampiran': ['ID Lampiran', 'ID Hasil', 'Nama', 'File URL']
-    };
+  $content.innerHTML = `
+    <div class="view-header">
+      <div><div class="breadcrumb">${esc(group.label)}</div><h1>${esc(table.label)}</h1></div>
+      <div class="view-actions">
+        <div class="search-box"><i data-lucide="search"></i><input id="tableSearchInput" placeholder="Cari di ${esc(table.label)}..." value="${esc(STATE.tableSearch)}"/></div>
+        <button class="btn btn-ghost" data-action="export-csv" data-table="${tableName}"><i data-lucide="download"></i>Export CSV</button>
+        <button class="btn btn-primary" data-action="add-record" data-table="${tableName}"><i data-lucide="plus"></i>Tambah Data</button>
+      </div>
+    </div>
+    <div class="glass table-wrap">
+      <table>
+        <thead><tr>${columns.map(c=>"<th>"+esc(c.label)+"</th>").join("")}<th class="col-actions">Aksi</th></tr></thead>
+        <tbody id="tbody-${tableName}"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="tableFooter-${tableName}"></div>
+  `;
+  refreshTableRows(tableName, columns);
+  const input = document.getElementById("tableSearchInput");
+  input.addEventListener("input", debounce(e=>{ STATE.tableSearch = e.target.value; refreshTableRows(tableName, columns); }, 220));
+  renderIcons();
+  setSidebarActive();
+}
+function refreshTableRows(tableName, columns){
+  const table = SCHEMA.tables[tableName];
+  const rows = (STATE.allData[tableName]||[]).slice();
+  const q = STATE.tableSearch.trim().toLowerCase();
+  const filtered = q ? rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(q))) : rows;
+  const display = filtered.slice().reverse();
+  const tbody = document.getElementById("tbody-"+tableName);
+  const footer = document.getElementById("tableFooter-"+tableName);
+  if(!tbody) return;
+  if(display.length===0){
+    tbody.innerHTML = '<tr><td colspan="'+(columns.length+1)+'" class="empty-state">'+
+      (rows.length===0 ? "Belum ada data. Klik “Tambah Data” untuk mulai mengisi." : "Tidak ada data yang cocok dengan pencarian.")+"</td></tr>";
+  } else {
+    tbody.innerHTML = display.map(r=>{
+      const keyVal = r[table.key];
+      return '<tr class="'+(r._overdue?"row-overdue":"")+'">'+
+        columns.map(c=>"<td>"+renderCell(c,r)+"</td>").join("")+
+        '<td class="col-actions">'+
+        '<button class="icon-btn" data-action="edit-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Edit"><i data-lucide="pencil"></i></button> '+
+        '<button class="icon-btn icon-btn-danger" data-action="delete-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Hapus"><i data-lucide="trash-2"></i></button>'+
+        "</td></tr>";
+    }).join("");
+  }
+  if(footer) footer.textContent = display.length+" dari "+rows.length+" data";
+  renderIcons();
+}
 
-    const relationships = {
-      'Master Audit': { 'ID Auditee': { sheet: 'Auditee', key: 'ID Auditee', label: 'Departemen' }, 'Lead Auditor': { sheet: 'Auditor', key: 'ID Auditor', label: 'Nama' } },
-      'Hasil_Audit': { 'ID Audit': { sheet: 'Master Audit', key: 'ID Audit', label: 'ID Audit' }, 'ID Checklist': { sheet: 'Checklist_ISO', key: 'ID Checklist', label: 'Pertanyaan' }, 'Auditor': { sheet: 'Auditor', key: 'ID Auditor', label: 'Nama' } },
-      'Temuan': { 'ID Hasil': { sheet: 'Hasil_Audit', key: 'ID Hasil', label: 'ID Hasil' } },
-      'Corrective Action': { 'ID Temuan': { sheet: 'Temuan', key: 'ID Temuan', label: 'Jenis' }, 'PIC': { sheet: 'Auditee', key: 'PIC', label: 'PIC' } },
-      'Lampiran': { 'ID Hasil': { sheet: 'Hasil_Audit', key: 'ID Hasil', label: 'ID Hasil' } }
-    };
+// ==========================================================================
+// MODAL — FORM RECORD
+// ==========================================================================
+function fieldInputHtml(table, field, record, isEdit){
+  const val = record ? record[field.name] : "";
+  const isKey = field.name === table.key;
+  const req = field.required ? '<span class="req">*</span>' : "";
+  const lockedKey = isKey && (field.auto || isEdit);
+  let input = "";
+  switch(field.type){
+    case "text": case "email":
+      input = '<input type="'+(field.type==="email"?"email":"text")+'" name="'+field.name+'" value="'+esc(val)+'" '+(lockedKey?"disabled":"")+' '+(isKey&&!field.auto&&!isEdit?"required":(field.required?"required":""))+' placeholder="'+(field.note?esc(field.note):(isKey&&field.auto?"(dibuat otomatis)":""))+'"/>';
+      break;
+    case "number":
+      input = '<input type="number" name="'+field.name+'" value="'+(val!==undefined&&val!==null?val:"")+'" '+(field.min!==undefined?'min="'+field.min+'"':"")+' '+(field.max!==undefined?'max="'+field.max+'"':"")+' '+(field.required?"required":"")+'/>';
+      break;
+    case "date":
+      input = '<input type="date" name="'+field.name+'" value="'+esc(val)+'" '+(field.required?"required":"")+'/>';
+      break;
+    case "textarea":
+      input = '<textarea name="'+field.name+'" '+(field.required?"required":"")+'>'+esc(val)+"</textarea>";
+      break;
+    case "enum": {
+      const opts = field.options.map(o=>'<option value="'+esc(o)+'" '+(o===val?"selected":"")+'>'+esc(o)+"</option>").join("");
+      input = '<select name="'+field.name+'" '+(field.required?"required":"")+'><option value="">— pilih —</option>'+opts+"</select>";
+      break;
+    }
+    case "yesno":
+      input = '<select name="'+field.name+'"><option value="">— pilih —</option><option value="Ya" '+(val==="Ya"?"selected":"")+'>Ya</option><option value="Tidak" '+(val==="Tidak"?"selected":"")+'>Tidak</option></select>';
+      break;
+    case "enumlist": {
+      const selected = String(val||"").split(",").map(s=>s.trim());
+      const boxes = field.options.map(o=>'<label class="chk"><input type="checkbox" name="'+field.name+'[]" value="'+esc(o)+'" '+(selected.includes(o)?"checked":"")+'/> '+esc(o)+"</label>").join("");
+      input = '<div class="checklist">'+boxes+"</div>";
+      break;
+    }
+    case "ref": {
+      const refT = SCHEMA.tables[field.ref];
+      const opts = (STATE.allData[field.ref]||[]).map(o=>'<option value="'+esc(o[refT.key])+'" '+(String(o[refT.key])===String(val)?"selected":"")+'>'+esc(o[refT.display]||o[refT.key])+"</option>").join("");
+      input = '<select name="'+field.name+'" '+(field.required?"required":"")+'><option value="">— pilih '+esc(refT.label)+' —</option>'+opts+"</select>";
+      break;
+    }
+    case "refmulti": {
+      const refT = SCHEMA.tables[field.ref];
+      const selected = String(val||"").split(",").map(s=>s.trim());
+      const boxes = (STATE.allData[field.ref]||[]).map(o=>{
+        const kv = o[refT.key];
+        return '<label class="chk"><input type="checkbox" name="'+field.name+'[]" value="'+esc(kv)+'" '+(selected.includes(String(kv))?"checked":"")+'/> '+esc(o[refT.display]||kv)+"</label>";
+      }).join("");
+      input = '<div class="checklist">'+(boxes||'<span class="hint">Belum ada data '+esc(refT.label)+'</span>')+"</div>";
+      break;
+    }
+    case "file":
+      input = '<div class="file-field">'+
+        (val ? '<a class="file-link-existing" href="'+esc(val)+'" target="_blank" rel="noopener">File saat ini &rarr;</a>' : "")+
+        '<input type="file" data-file-field="'+field.name+'"/>'+
+        '<input type="hidden" name="'+field.name+'" value="'+esc(val)+'"/>'+
+        "</div>";
+      break;
+    default:
+      input = '<input type="text" name="'+field.name+'" value="'+esc(val)+'"/>';
+  }
+  const full = (field.type==="textarea"||field.type==="enumlist"||field.type==="refmulti"||field.type==="file") ? " full" : "";
+  return '<div class="form-group'+full+'"><label>'+esc(field.label)+req+"</label>"+input+"</div>";
+}
+function openRecordModal(tableName, keyValue){
+  const table = SCHEMA.tables[tableName];
+  const isEdit = !!keyValue;
+  const record = isEdit ? (STATE.allData[tableName]||[]).find(r=>String(r[table.key])===String(keyValue)) : {};
+  const fieldsHtml = table.fields.map(f=>fieldInputHtml(table,f,record,isEdit)).join("");
+  $modalRoot.innerHTML = `
+    <div class="modal-overlay" data-action="close-modal">
+      <div class="modal glass" onclick="event.stopPropagation()">
+        <div class="modal-header"><h2>${isEdit?"Edit":"Tambah"} — ${esc(table.label)}</h2>
+          <button class="icon-btn" data-action="close-modal"><i data-lucide="x"></i></button></div>
+        <div class="modal-body"><form id="recordForm">${fieldsHtml}</form></div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button class="btn btn-primary" id="saveRecordBtn" data-action="save-record" data-table="${tableName}" data-key="${esc(keyValue||"")}">
+            <i data-lucide="save"></i>${isEdit?"Simpan Perubahan":"Simpan"}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  renderIcons();
+}
+function closeModal(){ $modalRoot.innerHTML = ""; }
 
-    async function handleLogin(e) {
-      e.preventDefault();
-      const u = document.getElementById('loginUser').value;
-      const p = document.getElementById('loginPass').value;
-      if (!u) return alert("Silakan pilih username.");
-
-      const btn = document.getElementById('btnLogin');
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifikasi...';
-
-      const res = await callAPI({ action: 'login', username: u, password: p });
-      
-      if (res && res.success) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('userName').innerText = res.user;
-        document.getElementById('userAvatar').innerText = res.user.charAt(0).toUpperCase();
-        
-        currentUserRole = res.role.toUpperCase();
-        document.getElementById('userRole').innerText = currentUserRole === 'QMS' ? 'Administrator (QMS)' : 'Viewer (Departemen)';
-        
-        loadAllData();
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadFileToServer(file){
+  const base64 = await fileToBase64(file);
+  const res = await api.post({action:"uploadFile", base64, fileName:file.name, mimeType:file.type||"application/octet-stream"});
+  return res.data.url;
+}
+async function saveRecord(tableName, keyValue){
+  const table = SCHEMA.tables[tableName];
+  const form = document.getElementById("recordForm");
+  const btn = document.getElementById("saveRecordBtn");
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = "Menyimpan...";
+  try{
+    const data = {};
+    table.fields.forEach(f=>{
+      if(f.type==="enumlist" || f.type==="refmulti"){
+        const boxes = form.querySelectorAll('input[name="'+f.name+'[]"]:checked');
+        data[f.name] = Array.from(boxes).map(b=>b.value).join(", ");
+      } else if(f.type==="file"){
+        // handled below
       } else {
-        alert(res ? res.message : "Gagal Login");
-        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk System';
+        const el = form.elements[f.name];
+        if(el) data[f.name] = el.value;
       }
-    }
-
-    async function loadAllData() {
-      // Ubah state tabel menjadi loading saat refresh ditekan
-      document.getElementById('tableBody').innerHTML = '<tr><td colspan="10" style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:24px;"></i><br><br>Memperbarui data...</td></tr>';
-      
-      const res = await callAPI({ action: 'fetchData' });
-      if (res && res.success) {
-        dbData = res.data;
-        renderTable();
-      }
-    }
-
-    function switchTab(tabName) {
-      currentTab = tabName;
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      if(event && event.currentTarget) event.currentTarget.classList.add('active');
-      document.getElementById('tabTitle').innerText = tabName.replace('_', ' ');
-      renderTable();
-      
-      // Tutup menu otomatis di mobile saat tab dipilih
-      const sidebar = document.querySelector('.sidebar');
-      if (sidebar && sidebar.classList.contains('active-mobile')) {
-         toggleMobileMenu();
-      }
-    }
-
-    function renderTable() {
-      const headers = sheetSchemas[currentTab] || [];
-      const rows = dbData[currentTab] || [];
-      const isQMS = currentUserRole === 'QMS';
-
-      if (isQMS) {
-        document.getElementById('btnAddData').style.display = 'inline-flex';
+    });
+    const fileInputs = form.querySelectorAll('input[type=file][data-file-field]');
+    for(const fi of fileInputs){
+      const fname = fi.dataset.fileField;
+      if(fi.files && fi.files[0]){
+        toast("Mengunggah file "+fi.files[0].name+"...", "info");
+        data[fname] = await uploadFileToServer(fi.files[0]);
       } else {
-        document.getElementById('btnAddData').style.display = 'none';
-      }
-
-      let thHTML = headers.map(h => `<th>${h}</th>`).join('');
-      if (isQMS) thHTML += '<th style="text-align:center;">Aksi</th>';
-      document.getElementById('tableHeader').innerHTML = thHTML;
-
-      if (rows.length === 0) {
-        document.getElementById('tableBody').innerHTML = `<tr><td colspan="${headers.length + (isQMS ? 1 : 0)}" style="text-align:center; padding:30px; color:var(--text-muted);">Belum ada data tersedia.</td></tr>`;
-        return;
-      }
-
-      let tbodyHTML = rows.map(r => {
-        let cols = headers.map(h => {
-          let val = r[h] !== undefined ? r[h] : '';
-          if (h.toLowerCase().includes('status')) {
-            let badgeClass = String(val).toLowerCase().includes('open') ? 'badge-close' : 'badge-open';
-            return `<td><span class="badge ${badgeClass}">${val}</span></td>`;
-          }
-          return `<td>${val}</td>`;
-        }).join('');
-
-        let actionHtml = '';
-        if (isQMS) {
-          actionHtml = `<td style="text-align:center; white-space:nowrap;">
-            <button class="btn-action btn-edit" onclick="openEditModal(${r._rowIndex})" title="Edit Data"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button class="btn-action btn-delete" onclick="deleteRow(${r._rowIndex})" title="Hapus Data"><i class="fa-solid fa-trash"></i></button>
-          </td>`;
-        }
-
-        return `<tr>${cols}${actionHtml}</tr>`;
-      }).join('');
-      
-      document.getElementById('tableBody').innerHTML = tbodyHTML;
-    }
-
-    function filterTable() {
-      const q = document.getElementById('searchInput').value.toLowerCase();
-      const rows = document.querySelectorAll('#tableBody tr');
-      rows.forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; });
-    }
-
-    function openAddModal() {
-      editingRowIndex = null;
-      document.getElementById('modalTitle').innerText = 'Tambah Data ' + currentTab.replace('_', ' ');
-      buildFormFields({});
-      document.getElementById('dataModal').classList.add('active');
-    }
-
-    function openEditModal(rowIndex) {
-      editingRowIndex = rowIndex;
-      document.getElementById('modalTitle').innerText = 'Edit Data ' + currentTab.replace('_', ' ');
-      const rowData = dbData[currentTab].find(r => r._rowIndex === rowIndex);
-      buildFormFields(rowData || {});
-      document.getElementById('dataModal').classList.add('active');
-    }
-
-    function closeModal() { document.getElementById('dataModal').classList.remove('active'); }
-
-    function buildFormFields(data) {
-      const fields = sheetSchemas[currentTab] || [];
-      const rels = relationships[currentTab] || {};
-
-      let html = fields.map(f => {
-        let val = data[f] !== undefined ? data[f] : '';
-        if (rels[f]) {
-          const config = rels[f];
-          const targetRows = dbData[config.sheet] || [];
-          let options = targetRows.map(tr => {
-            let optVal = tr[config.key];
-            let optLabel = tr[config.label] ? `${optVal} - ${tr[config.label]}` : optVal;
-            return `<option value="${optVal}" ${optVal == val ? 'selected' : ''}>${optLabel}</option>`;
-          }).join('');
-          return `<div class="form-group"><label>${f}</label><select name="${f}" class="input-control" required><option value="">Pilih ${f}...</option>${options}</select></div>`;
-        }
-        let inputType = f.toLowerCase().includes('tanggal') || f.toLowerCase().includes('date') ? 'date' : 'text';
-        return `<div class="form-group"><label>${f}</label><input type="${inputType}" name="${f}" value="${val}" class="input-control" required></div>`;
-      }).join('');
-      document.getElementById('formFields').innerHTML = html;
-    }
-
-    async function handleFormSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSave');
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-      const formData = new FormData(e.target);
-      let payload = {}; formData.forEach((val, key) => payload[key] = val);
-
-      const actionType = editingRowIndex === null ? 'save' : 'update';
-      const reqData = { action: actionType, sheetName: currentTab, dataObj: payload };
-      if (editingRowIndex !== null) reqData.rowIndex = editingRowIndex;
-
-      const res = await callAPI(reqData);
-      if (res && res.success) {
-        closeModal();
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
-        loadAllData();
-      } else {
-        alert("Gagal menyimpan data!");
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Coba Lagi';
+        const hidden = form.querySelector('input[type=hidden][name="'+fname+'"]');
+        data[fname] = hidden ? hidden.value : "";
       }
     }
-
-    async function deleteRow(rowIndex) {
-      if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-        const res = await callAPI({ action: 'delete', sheetName: currentTab, rowIndex: rowIndex });
-        if (res && res.success) loadAllData();
-      }
+    const missing = table.fields.filter(f=>f.required && !data[f.name]);
+    if(missing.length){
+      toast("Field wajib belum diisi: "+missing.map(f=>f.label).join(", "),"error");
+      btn.disabled=false; btn.innerHTML=originalHtml; renderIcons();
+      return;
     }
-
-    // ======= FUNGSI RESPONSIVE MOBILE =======
-    function toggleMobileMenu() {
-      const sidebar = document.querySelector('.sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      
-      sidebar.classList.toggle('active-mobile');
-      
-      if (overlay.classList.contains('active')) {
-        overlay.classList.remove('active');
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
-      } else {
-        overlay.style.display = 'block';
-        setTimeout(() => { overlay.classList.add('active'); }, 10);
-      }
+    if(keyValue){
+      await api.post({action:"update", table:tableName, key:keyValue, data});
+      toast("Data berhasil diperbarui","success");
+    } else {
+      await api.post({action:"create", table:tableName, data});
+      toast("Data berhasil ditambahkan","success");
     }
-  </script>
+    closeModal();
+    await loadAll();
+    if(STATE.view==="table" && STATE.currentTable===tableName) renderTableView(tableName);
+    else if(STATE.view==="dashboard") renderDashboard();
+  }catch(err){
+    toast("Gagal menyimpan: "+err.message,"error");
+    btn.disabled = false; btn.innerHTML = originalHtml; renderIcons();
+  }
+}
+async function confirmDelete(tableName, keyValue){
+  const table = SCHEMA.tables[tableName];
+  if(!confirm('Hapus data ini dari "'+table.label+'"? Tindakan tidak bisa dibatalkan.')) return;
+  try{
+    await api.post({action:"delete", table:tableName, key:keyValue});
+    toast("Data berhasil dihapus","success");
+    await loadAll();
+    renderTableView(tableName);
+  }catch(err){ toast("Gagal menghapus: "+err.message,"error"); }
+}
+function exportCSV(tableName){
+  const table = SCHEMA.tables[tableName];
+  const rows = STATE.allData[tableName]||[];
+  if(!rows.length){ toast("Tidak ada data untuk diexport","error"); return; }
+  const headers = table.fields.map(f=>f.label);
+  const keys = table.fields.map(f=>f.name);
+  const csv = [headers.join(",")].concat(rows.map(r=>keys.map(k=>csvEscape(r[k])).join(","))).join("\r\n");
+  const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download=tableName+".csv"; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ==========================================================================
+// SETTINGS MODAL
+// ==========================================================================
+function openSettingsModal(){
+  $modalRoot.innerHTML = `
+    <div class="modal-overlay" data-action="close-modal">
+      <div class="modal glass" style="max-width:540px" onclick="event.stopPropagation()">
+        <div class="modal-header"><h2>Pengaturan Koneksi</h2><button class="icon-btn" data-action="close-modal"><i data-lucide="x"></i></button></div>
+        <div class="modal-body">
+          <div class="form-group full">
+            <label>Web App URL (Google Apps Script)</label>
+            <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxxx/exec" value="${esc(CONFIG.API_URL)}"/>
+            <p class="hint">URL Web App sudah disematkan otomatis di file ini. Jika Anda deploy ulang <b>Code.gs</b> (Execute as: <b>Me</b>, Who has access: <b>Anyone</b>) dan mendapat URL baru yang diakhiri <code>/exec</code>, tempel di sini lalu klik Simpan &amp; Sambungkan.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" data-action="reset-default-url" type="button">Pakai URL Bawaan</button>
+          <button class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button class="btn btn-primary" id="saveSettingsBtn" data-action="save-settings"><i data-lucide="save"></i>Simpan &amp; Sambungkan</button>
+        </div>
+      </div>
+    </div>`;
+  renderIcons();
+}
+async function saveSettings(){
+  const input = document.getElementById("apiUrlInput");
+  const val = input.value.trim();
+  if(!val){ toast("URL tidak boleh kosong","error"); return; }
+  const btn = document.getElementById("saveSettingsBtn");
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = "Menyambungkan...";
+  const previousUrl = CONFIG.API_URL;
+  CONFIG.API_URL = val;
+  try{
+    const res = await api.get("getAll");
+    STATE.allData = res.data;
+    STATE.lastSync = new Date();
+    updateSyncIndicator(true);
+    localStorage.setItem("qms_api_url", val);
+    closeModal();
+    toast("Berhasil tersambung ke Google Sheets","success");
+    if(STATE.view==="table" && STATE.currentTable) renderTableView(STATE.currentTable);
+    else renderDashboard();
+  }catch(err){
+    CONFIG.API_URL = previousUrl;
+    updateSyncIndicator(false);
+    btn.disabled = false; btn.innerHTML = originalHtml; renderIcons();
+    toast("Gagal menyambungkan: "+(err.message||"Periksa URL dan deployment Apps Script"), "error");
+  }
+}
+
+// ==========================================================================
+// EVENT DELEGATION
+// ==========================================================================
+document.body.addEventListener("click", function(e){
+  const el = e.target.closest("[data-action]");
+  if(!el) return;
+  const action = el.dataset.action;
+  switch(action){
+    case "nav-dashboard": renderDashboard(); closeSidebarMobile(); break;
+    case "nav-table": renderTableView(el.dataset.table); closeSidebarMobile(); break;
+    case "toggle-group": toggleGroup(el.dataset.group); break;
+    case "refresh": loadAll().then(()=>{ if(STATE.view==="dashboard") renderDashboard(); else renderTableView(STATE.currentTable); toast("Data diperbarui","success"); }); break;
+    case "add-record": openRecordModal(el.dataset.table, null); break;
+    case "edit-record": openRecordModal(el.dataset.table, el.dataset.key); break;
+    case "delete-record": confirmDelete(el.dataset.table, el.dataset.key); break;
+    case "export-csv": exportCSV(el.dataset.table); break;
+    case "close-modal": closeModal(); break;
+    case "save-record": saveRecord(el.dataset.table, el.dataset.key||null); break;
+    case "open-settings": openSettingsModal(); break;
+    case "save-settings": saveSettings(); break;
+    case "reset-default-url": { const inp=document.getElementById("apiUrlInput"); if(inp) inp.value = DEFAULT_API_URL; break; }
+    case "open-sidebar": document.getElementById("sidebar").classList.add("open"); document.querySelector(".sidebar-backdrop").classList.add("show"); break;
+    case "close-sidebar": closeSidebarMobile(); break;
+  }
+});
+function closeSidebarMobile(){
+  document.getElementById("sidebar").classList.remove("open");
+  const b = document.querySelector(".sidebar-backdrop"); if(b) b.classList.remove("show");
+}
+
+// ==========================================================================
+// INIT
+// ==========================================================================
+function init(){
+  CONFIG.API_URL = localStorage.getItem("qms_api_url") || DEFAULT_API_URL;
+  renderSidebar();
+  renderDashboard();
+  if(CONFIG.API_URL){
+    loadAll().then(()=>renderDashboard());
+    setInterval(pollTick, CONFIG.POLL_MS);
+  } else {
+    setTimeout(openSettingsModal, 400);
+  }
+  initFxLayer();
+}
+
+// ==========================================================================
+// EFEK VISUAL: cursor spotlight (hover) + ripple (klik) — liquid glass
+// ==========================================================================
+function initFxLayer(){
+  const SPOT_SELECTOR = ".glass, .btn, .icon-btn, .kpi-card, .quick-chip";
+  document.addEventListener("pointermove", function(e){
+    const el = e.target.closest(SPOT_SELECTOR);
+    if(!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", ((e.clientX-r.left)/r.width*100)+"%");
+    el.style.setProperty("--my", ((e.clientY-r.top)/r.height*100)+"%");
+  }, {passive:true});
+
+  const RIPPLE_SELECTOR = ".btn, .icon-btn, .kpi-card, .quick-chip, .nav-item";
+  document.addEventListener("pointerdown", function(e){
+    const el = e.target.closest(RIPPLE_SELECTOR);
+    if(!el) return;
+    const r = el.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) * 1.8;
+    const span = document.createElement("span");
+    span.className = "ripple-fx";
+    span.style.width = span.style.height = size+"px";
+    span.style.left = (e.clientX - r.left - size/2)+"px";
+    span.style.top = (e.clientY - r.top - size/2)+"px";
+    el.appendChild(span);
+    span.addEventListener("animationend", ()=>span.remove());
+  }, {passive:true});
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
 </body>
 </html>
