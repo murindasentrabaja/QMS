@@ -15,12 +15,11 @@
   --glass-bg:rgba(255,255,255,.60); --glass-bg-strong:rgba(255,255,255,.82);
   --glass-border:rgba(255,255,255,.65); --glass-highlight:rgba(255,255,255,.95);
 
-  /* Palet aksen: biru, ungu, pink, orange, hijau (nama variabel lama dipertahankan agar semua komponen tetap tersambung) */
-  --cyan:#2563EB;    --cyan-dim:rgba(37,99,235,.14);     /* BIRU (primer) */
-  --amber:#F97316;   --amber-dim:rgba(249,115,22,.15);   /* ORANGE */
-  --rose:#EC4899;    --rose-dim:rgba(236,72,153,.14);    /* PINK */
-  --emerald:#10B981; --emerald-dim:rgba(16,185,129,.15); /* HIJAU */
-  --indigo:#8B5CF6;  --indigo-dim:rgba(139,92,246,.14);  /* UNGU */
+  --cyan:#2563EB;    --cyan-dim:rgba(37,99,235,.14);
+  --amber:#F97316;   --amber-dim:rgba(249,115,22,.15);
+  --rose:#EC4899;    --rose-dim:rgba(236,72,153,.14);
+  --emerald:#10B981; --emerald-dim:rgba(16,185,129,.15);
+  --indigo:#8B5CF6;  --indigo-dim:rgba(139,92,246,.14);
   --slate:#64748B;   --slate-dim:rgba(100,116,139,.12);
 
   --text-1:#0F172A; --text-2:#51607A; --text-3:#8996AC;
@@ -87,17 +86,12 @@ body::before{
   margin:14px 0 14px 14px; padding:18px 14px; display:flex; flex-direction:column; gap:14px;
   height:calc(100vh - 28px); position:sticky; top:14px; overflow-y:auto;
 }
-.brand{display:flex; align-items:center; gap:11px; padding:4px 6px 12px; border-bottom:1px solid var(--glass-border);}
+.brand{display:flex; flex-direction:column; align-items:flex-start; gap:10px; padding:6px 6px 16px; border-bottom:1px solid var(--glass-border);}
 .brand-mark{
-  width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--cyan), var(--indigo)); color:#fff; flex:none; position:relative;
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.55), inset 0 -3px 5px rgba(0,0,0,.18), 0 8px 18px -5px rgba(99,102,241,.55);
+  width:100%; height:40px; display:flex; align-items:center; justify-content:flex-start; flex:none;
 }
-.brand-mark::before{
-  content:""; position:absolute; inset:2px 2px 52% 2px; border-radius:9px 9px 30px 30px/9px 9px 16px 16px;
-  background:linear-gradient(rgba(255,255,255,.6), rgba(255,255,255,0)); pointer-events:none;
-}
-.brand-mark svg{width:20px; height:20px; position:relative; z-index:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,.2));}
+.brand-mark img{height:100%; width:auto; max-width:100%; object-fit:contain;}
+.brand-text{display:flex; flex-direction:column; align-items:flex-start; text-align:left;}
 .brand-title{font-weight:800; font-size:.92rem; letter-spacing:.01em;}
 .brand-sub{font-size:.72rem; color:var(--text-3); margin-top:1px;}
 
@@ -266,7 +260,7 @@ thead th{
   position:sticky; top:0; background:rgba(255,255,255,.88); backdrop-filter:blur(8px); text-align:left; font-weight:700;
   color:var(--text-3); font-size:.68rem; letter-spacing:.02em; padding:11px 14px; border-bottom:1px solid var(--glass-border); white-space:nowrap;
 }
-tbody td{padding:11px 14px; border-bottom:1px solid rgba(15,23,42,.055); color:var(--text-1); vertical-align:top; max-width:260px;}
+tbody td{padding:11px 14px; border-bottom:1px solid rgba(15,23,42,.055); color:var(--text-1); vertical-align:middle; max-width:260px;}
 tbody tr:hover{background:rgba(37,99,235,.045);}
 tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
 .col-actions{white-space:nowrap; text-align:right;}
@@ -284,6 +278,30 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
 .chip{display:inline-block; padding:2px 8px; margin:1px 3px 1px 0; border-radius:6px; background:rgba(15,23,42,.055); font-size:.68rem; color:var(--text-2);}
 .file-link{display:inline-flex; align-items:center; gap:4px; color:var(--cyan); font-weight:700; font-size:.76rem; text-decoration:none;}
 .file-link svg{width:13px; height:13px;}
+
+/* Employee photo (table thumbnail + lightbox) */
+.employee-photo-wrap{display:inline-block; position:relative; z-index:1;}
+.employee-photo-wrap:hover, .employee-photo-wrap:focus-within{ z-index:8; }
+.employee-photo{
+  width:40px; height:40px; border-radius:50%; object-fit:cover; display:block; cursor:zoom-in;
+  border:1px solid var(--glass-border); box-shadow:0 2px 6px rgba(0,0,0,.1);
+  transition:transform .18s ease, box-shadow .18s ease; transform-origin:center;
+}
+.employee-photo:hover, .employee-photo:focus-visible{
+  transform:scale(1.9); box-shadow:0 10px 26px -6px rgba(15,23,42,.4), 0 0 0 3px #fff, 0 0 0 4px var(--cyan);
+}
+.photo-lightbox-overlay{background:rgba(8,13,28,.78); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);}
+.photo-lightbox-card{
+  position:relative; max-width:min(86vw,480px); max-height:86vh; animation:loginCardIn .3s cubic-bezier(.16,1,.3,1) both;
+}
+.photo-lightbox-card img{
+  display:block; width:100%; height:100%; max-height:86vh; object-fit:contain; border-radius:var(--r-md);
+  background:#fff; box-shadow:0 24px 60px -12px rgba(0,0,0,.5);
+}
+.photo-lightbox-close{
+  position:absolute; top:-14px; right:-14px; background:#fff; color:var(--text-1);
+  box-shadow:0 6px 18px -4px rgba(0,0,0,.35);
+}
 
 /* Modal */
 .modal-overlay{position:fixed; inset:0; background:rgba(15,23,42,.35); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;}
@@ -332,26 +350,107 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
 .setup-banner p{font-size:.8rem; color:var(--text-2); position:relative; z-index:1;}
 .setup-banner b{color:var(--text-1);}
 
-/* PENTING — perbaikan bug "judul & summary bertumpuk setelah discroll":
-   #app pakai display:grid (2 kolom: sidebar 280px + main 1fr). .sidebar-backdrop
-   adalah ANAK LANGSUNG #app, persis di antara #sidebar dan #main di HTML.
-   Sebelumnya aturan position:fixed+display:none untuk elemen ini HANYA ada di
-   dalam @media (max-width:860px), sehingga di lebar desktop/tablet elemen ini
-   ikut jadi "kotak kosong" yang menempati slot kolom ke-2 pada baris grid
-   pertama — akibatnya #main (berisi topbar+konten) terdorong ke baris ke-2
-   kolom ke-1, tepat bertumpuk di bawah #sidebar. Definisikan di luar media
-   query supaya elemen ini SELALU position:fixed (keluar dari alur grid) di
-   semua lebar layar. */
 .sidebar-backdrop{position:fixed; inset:0; z-index:55; display:none; background:rgba(15,23,42,.45);}
 .sidebar-backdrop.show{display:block;}
 
-/* Efek klik: ripple */
 .ripple-fx{
   position:absolute; border-radius:50%; z-index:6; pointer-events:none; transform:scale(0); opacity:.9;
   background:radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,0) 70%);
   animation:rippleAnim .6s ease-out forwards;
 }
 @keyframes rippleAnim{ to{ transform:scale(1); opacity:0; } }
+
+/* Live clock + user menu */
+.live-clock{
+  display:flex; align-items:center; font-size:.74rem; font-weight:700; color:var(--text-2); white-space:nowrap;
+  background:rgba(255,255,255,.55); border:1px solid var(--glass-border); padding:6px 13px; border-radius:999px;
+  font-variant-numeric:tabular-nums;
+}
+.user-menu{display:flex; align-items:center; gap:8px;}
+.user-badge{
+  display:inline-flex; align-items:center; gap:6px; font-size:.74rem; font-weight:700; color:var(--text-2);
+  background:rgba(255,255,255,.55); border:1px solid var(--glass-border); padding:6px 12px; border-radius:999px; white-space:nowrap;
+}
+.user-badge svg{width:13px; height:13px;}
+.user-badge-view{color:var(--amber); border-color:rgba(249,115,22,.3); background:var(--amber-dim);}
+.print-only-brand{display:none;}
+
+/* Login screen */
+.login-overlay{
+  position:fixed; inset:0; z-index:400; display:flex; align-items:center; justify-content:center; padding:20px;
+  background:
+    radial-gradient(circle at 14% 16%, rgba(16,185,129,.20), transparent 40%),
+    radial-gradient(circle at 88% 10%, rgba(37,99,235,.22), transparent 42%),
+    radial-gradient(circle at 85% 85%, rgba(139,92,246,.18), transparent 45%),
+    radial-gradient(circle at 12% 88%, rgba(249,115,22,.14), transparent 40%),
+    linear-gradient(180deg, #F5F8FD, #E8EFFA);
+  animation:loginOverlayIn .5s ease both;
+}
+@keyframes loginOverlayIn{ from{opacity:0;} to{opacity:1;} }
+.login-card{
+  width:100%; max-width:396px; text-align:center; position:relative; z-index:1; overflow:hidden;
+  background:var(--glass-bg-strong);
+  box-shadow:inset 0 1px 0 0 var(--glass-highlight), inset 0 0 0 1px rgba(255,255,255,.4), 0 24px 48px -16px rgba(30,41,68,.22);
+  animation:loginCardIn .55s cubic-bezier(.16,1,.3,1) .08s both;
+}
+@keyframes loginCardIn{ from{opacity:0; transform:translateY(22px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
+.login-card-band{height:5px; background:linear-gradient(90deg, var(--cyan), var(--indigo) 55%, var(--rose));}
+.login-card-inner{padding:38px 34px 32px;}
+.login-logo{
+  height:56px; margin:0 auto 22px; display:flex; align-items:center; justify-content:center;
+}
+.login-logo img{height:100%; width:auto; max-width:240px; object-fit:contain;}
+.login-title{font-weight:800; font-size:1.2rem; margin-bottom:3px; letter-spacing:-.01em;}
+.login-sub{font-size:.79rem; color:var(--text-3); margin-bottom:26px; font-weight:600;}
+.login-form{display:flex; flex-direction:column; gap:13px; text-align:left;}
+.login-field{position:relative; display:flex; align-items:center;}
+.login-field > svg{position:absolute; left:12px; width:15px; height:15px; color:var(--text-3); pointer-events:none;}
+.login-field input[type="text"], .login-field input[type="password"]{padding-left:36px; padding-right:36px; background:rgba(255,255,255,.85);}
+.login-field .pw-toggle{
+  position:absolute; right:6px; background:none; border:none; padding:6px; border-radius:8px;
+  color:var(--text-3); cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.login-field .pw-toggle svg{width:15px; height:15px;}
+.login-field .pw-toggle:hover{background:rgba(37,99,235,.1); color:var(--cyan);}
+.login-error{
+  background:var(--rose-dim); color:var(--rose); font-size:.76rem; font-weight:600; padding:9px 12px;
+  border-radius:var(--r-sm); display:none; margin-bottom:12px; text-align:left;
+}
+.login-error.show{display:block;}
+.login-divider{display:flex; align-items:center; gap:10px; margin:20px 0 14px; color:var(--text-3); font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+.login-divider::before, .login-divider::after{content:""; flex:1; height:1px; background:var(--glass-border);}
+.login-loading{font-size:.82rem; color:var(--text-3); padding:16px 0 4px; display:flex; flex-direction:column; align-items:center; gap:13px;}
+.login-spinner{width:26px; height:26px; border-radius:50%; border:3px solid var(--cyan-dim); border-top-color:var(--cyan); animation:loginSpin .8s linear infinite;}
+@keyframes loginSpin{to{transform:rotate(360deg);}}
+.login-foot{margin-top:22px; font-size:.68rem; color:var(--text-3); font-weight:600;}
+
+/* Print */
+.print-only-meta{display:none;}
+@media print{
+  body::before, .grid-overlay, #sidebar, .sidebar-backdrop, #menuToggle, .user-menu,
+  #syncIndicator, #liveClock, .view-actions, .col-actions,
+  #modalRoot, #toastRoot, #loginRoot{ display:none !important; }
+  #app{display:block;}
+  #main{padding:0;}
+  body{background:#fff;}
+  #topbar{
+    position:static; display:flex; align-items:center; justify-content:space-between;
+    box-shadow:none; border:none; background:none; backdrop-filter:none;
+    padding:0 0 14px; margin-bottom:18px; border-bottom:2px solid #0F172A;
+  }
+  .topbar-title{flex:1;}
+  .screen-only-title{display:none !important;}
+  .print-only-brand{display:flex !important; align-items:center; gap:12px;}
+  .print-only-brand img{height:36px; width:auto; flex:none;}
+  .print-only-brand-text{display:flex; flex-direction:column; gap:2px; line-height:1.3; text-align:left;}
+  .print-only-brand-text strong{font-size:1rem; color:#0F172A; font-weight:800;}
+  .print-only-brand-text span{font-size:.74rem; color:#51607A; font-weight:600;}
+  .topbar-actions{display:flex;}
+  .print-only-meta{display:block !important; font-size:.72rem; color:#51607A; font-weight:600; text-align:right; white-space:nowrap;}
+  .glass{background:#fff !important; box-shadow:none !important; backdrop-filter:none !important; border:1px solid #ddd !important;}
+  .table-wrap{max-height:none; overflow:visible;}
+  thead th{position:static; background:#fff !important; backdrop-filter:none !important;}
+}
 
 @media (max-width:960px){
   .dash-grid{grid-template-columns:1fr;}
@@ -383,11 +482,22 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
     <header id="topbar" class="glass">
       <div style="display:flex; align-items:center; gap:12px;">
         <button id="menuToggle" class="icon-btn" data-action="open-sidebar"><i data-lucide="menu"></i></button>
-        <div class="topbar-title">Sistem Manajemen Mutu · ISO 9001:2015</div>
+        <div class="topbar-title">
+          <span class="print-only-brand">
+            <img src="MSB Logo.png" alt="Logo MSB" onerror="this.style.display='none'"/>
+            <span class="print-only-brand-text">
+              <strong>PT Murinda Sentra Baja</strong>
+              <span>Sistem Manajemen Mutu · ISO 9001:2015</span>
+            </span>
+          </span>
+          <span class="screen-only-title">Sistem Manajemen Mutu · ISO 9001:2015</span>
+        </div>
       </div>
       <div class="topbar-actions">
+        <div id="liveClock" class="live-clock"></div>
         <div id="syncIndicator" class="sync-pill sync-off"><span class="dot"></span>Belum tersambung</div>
-        <button class="icon-btn" data-action="open-settings" title="Pengaturan koneksi"><i data-lucide="settings"></i></button>
+        <div id="userMenu" class="user-menu"></div>
+        <div id="printMeta" class="print-only-meta"></div>
       </div>
     </header>
     <main id="content"></main>
@@ -395,22 +505,24 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
 </div>
 <div id="modalRoot"></div>
 <div id="toastRoot"></div>
+<div id="loginRoot"></div>
 
 <script>
 // ==========================================================================
 // CONFIG
 // ==========================================================================
-// URL Web App Google Apps Script disematkan langsung di sini agar aplikasi siap pakai tanpa setup manual.
-// Bisa tetap diganti lewat ikon Pengaturan (⚙) di kanan atas bila suatu saat Anda deploy ulang/ganti URL.
-const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycby7QhbG8X27pRmozy3jQPNuGBXtcWcj19gfCBVhyHmv9Tuk7UzD_OP42Hq_2rcBPkjfBg/exec";
+// URL hasil Deploy > New deployment (Web app) dari Code.gs — sudah ditanam
+// langsung di sini, tidak ada lagi menu Pengaturan untuk mengubahnya.
+// Jika Code.gs di-deploy ulang, ganti nilai di bawah ini dengan URL /exec yang baru.
+const API_URL = "https://script.google.com/macros/s/AKfycbyDS1e-EzvvdrOCwqfaNi8dCfYtrftuNQcqxCx7V0g9_XzEkICMF_-Uxd8NHGu23zn0jg/exec";
 const CONFIG = {
-  API_URL: "",           // diisi dari localStorage jika pernah diubah, kalau tidak pakai DEFAULT_API_URL
+  API_URL: API_URL,
   POLL_MS: 25000,
   FETCH_TIMEOUT_MS: 30000
 };
 
 // ==========================================================================
-// SCHEMA (identik dengan Code.gs)
+// SCHEMA 
 // ==========================================================================
 const SCHEMA = {
   groups: [
@@ -435,15 +547,19 @@ const SCHEMA = {
       {name:"Kepala_Departemen",label:"Kepala Departemen",type:"ref",ref:"Master_Karyawan"},
       {name:"Area_Proses",label:"Area Proses",type:"text"}
     ]},
-    Master_Karyawan:{label:"Karyawan",group:"master",key:"ID_Karyawan",idPrefix:"KAR",display:"Nama",fields:[
-      {name:"ID_Karyawan",label:"ID Karyawan",type:"text",auto:true},
-      {name:"Nama",label:"Nama",type:"text",required:true},
+    /* PENTING: kolom & urutan HARUS SAMA PERSIS dengan header asli di sheet
+       Master_Karyawan (ID Karyawan, Foto Profil, Nama Lengkap, Jabatan,
+       Departemen, Status Kerja, Tanggal Masuk, Whatsapp, Email). */
+    Master_Karyawan:{label:"Karyawan",group:"master",key:"ID Karyawan",idPrefix:"",display:"Nama Lengkap",fields:[
+      {name:"ID Karyawan",label:"ID Karyawan",type:"text",required:true,note:"Samakan dengan ID Karyawan di sistem HR / ID Card"},
+      {name:"Foto Profil",label:"Foto Profil",type:"appsheet_image"},
+      {name:"Nama Lengkap",label:"Nama Lengkap",type:"text",required:true},
       {name:"Jabatan",label:"Jabatan",type:"text"},
-      {name:"Departemen",label:"Departemen",type:"ref",ref:"Master_Departemen"},
-      {name:"Email",label:"Email",type:"email"},
-      {name:"No_HP",label:"No. HP",type:"text"},
-      {name:"Role_Sistem",label:"Role Sistem",type:"enum",options:["Admin","Auditor","Auditee","Manajemen","QA"]},
-      {name:"Status_Aktif",label:"Status Aktif",type:"yesno"}
+      {name:"Departemen",label:"Departemen",type:"text"},
+      {name:"Status Kerja",label:"Status Kerja",type:"text",hidden:true},
+      {name:"Tanggal Masuk",label:"Tanggal Masuk",type:"date",hidden:true},
+      {name:"Whatsapp",label:"WhatsApp",type:"text"},
+      {name:"Email",label:"Email",type:"email"}
     ]},
     Master_Auditor:{label:"Auditor",group:"master",key:"ID_Auditor",idPrefix:"AUD",display:"ID_Auditor",fields:[
       {name:"ID_Auditor",label:"ID Auditor",type:"text",auto:true},
@@ -493,11 +609,22 @@ const SCHEMA = {
       {name:"Kontak",label:"Kontak",type:"text"},
       {name:"Kategori",label:"Kategori",type:"text"}
     ]},
-    Master_Alat_Mesin:{label:"Alat & Mesin (sync ERP Maintenance)",group:"master",key:"ID_Alat",idPrefix:"ALT",display:"Nama_Alat",fields:[
-      {name:"ID_Alat",label:"ID Alat",type:"text",required:true,note:"Samakan dgn ID Alat di ERP Maintenance"},
-      {name:"Nama_Alat",label:"Nama Alat",type:"text",required:true},
-      {name:"Departemen",label:"Departemen",type:"ref",ref:"Master_Departemen"},
-      {name:"Keterangan",label:"Keterangan",type:"textarea"}
+    /* PENTING: kolom & urutan HARUS SAMA PERSIS dengan header asli di sheet
+       Master_Alat_Mesin (ID Alat/Mesin, Nama Alat/Mesin, Merek/Tipe, Nomor
+       Seri, Tanggal Beli, Kapasitas/Spesifikasi, Kondisi, Tanggal Kalibrasi,
+       Kalibrasi Berikutnya, Lokasi/Departemen, Nama Pengguna). */
+    Master_Alat_Mesin:{label:"Alat & Mesin",group:"master",key:"ID Alat/Mesin",idPrefix:"",display:"Nama Alat/Mesin",fields:[
+      {name:"ID Alat/Mesin",label:"ID Alat/Mesin",type:"text",required:true,note:"Samakan dgn ID Alat di ERP Maintenance"},
+      {name:"Nama Alat/Mesin",label:"Nama Alat/Mesin",type:"text",required:true},
+      {name:"Merek/Tipe",label:"Merek/Tipe",type:"text"},
+      {name:"Nomor Seri",label:"Nomor Seri",type:"text"},
+      {name:"Tanggal Beli",label:"Tanggal Beli",type:"date"},
+      {name:"Kapasitas/Spesifikasi",label:"Kapasitas/Spesifikasi",type:"text"},
+      {name:"Kondisi",label:"Kondisi",type:"enum",options:["Baik","Rusak","Perlu Perbaikan"]},
+      {name:"Tanggal Kalibrasi",label:"Tanggal Kalibrasi",type:"date"},
+      {name:"Kalibrasi Berikutnya",label:"Kalibrasi Berikutnya",type:"date"},
+      {name:"Lokasi/Departemen",label:"Lokasi/Departemen",type:"text"},
+      {name:"Nama Pengguna",label:"Nama Pengguna",type:"text"}
     ]},
     Audit_Program_Tahunan:{label:"Program Audit Tahunan",group:"planning",key:"ID_Program",idPrefix:"PRG",display:"Nama_Program",fields:[
       {name:"ID_Program",label:"ID Program",type:"text",auto:true},
@@ -719,32 +846,38 @@ const SCHEMA = {
       {name:"Tgl_Terbit",label:"Tgl Terbit",type:"date"},
       {name:"Tgl_Kadaluarsa",label:"Tgl Kadaluarsa",type:"date"},
       {name:"File_Sertifikat",label:"File Sertifikat",type:"file"}
-    ],overdueField:{dateField:"Tgl_Kadaluarsa",statusField:null,closedValues:[]}}
+    ],overdueField:{dateField:"Tgl_Kadaluarsa",statusField:null,closedValues:[]}},
+
+    /* Sheet "Login" — dipakai layar login (username & password). Tidak
+       tampil di menu navigasi. */
+    Login:{label:"Login",group:"master",hidden:true,key:"Username",idPrefix:"",display:"Username",fields:[
+      {name:"Username",label:"Username",type:"text",required:true},
+      {name:"Password",label:"Password",type:"text",required:true}
+    ]}
   }
 };
 
 // ==========================================================================
 // STATE + DOM refs
 // ==========================================================================
-const STATE = { view:"dashboard", currentTable:null, allData:{}, lastSync:null, tableSearch:"" };
+const STATE = { view:"dashboard", currentTable:null, allData:{}, lastSync:null, tableSearch:"", authenticated:false, currentUser:null, viewOnly:false };
 const $content = document.getElementById("content");
 const $sidebar = document.getElementById("sidebar");
 const $modalRoot = document.getElementById("modalRoot");
 const $toastRoot = document.getElementById("toastRoot");
+const $loginRoot = document.getElementById("loginRoot");
 const $syncIndicator = document.getElementById("syncIndicator");
 const MONTHS_ID = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
+const DAYS_ID = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
 // ==========================================================================
 // UTIL
 // ==========================================================================
-// Pembungkus aman untuk lucide.createIcons(). Jika library ikon dari CDN gagal
-// dimuat/berubah versi, ini mencegah error tersebut menghentikan fungsi lain
-// (mis. tombol "Simpan & Sambungkan" jadi terlihat tidak bereaksi sama sekali).
 function renderIcons(){
   try{
     if(window.lucide && typeof lucide.createIcons==="function") window.lucide.createIcons();
   }catch(err){
-    console.warn("Ikon gagal dirender (diabaikan agar aplikasi tetap jalan):", err);
+    console.warn("Ikon gagal dirender:", err);
   }
 }
 function esc(v){
@@ -792,7 +925,8 @@ const BADGE_MAP = {
   "Closed":"emerald","Verified":"emerald","Approved":"emerald","Ya":"emerald",
   "Open":"indigo","Draft":"indigo","Terjadwal":"indigo",
   "In Progress":"amber","Berlangsung":"amber","Tindakan":"amber","Analisa":"amber","Review":"amber","Investigasi":"amber","Verifikasi":"amber",
-  "Overdue":"rose","Ditunda":"rose","Reject":"rose","Obsolete":"rose","Tidak":"rose"
+  "Overdue":"rose","Ditunda":"rose","Reject":"rose","Obsolete":"rose","Tidak":"rose",
+  "Baik":"emerald","Rusak":"rose","Perlu Perbaikan":"amber"
 };
 function badgeClass(v){
   const s = String(v||"").trim();
@@ -810,8 +944,8 @@ function fetchWithTimeout(url, options){
   const timer = setTimeout(()=>ctrl.abort(), CONFIG.FETCH_TIMEOUT_MS);
   return fetch(url, Object.assign({}, options, {signal:ctrl.signal}))
     .catch(err=>{
-      if(err.name==="AbortError") throw new Error("Waktu koneksi ke server habis (>"+Math.round(CONFIG.FETCH_TIMEOUT_MS/1000)+" detik). Periksa deployment Apps Script Anda.");
-      throw new Error("Gagal menghubungi server. Periksa koneksi internet atau URL Web App.");
+      if(err.name==="AbortError") throw new Error("Waktu koneksi ke server habis. Periksa koneksi atau Apps Script.");
+      throw new Error("Gagal menghubungi server.");
     })
     .finally(()=>clearTimeout(timer));
 }
@@ -823,8 +957,7 @@ const api = {
     if(params) Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
     const res = await fetchWithTimeout(url.toString());
     let json;
-    try{ json = await res.json(); }
-    catch(e){ throw new Error("Respons server tidak valid (bukan JSON). Pastikan Code.gs sudah di-deploy ulang sebagai Web App."); }
+    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON."); }
     if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
     return json;
   },
@@ -836,8 +969,7 @@ const api = {
       body: JSON.stringify(payload)
     });
     let json;
-    try{ json = await res.json(); }
-    catch(e){ throw new Error("Respons server tidak valid (bukan JSON). Pastikan Code.gs sudah di-deploy ulang sebagai Web App."); }
+    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON."); }
     if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
     return json;
   }
@@ -883,17 +1015,21 @@ function toast(msg,type){
 }
 
 // ==========================================================================
-// SIDEBAR
+// SIDEBAR (Update Logo di sini)
 // ==========================================================================
 const NAV_ACCENTS = ["accent-blue","accent-purple","accent-pink","accent-orange","accent-green"];
 function renderSidebar(){
-  let html = '<div class="brand"><div class="brand-mark"><i data-lucide="shield-check"></i></div>'+
-    '<div><div class="brand-title">QMS ISO 9001</div><div class="brand-sub">PT Murinda Sentra Baja</div></div></div>';
+  /* Logo perusahaan PT Murinda Sentra Baja, jatuh ke inisial MSB bila file logo tidak ditemukan */
+  const logoFallback = "https://ui-avatars.com/api/?name=MSB&background=2563EB&color=fff&font-size=0.4&bold=true";
+  let html = '<div class="brand"><div class="brand-mark"><img src="MSB Logo.png" alt="Logo PT Murinda Sentra Baja" onerror="this.onerror=null;this.src=\''+logoFallback+'\';"/></div>'+
+    '<div class="brand-text"><div class="brand-title">QMS ISO 9001</div><div class="brand-sub">PT Murinda Sentra Baja</div></div></div>';
+  
   html += '<button class="nav-item '+(STATE.view==="dashboard"?"active":"")+'" data-action="nav-dashboard"><i data-lucide="layout-dashboard"></i>Dashboard</button>';
   html += '<div class="sidebar-search"><i data-lucide="search"></i><input id="sidebarSearch" placeholder="Cari modul / tabel..."/></div>';
   html += '<div id="navGroups">';
+  
   SCHEMA.groups.forEach((g,gi)=>{
-    const tables = Object.entries(SCHEMA.tables).filter(([k,t])=>t.group===g.key);
+    const tables = Object.entries(SCHEMA.tables).filter(([k,t])=>t.group===g.key && !t.hidden);
     const isOpen = STATE.currentTable && SCHEMA.tables[STATE.currentTable] && SCHEMA.tables[STATE.currentTable].group===g.key;
     const accent = NAV_ACCENTS[gi % NAV_ACCENTS.length];
     html += '<div class="nav-group'+(isOpen?" open":"")+'" data-group="'+g.key+'">'+
@@ -1002,14 +1138,15 @@ function renderDashboard(){
   const temuan = STATE.allData.Audit_Temuan||[], capaRows = STATE.allData.CAPA_Register||[];
 
   let banner = "";
-  if(!CONFIG.API_URL){
-    banner = '<div class="glass setup-banner"><i data-lucide="plug-zap"></i><p><b>Belum tersambung ke Google Sheets.</b> Klik ikon pengaturan di kanan atas untuk menempelkan URL Web App Apps Script yang sudah di-deploy.</p></div>';
+  if(!STATE.lastSync){
+    banner = '<div class="glass setup-banner"><i data-lucide="plug-zap"></i><p><b>Belum tersambung ke Google Sheets.</b> Periksa koneksi internet, lalu klik Refresh.</p></div>';
   }
 
   $content.innerHTML = banner + `
     <div class="view-header">
       <div><div class="breadcrumb">Ringkasan</div><h1>Dashboard QMS</h1></div>
       <div class="view-actions">
+        <button class="btn btn-ghost" data-action="print-view"><i data-lucide="printer"></i>Cetak</button>
         <button class="btn btn-ghost" data-action="refresh"><i data-lucide="refresh-cw"></i>Refresh</button>
       </div>
     </div>
@@ -1051,13 +1188,26 @@ function kpiCard(icon,label,value,color,table){
 // TABLE VIEW
 // ==========================================================================
 function buildColumns(table){
-  const cols = table.fields.filter(f=>f.type!=="file" || true).map(f=>({name:f.name,label:f.label,type:f.type,ref:f.ref}));
+  const cols = table.fields.filter(f=>!f.hidden).map(f=>({name:f.name,label:f.label,type:f.type,ref:f.ref}));
   if(table.riskCalc) cols.push({name:"Level_Risiko_Label",label:"Level Risiko",type:"computed_risk"});
   if(table.overdueField) cols.push({name:"_overdue",label:"Keterangan Waktu",type:"computed_overdue"});
   return cols;
 }
-function renderCell(col,row){
+
+function renderCell(col, row, tableName){
   switch(col.type){
+    case "appsheet_image": {
+      const v = row[col.name];
+      if(!v) return "—";
+      let imgUrl = v;
+      // Membaca path gambar dan membuat URL ke AppSheet dengan App ID yang diminta
+      if(!v.startsWith("http")){
+        const encodedFile = encodeURIComponent(v);
+        const appSheetTable = tableName === "Master_Karyawan" ? "Karyawan" : tableName;
+        imgUrl = `https://www.appsheet.com/template/gettablefileurl?appName=MSBHumanResource-310640119&tableName=${appSheetTable}&fileName=${encodedFile}`;
+      }
+      return `<span class="employee-photo-wrap"><img class="employee-photo" src="${imgUrl}" alt="Foto" title="Klik untuk memperbesar" tabindex="0" data-action="view-photo" data-img="${imgUrl}"/></span>`;
+    }
     case "ref": return row[col.name] ? esc(resolveRef(col.ref,row[col.name])) : "—";
     case "refmulti": { const arr=resolveRefMulti(col.ref,row[col.name]); return arr.length? arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join(""):"—"; }
     case "enum": return row[col.name] ? '<span class="badge badge-'+badgeClass(row[col.name])+'">'+esc(row[col.name])+"</span>" : "—";
@@ -1069,14 +1219,13 @@ function renderCell(col,row){
     case "textarea": { const v=row[col.name]||""; return v? '<span title="'+esc(v)+'">'+esc(truncate(v,70))+"</span>" : "—"; }
     case "computed_risk": { const l=row.Level_Risiko_Label; return l && l!=="-" ? '<span class="badge badge-'+badgeClass(l)+'">'+esc(l)+" ("+row.Level_Risiko+")</span>" : "—"; }
     case "computed_overdue": {
-      const cfgRow = row; if(!cfgRow) return "—";
-      const hasDate = true;
       if(row._overdue) return '<span class="badge badge-rose">Terlambat</span>';
       return '<span class="badge badge-emerald">Sesuai Jadwal</span>';
     }
     default: return row[col.name] ? esc(row[col.name]) : "—";
   }
 }
+
 function renderTableView(tableName){
   STATE.view = "table"; STATE.currentTable = tableName;
   const table = SCHEMA.tables[tableName];
@@ -1089,12 +1238,13 @@ function renderTableView(tableName){
       <div class="view-actions">
         <div class="search-box"><i data-lucide="search"></i><input id="tableSearchInput" placeholder="Cari di ${esc(table.label)}..." value="${esc(STATE.tableSearch)}"/></div>
         <button class="btn btn-ghost" data-action="export-csv" data-table="${tableName}"><i data-lucide="download"></i>Export CSV</button>
-        <button class="btn btn-primary" data-action="add-record" data-table="${tableName}"><i data-lucide="plus"></i>Tambah Data</button>
+        <button class="btn btn-ghost" data-action="print-view"><i data-lucide="printer"></i>Cetak</button>
+        ${STATE.viewOnly ? "" : `<button class="btn btn-primary" data-action="add-record" data-table="${tableName}"><i data-lucide="plus"></i>Tambah Data</button>`}
       </div>
     </div>
     <div class="glass table-wrap">
       <table>
-        <thead><tr>${columns.map(c=>"<th>"+esc(c.label)+"</th>").join("")}<th class="col-actions">Aksi</th></tr></thead>
+        <thead><tr>${columns.map(c=>"<th>"+esc(c.label)+"</th>").join("")}${STATE.viewOnly?"":'<th class="col-actions">Aksi</th>'}</tr></thead>
         <tbody id="tbody-${tableName}"></tbody>
       </table>
     </div>
@@ -1106,6 +1256,7 @@ function renderTableView(tableName){
   renderIcons();
   setSidebarActive();
 }
+
 function refreshTableRows(tableName, columns){
   const table = SCHEMA.tables[tableName];
   const rows = (STATE.allData[tableName]||[]).slice();
@@ -1115,18 +1266,20 @@ function refreshTableRows(tableName, columns){
   const tbody = document.getElementById("tbody-"+tableName);
   const footer = document.getElementById("tableFooter-"+tableName);
   if(!tbody) return;
+  
   if(display.length===0){
-    tbody.innerHTML = '<tr><td colspan="'+(columns.length+1)+'" class="empty-state">'+
-      (rows.length===0 ? "Belum ada data. Klik “Tambah Data” untuk mulai mengisi." : "Tidak ada data yang cocok dengan pencarian.")+"</td></tr>";
+    tbody.innerHTML = '<tr><td colspan="'+(columns.length+(STATE.viewOnly?0:1))+'" class="empty-state">'+
+      (rows.length===0 ? "Belum ada data. Pastikan Sheet diisi atau klik Tambah Data." : "Tidak ada data yang cocok dengan pencarian.")+"</td></tr>";
   } else {
     tbody.innerHTML = display.map(r=>{
       const keyVal = r[table.key];
       return '<tr class="'+(r._overdue?"row-overdue":"")+'">'+
-        columns.map(c=>"<td>"+renderCell(c,r)+"</td>").join("")+
+        columns.map(c=>"<td>"+renderCell(c, r, tableName)+"</td>").join("")+
+        (STATE.viewOnly ? "" :
         '<td class="col-actions">'+
         '<button class="icon-btn" data-action="edit-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Edit"><i data-lucide="pencil"></i></button> '+
         '<button class="icon-btn icon-btn-danger" data-action="delete-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Hapus"><i data-lucide="trash-2"></i></button>'+
-        "</td></tr>";
+        "</td>")+"</tr>";
     }).join("");
   }
   if(footer) footer.textContent = display.length+" dari "+rows.length+" data";
@@ -1142,6 +1295,7 @@ function fieldInputHtml(table, field, record, isEdit){
   const req = field.required ? '<span class="req">*</span>' : "";
   const lockedKey = isKey && (field.auto || isEdit);
   let input = "";
+  
   switch(field.type){
     case "text": case "email":
       input = '<input type="'+(field.type==="email"?"email":"text")+'" name="'+field.name+'" value="'+esc(val)+'" '+(lockedKey?"disabled":"")+' '+(isKey&&!field.auto&&!isEdit?"required":(field.required?"required":""))+' placeholder="'+(field.note?esc(field.note):(isKey&&field.auto?"(dibuat otomatis)":""))+'"/>';
@@ -1185,9 +1339,10 @@ function fieldInputHtml(table, field, record, isEdit){
       input = '<div class="checklist">'+(boxes||'<span class="hint">Belum ada data '+esc(refT.label)+'</span>')+"</div>";
       break;
     }
+    case "appsheet_image":
     case "file":
       input = '<div class="file-field">'+
-        (val ? '<a class="file-link-existing" href="'+esc(val)+'" target="_blank" rel="noopener">File saat ini &rarr;</a>' : "")+
+        (val ? '<a class="file-link-existing" href="'+esc(val)+'" target="_blank" rel="noopener">File/Foto saat ini &rarr;</a>' : "")+
         '<input type="file" data-file-field="'+field.name+'"/>'+
         '<input type="hidden" name="'+field.name+'" value="'+esc(val)+'"/>'+
         "</div>";
@@ -1195,17 +1350,19 @@ function fieldInputHtml(table, field, record, isEdit){
     default:
       input = '<input type="text" name="'+field.name+'" value="'+esc(val)+'"/>';
   }
-  const full = (field.type==="textarea"||field.type==="enumlist"||field.type==="refmulti"||field.type==="file") ? " full" : "";
+  const full = (field.type==="textarea"||field.type==="enumlist"||field.type==="refmulti"||field.type==="file"||field.type==="appsheet_image") ? " full" : "";
   return '<div class="form-group'+full+'"><label>'+esc(field.label)+req+"</label>"+input+"</div>";
 }
+
 function openRecordModal(tableName, keyValue){
+  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
   const isEdit = !!keyValue;
   const record = isEdit ? (STATE.allData[tableName]||[]).find(r=>String(r[table.key])===String(keyValue)) : {};
-  const fieldsHtml = table.fields.map(f=>fieldInputHtml(table,f,record,isEdit)).join("");
+  const fieldsHtml = table.fields.filter(f=>!f.hidden).map(f=>fieldInputHtml(table,f,record,isEdit)).join("");
   $modalRoot.innerHTML = `
-    <div class="modal-overlay" data-action="close-modal">
-      <div class="modal glass" onclick="event.stopPropagation()">
+    <div class="modal-overlay">
+      <div class="modal glass">
         <div class="modal-header"><h2>${isEdit?"Edit":"Tambah"} — ${esc(table.label)}</h2>
           <button class="icon-btn" data-action="close-modal"><i data-lucide="x"></i></button></div>
         <div class="modal-body"><form id="recordForm">${fieldsHtml}</form></div>
@@ -1219,7 +1376,20 @@ function openRecordModal(tableName, keyValue){
     </div>`;
   renderIcons();
 }
+
 function closeModal(){ $modalRoot.innerHTML = ""; }
+
+function openPhotoLightbox(url){
+  if(!url) return;
+  $modalRoot.innerHTML = `
+    <div class="modal-overlay photo-lightbox-overlay">
+      <div class="photo-lightbox-card">
+        <button class="icon-btn photo-lightbox-close" data-action="close-modal" aria-label="Tutup"><i data-lucide="x"></i></button>
+        <img src="${esc(url)}" alt="Foto Karyawan"/>
+      </div>
+    </div>`;
+  renderIcons();
+}
 
 function fileToBase64(file){
   return new Promise((resolve,reject)=>{
@@ -1234,7 +1404,9 @@ async function uploadFileToServer(file){
   const res = await api.post({action:"uploadFile", base64, fileName:file.name, mimeType:file.type||"application/octet-stream"});
   return res.data.url;
 }
+
 async function saveRecord(tableName, keyValue){
+  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
   const form = document.getElementById("recordForm");
   const btn = document.getElementById("saveRecordBtn");
@@ -1246,7 +1418,7 @@ async function saveRecord(tableName, keyValue){
       if(f.type==="enumlist" || f.type==="refmulti"){
         const boxes = form.querySelectorAll('input[name="'+f.name+'[]"]:checked');
         data[f.name] = Array.from(boxes).map(b=>b.value).join(", ");
-      } else if(f.type==="file"){
+      } else if(f.type==="file" || f.type==="appsheet_image"){
         // handled below
       } else {
         const el = form.elements[f.name];
@@ -1286,7 +1458,9 @@ async function saveRecord(tableName, keyValue){
     btn.disabled = false; btn.innerHTML = originalHtml; renderIcons();
   }
 }
+
 async function confirmDelete(tableName, keyValue){
+  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
   if(!confirm('Hapus data ini dari "'+table.label+'"? Tindakan tidak bisa dibatalkan.')) return;
   try{
@@ -1296,6 +1470,7 @@ async function confirmDelete(tableName, keyValue){
     renderTableView(tableName);
   }catch(err){ toast("Gagal menghapus: "+err.message,"error"); }
 }
+
 function exportCSV(tableName){
   const table = SCHEMA.tables[tableName];
   const rows = STATE.allData[tableName]||[];
@@ -1310,60 +1485,155 @@ function exportCSV(tableName){
 }
 
 // ==========================================================================
-// SETTINGS MODAL
+// LOGIN
 // ==========================================================================
-function openSettingsModal(){
-  $modalRoot.innerHTML = `
-    <div class="modal-overlay" data-action="close-modal">
-      <div class="modal glass" style="max-width:540px" onclick="event.stopPropagation()">
-        <div class="modal-header"><h2>Pengaturan Koneksi</h2><button class="icon-btn" data-action="close-modal"><i data-lucide="x"></i></button></div>
-        <div class="modal-body">
-          <div class="form-group full">
-            <label>Web App URL (Google Apps Script)</label>
-            <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxxx/exec" value="${esc(CONFIG.API_URL)}"/>
-            <p class="hint">URL Web App sudah disematkan otomatis di file ini. Jika Anda deploy ulang <b>Code.gs</b> (Execute as: <b>Me</b>, Who has access: <b>Anyone</b>) dan mendapat URL baru yang diakhiri <code>/exec</code>, tempel di sini lalu klik Simpan &amp; Sambungkan.</p>
+let pollingStarted = false;
+
+function renderLoginScreen(mode){
+  // mode: "loading" | "form" | "error"
+  const body = mode==="loading" ? `
+      <div class="login-loading"><div class="login-spinner"></div>Memuat data sistem...</div>` : mode==="error" ? `
+      <div class="login-error show">Gagal memuat data dari Google Sheets. Periksa koneksi internet Anda.</div>
+      <button class="btn btn-primary" id="loginRetryBtn" style="width:100%;justify-content:center;"><i data-lucide="refresh-cw"></i>Coba Lagi</button>` : `
+      <div class="login-error" id="loginError"></div>
+      <form id="loginForm" class="login-form">
+        <div class="form-group full">
+          <label>Username</label>
+          <div class="login-field">
+            <i data-lucide="user"></i>
+            <input type="text" id="loginUsername" autocomplete="username" required/>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-ghost" data-action="reset-default-url" type="button">Pakai URL Bawaan</button>
-          <button class="btn btn-ghost" data-action="close-modal">Batal</button>
-          <button class="btn btn-primary" id="saveSettingsBtn" data-action="save-settings"><i data-lucide="save"></i>Simpan &amp; Sambungkan</button>
+        <div class="form-group full">
+          <label>Password</label>
+          <div class="login-field">
+            <i data-lucide="lock"></i>
+            <input type="password" id="loginPassword" autocomplete="current-password" required/>
+            <button type="button" class="pw-toggle" id="pwToggleBtn" tabindex="-1" aria-label="Tampilkan password"><i data-lucide="eye"></i></button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center;"><i data-lucide="log-in"></i>Masuk</button>
+      </form>
+      <div class="login-divider">atau</div>
+      <button class="btn btn-ghost" id="viewOnlyBtn" style="width:100%;justify-content:center;"><i data-lucide="eye"></i>Masuk Hanya Lihat</button>`;
+
+  $loginRoot.innerHTML = `
+    <div class="login-overlay">
+      <div class="glass login-card">
+        <div class="login-card-band"></div>
+        <div class="login-card-inner">
+          <div class="login-logo"><img src="MSB Logo.png" alt="Logo MSB" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=MSB&background=2563EB&color=fff&bold=true';"/></div>
+          <div class="login-title">QMS ISO 9001:2015</div>
+          <div class="login-sub">PT Murinda Sentra Baja</div>
+          ${body}
+          <div class="login-foot">Sistem Manajemen Mutu Internal</div>
         </div>
       </div>
     </div>`;
   renderIcons();
-}
-async function saveSettings(){
-  const input = document.getElementById("apiUrlInput");
-  const val = input.value.trim();
-  if(!val){ toast("URL tidak boleh kosong","error"); return; }
-  const btn = document.getElementById("saveSettingsBtn");
-  const originalHtml = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = "Menyambungkan...";
-  const previousUrl = CONFIG.API_URL;
-  CONFIG.API_URL = val;
-  try{
-    const res = await api.get("getAll");
-    STATE.allData = res.data;
-    STATE.lastSync = new Date();
-    updateSyncIndicator(true);
-    localStorage.setItem("qms_api_url", val);
-    closeModal();
-    toast("Berhasil tersambung ke Google Sheets","success");
-    if(STATE.view==="table" && STATE.currentTable) renderTableView(STATE.currentTable);
-    else renderDashboard();
-  }catch(err){
-    CONFIG.API_URL = previousUrl;
-    updateSyncIndicator(false);
-    btn.disabled = false; btn.innerHTML = originalHtml; renderIcons();
-    toast("Gagal menyambungkan: "+(err.message||"Periksa URL dan deployment Apps Script"), "error");
+  if(mode==="form"){
+    document.getElementById("loginForm").addEventListener("submit", handleLoginSubmit);
+    document.getElementById("viewOnlyBtn").addEventListener("click", enterViewOnly);
+    const pwBtn = document.getElementById("pwToggleBtn");
+    pwBtn.addEventListener("click", function(){
+      const inp = document.getElementById("loginPassword");
+      const showing = inp.type==="text";
+      inp.type = showing ? "password" : "text";
+      pwBtn.innerHTML = showing ? '<i data-lucide="eye"></i>' : '<i data-lucide="eye-off"></i>';
+      pwBtn.setAttribute("aria-label", showing ? "Tampilkan password" : "Sembunyikan password");
+      renderIcons();
+    });
+    document.getElementById("loginUsername").focus();
+  } else if(mode==="error"){
+    document.getElementById("loginRetryBtn").addEventListener("click", retryInit);
   }
+}
+function showLoginError(msg){
+  const el = document.getElementById("loginError");
+  if(el){ el.textContent = msg; el.classList.add("show"); }
+}
+function handleLoginSubmit(e){
+  e.preventDefault();
+  const u = document.getElementById("loginUsername").value.trim();
+  const p = document.getElementById("loginPassword").value;
+  const rows = STATE.allData.Login||[];
+  const match = rows.find(r=>String(r.Username||"").trim().toLowerCase()===u.toLowerCase() && String(r.Password||"")===p);
+  if(match){ completeAuth(match.Username, false); }
+  else { showLoginError("Username atau password salah."); }
+}
+function enterViewOnly(){ completeAuth(null, true); }
+function completeAuth(username, viewOnly){
+  STATE.authenticated = true;
+  STATE.currentUser = username;
+  STATE.viewOnly = viewOnly;
+  sessionStorage.setItem("qms_user", username||"");
+  sessionStorage.setItem("qms_viewonly", viewOnly?"1":"0");
+  $loginRoot.innerHTML = "";
+  renderSidebar();
+  renderDashboard();
+  renderUserMenu();
+  if(!pollingStarted){ pollingStarted = true; setInterval(pollTick, CONFIG.POLL_MS); }
+}
+function logout(){
+  STATE.authenticated = false;
+  STATE.currentUser = null;
+  STATE.viewOnly = false;
+  sessionStorage.removeItem("qms_user");
+  sessionStorage.removeItem("qms_viewonly");
+  renderLoginScreen("form");
+}
+function renderUserMenu(){
+  const el = document.getElementById("userMenu");
+  if(!el) return;
+  if(STATE.viewOnly){
+    el.innerHTML = '<span class="user-badge user-badge-view"><i data-lucide="eye"></i>Mode Hanya Lihat</span>'+
+      '<button class="icon-btn" data-action="logout" title="Keluar"><i data-lucide="log-out"></i></button>';
+  } else {
+    el.innerHTML = '<span class="user-badge"><i data-lucide="user-round"></i>'+esc(STATE.currentUser||"")+'</span>'+
+      '<button class="icon-btn" data-action="logout" title="Keluar"><i data-lucide="log-out"></i></button>';
+  }
+  renderIcons();
+}
+function retryInit(){
+  renderLoginScreen("loading");
+  loadAll(true).then(()=>{
+    if(!STATE.lastSync){ renderLoginScreen("error"); return; }
+    resumeAfterLoad();
+  });
+}
+function resumeAfterLoad(){
+  const savedUser = sessionStorage.getItem("qms_user");
+  const savedViewOnly = sessionStorage.getItem("qms_viewonly");
+  if(savedViewOnly==="1"){ completeAuth(null, true); }
+  else if(savedUser){ completeAuth(savedUser, false); }
+  else { renderLoginScreen("form"); }
+}
+
+// ==========================================================================
+// PRINT
+// ==========================================================================
+function printCurrentView(){
+  const meta = document.getElementById("printMeta");
+  if(meta){
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2,"0");
+    const mm = String(now.getMonth()+1).padStart(2,"0");
+    const hh = String(now.getHours()).padStart(2,"0");
+    const mi = String(now.getMinutes()).padStart(2,"0");
+    meta.textContent = "Dicetak: "+DAYS_ID[now.getDay()]+", "+dd+"/"+mm+"/"+now.getFullYear()+" "+hh+":"+mi;
+  }
+  window.print();
 }
 
 // ==========================================================================
 // EVENT DELEGATION
 // ==========================================================================
 document.body.addEventListener("click", function(e){
+  // Klik langsung pada backdrop (bukan pada isi kartu di dalamnya) menutup modal/lightbox.
+  if(e.target.classList && (e.target.classList.contains("modal-overlay") || e.target.classList.contains("photo-lightbox-overlay"))){
+    closeModal();
+    return;
+  }
   const el = e.target.closest("[data-action]");
   if(!el) return;
   const action = el.dataset.action;
@@ -1378,9 +1648,9 @@ document.body.addEventListener("click", function(e){
     case "export-csv": exportCSV(el.dataset.table); break;
     case "close-modal": closeModal(); break;
     case "save-record": saveRecord(el.dataset.table, el.dataset.key||null); break;
-    case "open-settings": openSettingsModal(); break;
-    case "save-settings": saveSettings(); break;
-    case "reset-default-url": { const inp=document.getElementById("apiUrlInput"); if(inp) inp.value = DEFAULT_API_URL; break; }
+    case "view-photo": openPhotoLightbox(el.dataset.img); break;
+    case "print-view": printCurrentView(); break;
+    case "logout": logout(); break;
     case "open-sidebar": document.getElementById("sidebar").classList.add("open"); document.querySelector(".sidebar-backdrop").classList.add("show"); break;
     case "close-sidebar": closeSidebarMobile(); break;
   }
@@ -1391,24 +1661,35 @@ function closeSidebarMobile(){
 }
 
 // ==========================================================================
-// INIT
+// LIVE CLOCK
 // ==========================================================================
-function init(){
-  CONFIG.API_URL = localStorage.getItem("qms_api_url") || DEFAULT_API_URL;
-  renderSidebar();
-  renderDashboard();
-  if(CONFIG.API_URL){
-    loadAll().then(()=>renderDashboard());
-    setInterval(pollTick, CONFIG.POLL_MS);
-  } else {
-    setTimeout(openSettingsModal, 400);
-  }
-  initFxLayer();
+function startClock(){
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+function updateClock(){
+  const el = document.getElementById("liveClock");
+  if(!el) return;
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,"0");
+  const mm = String(now.getMinutes()).padStart(2,"0");
+  const ss = String(now.getSeconds()).padStart(2,"0");
+  el.textContent = DAYS_ID[now.getDay()]+", "+now.getDate()+" "+MONTHS_ID[now.getMonth()]+" "+now.getFullYear()+" · "+hh+":"+mm+":"+ss;
 }
 
 // ==========================================================================
-// EFEK VISUAL: cursor spotlight (hover) + ripple (klik) — liquid glass
+// INIT
 // ==========================================================================
+function init(){
+  startClock();
+  renderLoginScreen("loading");
+  loadAll(true).then(()=>{
+    if(!STATE.lastSync){ renderLoginScreen("error"); return; }
+    resumeAfterLoad();
+  });
+  initFxLayer();
+}
+
 function initFxLayer(){
   const SPOT_SELECTOR = ".glass, .btn, .icon-btn, .kpi-card, .quick-chip";
   document.addEventListener("pointermove", function(e){
