@@ -136,7 +136,7 @@ body::before{
 .nav-group.open .nav-group-items{max-height:600px;}
 .nav-subitem{font-size:.78rem; font-weight:500; padding-left:22px;}
 
-#main{display:flex; flex-direction:column; min-height:100vh; padding:14px 14px 14px 0;}
+#main{display:flex; flex-direction:column; min-height:100vh; padding:14px 14px 14px 0; min-width:0;}
 #topbar{
   display:flex; align-items:center; justify-content:space-between; padding:14px 20px; margin-bottom:14px;
   position:sticky; top:14px; z-index:20;
@@ -180,7 +180,7 @@ body::before{
 #topbar .icon-btn{background:linear-gradient(135deg, rgba(37,99,235,.14), rgba(139,92,246,.14)); border-color:rgba(37,99,235,.22); color:var(--cyan);}
 #topbar .icon-btn:hover{background:linear-gradient(135deg, var(--cyan), var(--indigo)); color:#fff; box-shadow:0 8px 18px -6px rgba(37,99,235,.6); transform:translateY(-2px);}
 
-#content{flex:1; display:flex; flex-direction:column; gap:18px; padding:0 6px 20px;}
+#content{flex:1; display:flex; flex-direction:column; gap:18px; padding:0 6px 20px; min-width:0;}
 .view-header{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;}
 .breadcrumb{font-size:.72rem; font-weight:700; color:var(--cyan); letter-spacing:.02em; margin-bottom:4px;}
 .view-header h1{font-size:1.5rem; font-weight:800; letter-spacing:-.01em;}
@@ -253,20 +253,44 @@ body::before{
 .bar-value{text-align:right; font-weight:700; font-variant-numeric:tabular-nums; color:var(--text-1);}
 .chart-empty{color:var(--text-3); font-size:.78rem; padding:10px 0; position:relative; z-index:1;}
 
-/* Table */
-.table-wrap{overflow:auto; max-height:calc(100vh - 220px);}
-table{width:100%; border-collapse:collapse; font-size:.81rem;}
+/* Table: lebar mengikuti isi kolom, bisa digeser; header & kolom pertama tetap terlihat */
+.table-wrap{overflow:auto; max-height:calc(100vh - 220px); background:rgba(255,255,255,.78); -webkit-overflow-scrolling:touch;}
+table{width:max-content; min-width:100%; border-collapse:separate; border-spacing:0; font-size:.82rem;}
 thead th{
-  position:sticky; top:0; background:rgba(255,255,255,.88); backdrop-filter:blur(8px); text-align:left; font-weight:700;
-  color:var(--text-3); font-size:.68rem; letter-spacing:.02em; padding:11px 14px; border-bottom:1px solid var(--glass-border); white-space:nowrap;
+  position:sticky; top:0; z-index:2; background:#F4F7FC; text-align:left; font-weight:700;
+  color:var(--text-2); font-size:.72rem; letter-spacing:.01em; padding:12px 16px; white-space:nowrap;
+  border-bottom:1px solid rgba(15,23,42,.12);
 }
-tbody td{padding:11px 14px; border-bottom:1px solid rgba(15,23,42,.055); color:var(--text-1); vertical-align:middle; max-width:260px;}
-tbody tr:hover{background:rgba(37,99,235,.045);}
-tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
+tbody td{padding:12px 16px; border-bottom:1px solid rgba(15,23,42,.06); color:var(--text-1); vertical-align:middle; background:transparent;}
+tbody tr[data-action="view-detail"]{cursor:pointer;}
+tbody tr:hover td{background:rgba(37,99,235,.05);}
+tbody tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--rose);}
+
+/* kolom pertama (identitas baris) dan kolom aksi menempel saat digeser */
+th.c-sticky, td.c-sticky{position:sticky; left:0; border-right:1px solid rgba(15,23,42,.09);}
+td.c-sticky{z-index:1; background:#FBFCFF; font-weight:700;}
+th.c-sticky{z-index:4;}
+th.col-actions, td.col-actions{position:sticky; right:0; border-left:1px solid rgba(15,23,42,.09);}
+td.col-actions{z-index:1; background:#FBFCFF;}
+th.col-actions{z-index:4;}
+tbody tr:hover td.c-sticky, tbody tr:hover td.col-actions{background:#EEF3FC;}
 .col-actions{white-space:nowrap; text-align:right;}
 .col-actions .icon-btn{display:inline-flex;}
+
+/* sel: teks panjang dipotong 2 baris (isi lengkap ada di detail) */
+.c-num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.c-nowrap{white-space:nowrap;}
+.cell-text, .cell-clamp{
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden;
+  white-space:normal; line-height:1.45; overflow-wrap:anywhere;
+}
+.cell-text{max-width:240px;}
+.cell-clamp{min-width:200px; max-width:320px;}
+td.c-sticky .cell-text{max-width:180px;}
+.cell-chips{min-width:140px; max-width:280px; white-space:normal;}
+.cell-muted{color:var(--text-3);}
 .empty-state{text-align:center; color:var(--text-3); padding:40px 20px !important; font-size:.85rem;}
-.table-footer{font-size:.74rem; color:var(--text-3); padding:2px 6px;}
+.table-footer{font-size:.76rem; color:var(--text-2); padding:2px 6px; display:flex; flex-wrap:wrap; gap:4px 18px;}
 
 .badge{display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:.7rem; font-weight:700; white-space:nowrap;}
 .badge-rose{background:var(--rose-dim); color:var(--rose);}
@@ -310,6 +334,28 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
 .modal-header h2{font-size:1.02rem; font-weight:800;}
 .modal-body{padding:20px 22px; overflow-y:auto; position:relative; z-index:1;}
 .modal-footer{display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--glass-border); position:relative; z-index:1;}
+/* Modal detail (klik baris) */
+.modal.modal-detail{max-width:760px; background:rgba(255,255,255,.95);}
+.detail-head{align-items:flex-start; gap:14px;}
+.detail-head-main{min-width:0; flex:1;}
+.detail-head-main .breadcrumb{margin-bottom:3px;}
+.modal-header h2.detail-title{
+  font-size:1.12rem; line-height:1.35; overflow-wrap:anywhere;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden;
+}
+.detail-badges{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px;}
+.detail-id{font-size:.72rem; font-weight:700; color:var(--text-2); background:rgba(15,23,42,.06); padding:3px 10px; border-radius:999px;}
+.detail-grid{display:grid; grid-template-columns:1fr 1fr; grid-auto-flow:dense; gap:0 28px;}
+.dv-item{padding:11px 0; border-bottom:1px solid rgba(15,23,42,.07); min-width:0;}
+.dv-item.full{grid-column:1 / -1;}
+.dv-label{font-size:.72rem; font-weight:700; color:var(--text-2); margin-bottom:4px;}
+.dv-value{font-size:.88rem; line-height:1.5; overflow-wrap:anywhere;}
+.dv-value .is-long{white-space:pre-wrap;}
+.dv-value .cell-chips{min-width:0; max-width:none;}
+.dv-empty{color:var(--text-3);}
+.detail-photo .employee-photo{width:96px; height:96px; border-radius:16px; cursor:default;}
+.detail-photo .employee-photo:hover{transform:none; box-shadow:0 2px 6px rgba(0,0,0,.1);}
+.btn-push-left{margin-right:auto;}
 #recordForm{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
 .form-group{display:flex; flex-direction:column; gap:6px;}
 .form-group.full{grid-column:1 / -1;}
@@ -450,6 +496,9 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
   .glass{background:#fff !important; box-shadow:none !important; backdrop-filter:none !important; border:1px solid #ddd !important;}
   .table-wrap{max-height:none; overflow:visible;}
   thead th{position:static; background:#fff !important; backdrop-filter:none !important;}
+  table{width:100%; font-size:.7rem;}
+  th.c-sticky, td.c-sticky{position:static; background:#fff !important;}
+  .cell-text, .cell-clamp{display:block; width:auto; min-width:0; max-width:none; -webkit-line-clamp:unset; overflow:visible;}
 }
 
 @media (max-width:960px){
@@ -466,11 +515,18 @@ tbody tr.row-overdue{box-shadow:inset 3px 0 0 var(--rose);}
   #main{padding:10px;}
   #menuToggle{display:inline-flex;}
   #recordForm{grid-template-columns:1fr;}
+  .detail-grid{grid-template-columns:1fr;}
+  .modal-overlay{padding:10px;}
+  .modal-detail{max-height:92vh;}
+  td.c-sticky .cell-text{max-width:130px;}
+  th.col-actions, td.col-actions{position:static; border-left:0;}
   .kpi-grid{grid-template-columns:repeat(2,1fr);}
   .sidebar-backdrop{display:none; position:fixed; inset:0; background:rgba(15,23,42,.45); z-index:55;}
   .sidebar-backdrop.show{display:block;}
 }
 
+.setup-banner.info{border-left-color:var(--cyan); margin-bottom:14px;}
+.setup-banner.info svg{color:var(--cyan);}
 </style>
 </head>
 <body>
@@ -541,25 +597,22 @@ const SCHEMA = {
     { key:"cert", label:"M. Sertifikasi", icon:"award" }
   ],
   tables: {
-    Master_Departemen:{label:"Departemen",group:"master",key:"ID_Departemen",idPrefix:"DEPT",display:"Nama_Departemen",fields:[
-      {name:"ID_Departemen",label:"ID Departemen",type:"text",auto:true},
-      {name:"Nama_Departemen",label:"Nama Departemen",type:"text",required:true},
+    /* ID & Nama Departemen berasal dari IMPORTRANGE (terkunci); Kepala_Departemen & Area_Proses diisi manual di sheet ini. */
+    Master_Departemen:{label:"Departemen",group:"master",noCreate:true,noDelete:true,sourceNote:"ID & Nama Departemen bersumber dari spreadsheet lain (IMPORTRANGE) dan terkunci. Hanya Kepala Departemen & Area Proses yang dapat diubah di sini.",key:"ID_Departemen",idPrefix:"",display:"Nama_Departemen",fields:[
+      {name:"ID_Departemen",label:"ID Departemen",type:"text",locked:true},
+      {name:"Nama_Departemen",label:"Nama Departemen",type:"text",locked:true},
       {name:"Kepala_Departemen",label:"Kepala Departemen",type:"ref",ref:"Master_Karyawan"},
       {name:"Area_Proses",label:"Area Proses",type:"text"}
     ]},
-    /* PENTING: kolom & urutan HARUS SAMA PERSIS dengan header asli di sheet
-       Master_Karyawan (ID Karyawan, Foto Profil, Nama Lengkap, Jabatan,
-       Departemen, Status Kerja, Tanggal Masuk, Whatsapp, Email). */
-    Master_Karyawan:{label:"Karyawan",group:"master",key:"ID Karyawan",idPrefix:"",display:"Nama Lengkap",fields:[
-      {name:"ID Karyawan",label:"ID Karyawan",type:"text",required:true,note:"Samakan dengan ID Karyawan di sistem HR / ID Card"},
-      {name:"Foto Profil",label:"Foto Profil",type:"appsheet_image"},
-      {name:"Nama Lengkap",label:"Nama Lengkap",type:"text",required:true},
+    /* Header Master_Karyawan = header asli sheet (IMPORTRANGE): ID_Karyawan, NIK_Karyawan, Nama_Lengkap, Foto_Profil, Jenis_Kelamin, Jabatan, Departemen */
+    Master_Karyawan:{label:"Karyawan",group:"master",readonly:true,sourceNote:"Data tabel ini bersumber dari spreadsheet lain (IMPORTRANGE) sehingga hanya-baca di sini. Ubah datanya di spreadsheet sumber.",key:"ID_Karyawan",idPrefix:"",display:"Nama_Lengkap",fields:[
+      {name:"ID_Karyawan",label:"ID Karyawan",type:"text",required:true},
+      {name:"NIK_Karyawan",label:"NIK Karyawan",type:"text"},
+      {name:"Nama_Lengkap",label:"Nama Lengkap",type:"text",required:true},
+      {name:"Foto_Profil",label:"Foto Profil",type:"appsheet_image"},
+      {name:"Jenis_Kelamin",label:"Jenis Kelamin",type:"text"},
       {name:"Jabatan",label:"Jabatan",type:"text"},
-      {name:"Departemen",label:"Departemen",type:"text"},
-      {name:"Status Kerja",label:"Status Kerja",type:"text",hidden:true},
-      {name:"Tanggal Masuk",label:"Tanggal Masuk",type:"date",hidden:true},
-      {name:"Whatsapp",label:"WhatsApp",type:"text"},
-      {name:"Email",label:"Email",type:"email"}
+      {name:"Departemen",label:"Departemen",type:"text"}
     ]},
     Master_Auditor:{label:"Auditor",group:"master",key:"ID_Auditor",idPrefix:"AUD",display:"ID_Auditor",fields:[
       {name:"ID_Auditor",label:"ID Auditor",type:"text",auto:true},
@@ -573,13 +626,13 @@ const SCHEMA = {
     Master_Klausul_ISO9001:{label:"Klausul ISO 9001",group:"master",key:"Kode_Klausul",idPrefix:"",display:"Judul_Klausul",fields:[
       {name:"Kode_Klausul",label:"Kode Klausul",type:"text",required:true,note:"cth. 8.5.1"},
       {name:"Judul_Klausul",label:"Judul Klausul",type:"text",required:true},
-      {name:"Kategori",label:"Kategori",type:"enum",options:["Konteks Organisasi","Kepemimpinan","Perencanaan","Dukungan","Operasi","Evaluasi Kinerja","Peningkatan"]},
+      {name:"Kategori",label:"Kategori",type:"enum",options:["Plan - Konteks Organisasi","Plan - Kepemimpinan","Plan - Perencanaan","Plan - Dukungan","Do - Operasional","Check - Evaluasi Kinerja","Act - Peningkatan"]},
       {name:"Deskripsi_Persyaratan",label:"Deskripsi Persyaratan",type:"textarea"}
     ]},
     Master_Proses_Bisnis:{label:"Proses Bisnis",group:"master",key:"ID_Proses",idPrefix:"PRS",display:"Nama_Proses",fields:[
       {name:"ID_Proses",label:"ID Proses",type:"text",auto:true},
       {name:"Nama_Proses",label:"Nama Proses",type:"text",required:true},
-      {name:"Pemilik_Proses",label:"Pemilik Proses",type:"ref",ref:"Master_Karyawan"},
+      {name:"Pemilik_Proses",label:"Pemilik Proses",type:"ref",ref:"Master_Departemen"},
       {name:"Klausul_Terkait",label:"Klausul Terkait",type:"refmulti",ref:"Master_Klausul_ISO9001"},
       {name:"Input_Proses",label:"Input Proses",type:"textarea"},
       {name:"Output_Proses",label:"Output Proses",type:"textarea"},
@@ -588,43 +641,91 @@ const SCHEMA = {
     Master_Dokumen:{label:"Dokumen",group:"master",key:"No_Dokumen",idPrefix:"",display:"Judul_Dokumen",fields:[
       {name:"No_Dokumen",label:"No. Dokumen",type:"text",required:true},
       {name:"Judul_Dokumen",label:"Judul Dokumen",type:"text",required:true},
-      {name:"Jenis",label:"Jenis",type:"enum",options:["Manual Mutu","Prosedur","Instruksi Kerja","Formulir","Rekaman"]},
+      {name:"Jenis",label:"Jenis",type:"enum",options:["Manual Mutu","Kebijakan","Prosedur","Instruksi Kerja","Formulir","Rekaman"]},
       {name:"Klausul_Terkait",label:"Klausul Terkait",type:"refmulti",ref:"Master_Klausul_ISO9001"},
-      {name:"Revisi_Saat_Ini",label:"Revisi Saat Ini",type:"text"},
+      {name:"Revisi_Saat_Ini",label:"Revisi Saat Ini",type:"text",note:"cth. 0, 1, 2"},
       {name:"Tgl_Efektif",label:"Tgl Efektif",type:"date"},
-      {name:"Pemilik_Dokumen",label:"Pemilik Dokumen",type:"ref",ref:"Master_Karyawan"},
+      {name:"Pemilik_Dokumen",label:"Pemilik Dokumen",type:"ref",ref:"Master_Departemen"},
       {name:"File_Dokumen",label:"File Dokumen",type:"file"},
       {name:"Status",label:"Status",type:"enum",options:["Draft","Review","Approved","Obsolete"]}
     ]},
-    Master_Supplier:{label:"Supplier",group:"master",key:"ID_Supplier",idPrefix:"SUP",display:"Nama_Supplier",fields:[
-      {name:"ID_Supplier",label:"ID Supplier",type:"text",auto:true},
-      {name:"Nama_Supplier",label:"Nama Supplier",type:"text",required:true},
-      {name:"Kategori_Barang_Jasa",label:"Kategori Barang/Jasa",type:"text"},
-      {name:"Kontak",label:"Kontak",type:"text"},
-      {name:"Status_Approved",label:"Status Approved",type:"yesno"}
+    Master_Supplier:{label:"Supplier",group:"master",readonly:true,sourceNote:"Data tabel ini bersumber dari spreadsheet lain (IMPORTRANGE) sehingga hanya-baca di sini. Ubah datanya di spreadsheet sumber.",key:"SupplierID",idPrefix:"",display:"SupplierName",fields:[
+      {name:"SupplierID",label:"Supplier ID",type:"text",required:true},
+      {name:"SupplierName",label:"Supplier Name",type:"text",required:true},
+      {name:"SupplierCategory",label:"Supplier Category",type:"text"},
+      {name:"Address",label:"Address",type:"text"},
+      {name:"ContactPerson",label:"Contact Person",type:"text"},
+      {name:"Phone",label:"Phone",type:"text"},
+      {name:"Email",label:"Email",type:"email"},
+      {name:"PaymentTermDays",label:"Payment Term (Days)",type:"number"},
+      {name:"Status",label:"Status",type:"badge"}
     ]},
-    Master_Pelanggan:{label:"Pelanggan",group:"master",key:"ID_Pelanggan",idPrefix:"PLG",display:"Nama_Pelanggan",fields:[
-      {name:"ID_Pelanggan",label:"ID Pelanggan",type:"text",auto:true},
-      {name:"Nama_Pelanggan",label:"Nama Pelanggan",type:"text",required:true},
-      {name:"Kontak",label:"Kontak",type:"text"},
-      {name:"Kategori",label:"Kategori",type:"text"}
+    Master_Pelanggan:{label:"Pelanggan",group:"master",readonly:true,sourceNote:"Data tabel ini bersumber dari spreadsheet lain (IMPORTRANGE) sehingga hanya-baca di sini. Ubah datanya di spreadsheet sumber.",key:"Kode_Customer",idPrefix:"",display:"Nama_Customer",fields:[
+      {name:"Kode_Customer",label:"Kode Customer",type:"text",required:true},
+      {name:"Nama_Customer",label:"Nama Customer",type:"text",required:true},
+      {name:"Jenis_Customer",label:"Jenis Customer",type:"text"},
+      {name:"Alamat",label:"Alamat",type:"text"},
+      {name:"Kota",label:"Kota",type:"text"},
+      {name:"Provinsi",label:"Provinsi",type:"text"}
     ]},
-    /* PENTING: kolom & urutan HARUS SAMA PERSIS dengan header asli di sheet
-       Master_Alat_Mesin (ID Alat/Mesin, Nama Alat/Mesin, Merek/Tipe, Nomor
-       Seri, Tanggal Beli, Kapasitas/Spesifikasi, Kondisi, Tanggal Kalibrasi,
-       Kalibrasi Berikutnya, Lokasi/Departemen, Nama Pengguna). */
-    Master_Alat_Mesin:{label:"Alat & Mesin",group:"master",key:"ID Alat/Mesin",idPrefix:"",display:"Nama Alat/Mesin",fields:[
-      {name:"ID Alat/Mesin",label:"ID Alat/Mesin",type:"text",required:true,note:"Samakan dgn ID Alat di ERP Maintenance"},
-      {name:"Nama Alat/Mesin",label:"Nama Alat/Mesin",type:"text",required:true},
-      {name:"Merek/Tipe",label:"Merek/Tipe",type:"text"},
-      {name:"Nomor Seri",label:"Nomor Seri",type:"text"},
-      {name:"Tanggal Beli",label:"Tanggal Beli",type:"date"},
-      {name:"Kapasitas/Spesifikasi",label:"Kapasitas/Spesifikasi",type:"text"},
-      {name:"Kondisi",label:"Kondisi",type:"enum",options:["Baik","Rusak","Perlu Perbaikan"]},
-      {name:"Tanggal Kalibrasi",label:"Tanggal Kalibrasi",type:"date"},
-      {name:"Kalibrasi Berikutnya",label:"Kalibrasi Berikutnya",type:"date"},
-      {name:"Lokasi/Departemen",label:"Lokasi/Departemen",type:"text"},
-      {name:"Nama Pengguna",label:"Nama Pengguna",type:"text"}
+    Master_Alat:{label:"Alat",group:"master",readonly:true,sourceNote:"Data tabel ini bersumber dari spreadsheet lain (IMPORTRANGE) sehingga hanya-baca di sini. Ubah datanya di spreadsheet sumber.",key:"Kode Alat",idPrefix:"",display:"Nama Alat",fields:[
+      {name:"Kode Alat",label:"Kode Alat",type:"text",required:true},
+      {name:"Nama Alat",label:"Nama Alat",type:"text",required:true},
+      {name:"Kategori",label:"Kategori",type:"text"},
+      {name:"Jenis Alat",label:"Jenis Alat",type:"text"},
+      {name:"Merk",label:"Merk",type:"text"},
+      {name:"Model/Tipe",label:"Model/Tipe",type:"text"},
+      {name:"No Seri",label:"No Seri",type:"text"},
+      {name:"No Aset/Inventaris",label:"No Aset/Inventaris",type:"text"},
+      {name:"Tahun Pembuatan",label:"Tahun Pembuatan",type:"text"},
+      {name:"Tanggal Pembelian",label:"Tanggal Pembelian",type:"date"},
+      {name:"Vendor Pembelian",label:"Vendor Pembelian",type:"text"},
+      {name:"Umur Ekonomis (Tahun)",label:"Umur Ekonomis (Tahun)",type:"number"},
+      {name:"Lokasi",label:"Lokasi",type:"text"},
+      {name:"Departemen",label:"Departemen",type:"text"},
+      {name:"PIC/Penanggung Jawab",label:"PIC/Penanggung Jawab",type:"text"},
+      {name:"Status",label:"Status",type:"badge"},
+      {name:"Satuan Meter",label:"Satuan Meter",type:"text"},
+      {name:"Meter Reading Terakhir",label:"Meter Reading Terakhir",type:"number"},
+      {name:"Interval PM (Meter)",label:"Interval PM (Meter)",type:"number"},
+      {name:"Interval PM (Hari)",label:"Interval PM (Hari)",type:"number"},
+      {name:"Tanggal PM Terakhir",label:"Tanggal PM Terakhir",type:"date"},
+      {name:"Tanggal PM Berikutnya",label:"Tanggal PM Berikutnya",type:"date"},
+      {name:"Harga Perolehan",label:"Harga Perolehan",type:"currency"},
+      {name:"Foto URL",label:"Foto URL",type:"file"},
+      {name:"Dokumen URL",label:"Dokumen URL",type:"file"},
+      {name:"Catatan",label:"Catatan",type:"textarea"}
+    ]},
+    Master_Mesin:{label:"Mesin",group:"master",readonly:true,sourceNote:"Data tabel ini bersumber dari spreadsheet lain (IMPORTRANGE) sehingga hanya-baca di sini. Ubah datanya di spreadsheet sumber.",key:"Kode Mesin",idPrefix:"",display:"Nama Mesin",fields:[
+      {name:"Kode Mesin",label:"Kode Mesin",type:"text",required:true},
+      {name:"Nama Mesin",label:"Nama Mesin",type:"text",required:true},
+      {name:"Kategori",label:"Kategori",type:"text"},
+      {name:"Jenis Mesin",label:"Jenis Mesin",type:"text"},
+      {name:"Merk",label:"Merk",type:"text"},
+      {name:"Model/Tipe",label:"Model/Tipe",type:"text"},
+      {name:"No Seri",label:"No Seri",type:"text"},
+      {name:"No Aset/Inventaris",label:"No Aset/Inventaris",type:"text"},
+      {name:"Tahun Pembuatan",label:"Tahun Pembuatan",type:"text"},
+      {name:"Tanggal Pembelian",label:"Tanggal Pembelian",type:"date"},
+      {name:"Tanggal Instalasi",label:"Tanggal Instalasi",type:"date"},
+      {name:"Vendor Pembelian",label:"Vendor Pembelian",type:"text"},
+      {name:"Umur Ekonomis (Tahun)",label:"Umur Ekonomis (Tahun)",type:"number"},
+      {name:"Daya Listrik (kW)",label:"Daya Listrik (kW)",type:"text"},
+      {name:"Tegangan/Fasa",label:"Tegangan/Fasa",type:"text"},
+      {name:"Kapasitas/Spesifikasi Kerja",label:"Kapasitas/Spesifikasi Kerja",type:"text"},
+      {name:"Lokasi",label:"Lokasi",type:"text"},
+      {name:"Departemen",label:"Departemen",type:"text"},
+      {name:"PIC/Penanggung Jawab",label:"PIC/Penanggung Jawab",type:"text"},
+      {name:"Status",label:"Status",type:"badge"},
+      {name:"Jam Operasi Terakhir",label:"Jam Operasi Terakhir",type:"number"},
+      {name:"Interval PM (Jam Operasi)",label:"Interval PM (Jam Operasi)",type:"number"},
+      {name:"Interval PM (Hari)",label:"Interval PM (Hari)",type:"number"},
+      {name:"Tanggal PM Terakhir",label:"Tanggal PM Terakhir",type:"date"},
+      {name:"Tanggal PM Berikutnya",label:"Tanggal PM Berikutnya",type:"date"},
+      {name:"Harga Perolehan",label:"Harga Perolehan",type:"currency"},
+      {name:"Foto URL",label:"Foto URL",type:"file"},
+      {name:"Dokumen URL",label:"Dokumen URL",type:"file"},
+      {name:"Catatan",label:"Catatan",type:"textarea"}
     ]},
     Audit_Program_Tahunan:{label:"Program Audit Tahunan",group:"planning",key:"ID_Program",idPrefix:"PRG",display:"Nama_Program",fields:[
       {name:"ID_Program",label:"ID Program",type:"text",auto:true},
@@ -820,15 +921,30 @@ const SCHEMA = {
       {name:"Kompetensi_Dibutuhkan",label:"Kompetensi Dibutuhkan",type:"textarea"},
       {name:"Level_Minimum",label:"Level Minimum",type:"text"}
     ]},
-    Kalibrasi_Alat_Ukur:{label:"Kalibrasi Alat Ukur",group:"calibration",key:"ID_Kalibrasi",idPrefix:"KAL",display:"ID_Kalibrasi",fields:[
-      {name:"ID_Kalibrasi",label:"ID Kalibrasi",type:"text",auto:true},
-      {name:"Alat",label:"Alat",type:"ref",ref:"Master_Alat_Mesin",required:true},
-      {name:"Tgl_Kalibrasi",label:"Tgl Kalibrasi",type:"date"},
-      {name:"Lembaga_Kalibrasi",label:"Lembaga Kalibrasi",type:"text"},
-      {name:"Hasil",label:"Hasil",type:"text"},
-      {name:"Tgl_Jatuh_Tempo_Berikutnya",label:"Tgl Jatuh Tempo Berikutnya",type:"date"},
-      {name:"Sertifikat",label:"Sertifikat",type:"file"}
-    ],overdueField:{dateField:"Tgl_Jatuh_Tempo_Berikutnya",statusField:null,closedValues:[]}},
+    Kalibrasi_Alat_Ukur:{label:"Kalibrasi Alat Ukur",group:"calibration",readonly:true,sourceNote:"Data kalibrasi bersumber dari spreadsheet permohonan kalibrasi (IMPORTRANGE) dan hanya-baca di sini. Satu ID Kalibrasi dapat memuat beberapa alat, sehingga ID tidak unik per baris.",key:"ID Kalibrasi",idPrefix:"",display:"ID Kalibrasi",fields:[
+      {name:"ID Kalibrasi",label:"ID Kalibrasi",type:"text"},
+      {name:"Tanggal",label:"Tanggal",type:"date"},
+      {name:"Nama Pemohon",label:"Nama Pemohon",type:"text"},
+      {name:"Departemen",label:"Departemen",type:"text"},
+      {name:"ID Alat/Mesin",label:"ID Alat/Mesin",type:"text"},
+      {name:"Nama Alat/Mesin",label:"Nama Alat/Mesin",type:"text"},
+      {name:"Merek & Tipe/Model",label:"Merek & Tipe/Model",type:"text"},
+      {name:"Serial Number",label:"Serial Number",type:"text"},
+      {name:"Kapasitas/Speksifikasi",label:"Kapasitas/Spesifikasi",type:"text"},
+      {name:"Lokasi Alat",label:"Lokasi Alat",type:"text"},
+      {name:"Pengguna",label:"Pengguna",type:"text"},
+      {name:"Alasan Kalibrasi",label:"Alasan Kalibrasi",type:"text"},
+      {name:"Jenis Layanan Kalibrasi",label:"Jenis Layanan Kalibrasi",type:"text"},
+      {name:"Lembaga Kalibrasi",label:"Lembaga Kalibrasi",type:"text"},
+      {name:"Tingkat Urgensi",label:"Tingkat Urgensi",type:"badge"},
+      {name:"Status Kalibrasi",label:"Status Kalibrasi",type:"badge"},
+      {name:"Kondisi Khusus/Keluhan",label:"Kondisi Khusus/Keluhan",type:"textarea"},
+      {name:"Tanggal Mulai Kalibrasi",label:"Tanggal Mulai Kalibrasi",type:"date"},
+      {name:"Target Tanggal Selesai",label:"Target Tanggal Selesai",type:"date"},
+      {name:"Tanggal Selesai",label:"Tanggal Selesai",type:"date"},
+      {name:"Teknisi",label:"Teknisi",type:"text"},
+      {name:"Catatan Kalibrasi",label:"Catatan Kalibrasi",type:"textarea"}
+    ],overdueField:{dateField:"Target Tanggal Selesai",statusField:"Status Kalibrasi",closedValues:["Selesai","Dibatalkan"],doneField:"Tanggal Selesai"}},
     Evaluasi_Supplier:{label:"Evaluasi Supplier",group:"supplier",key:"ID_Evaluasi",idPrefix:"EVS",display:"ID_Evaluasi",fields:[
       {name:"ID_Evaluasi",label:"ID Evaluasi",type:"text",auto:true},
       {name:"Supplier",label:"Supplier",type:"ref",ref:"Master_Supplier",required:true},
@@ -850,7 +966,7 @@ const SCHEMA = {
 
     /* Sheet "Login" — dipakai layar login (username & password). Tidak
        tampil di menu navigasi. */
-    Login:{label:"Login",group:"master",hidden:true,key:"Username",idPrefix:"",display:"Username",fields:[
+    Login:{label:"Login",group:"master",hidden:true,secret:true,key:"Username",idPrefix:"",display:"Username",fields:[
       {name:"Username",label:"Username",type:"text",required:true},
       {name:"Password",label:"Password",type:"text",required:true}
     ]}
@@ -860,7 +976,7 @@ const SCHEMA = {
 // ==========================================================================
 // STATE + DOM refs
 // ==========================================================================
-const STATE = { view:"dashboard", currentTable:null, allData:{}, lastSync:null, tableSearch:"", authenticated:false, currentUser:null, viewOnly:false };
+const STATE = { view:"dashboard", currentTable:null, allData:{}, lastSync:null, syncOk:false, epoch:0, tableSearch:"", fullCols:{}, authenticated:false, currentUser:null, viewOnly:false, token:"" };
 const $content = document.getElementById("content");
 const $sidebar = document.getElementById("sidebar");
 const $modalRoot = document.getElementById("modalRoot");
@@ -886,12 +1002,15 @@ function esc(v){
   });
 }
 function truncate(s,n){ s=String(s||""); return s.length>n ? s.slice(0,n)+"…" : s; }
-function isoDate(d){ return d.toISOString().slice(0,10); }
+function isoDate(d){ /* tanggal LOKAL (toISOString memakai UTC dan bisa mundur sehari) */
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
 function fmtDate(v){
-  if(!v) return "—";
-  const p = String(v).split("-");
-  if(p.length!==3) return esc(v);
-  return parseInt(p[2],10)+" "+MONTHS_ID[parseInt(p[1],10)-1]+" "+p[0];
+  if(v===undefined || v===null || v==="") return "—";
+  const s = String(v).trim();
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if(!m) return esc(s);
+  return parseInt(m[3],10)+" "+MONTHS_ID[parseInt(m[2],10)-1]+" "+m[1];
 }
 function timeAgo(d){
   const s = Math.floor((Date.now()-d.getTime())/1000);
@@ -905,11 +1024,60 @@ function timeAgo(d){
 function debounce(fn,ms){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a),ms); }; }
 function csvEscape(v){ v = v===undefined||v===null?"":String(v); if(/[",\n]/.test(v)) v = '"'+v.replace(/"/g,'""')+'"'; return v; }
 
+/* ---- Kode klausul ISO: Google Sheets sering mengubah "4.1" / "8.5.1" menjadi TANGGAL ---- */
+function isClauseField(f){ return f.name==="Kode_Klausul" || f.ref==="Master_Klausul_ISO9001"; }
+function clauseFromIso(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(v));
+  if(!m) return v;
+  const y=+m[1], mo=+m[2], d=+m[3];
+  /* "d.m" tanpa tahun -> tahun berjalan (>=2020); "d.m.yy" -> tahun 2000+yy */
+  return (y>=2001 && y<=2019) ? d+"."+mo+"."+(y-2000) : d+"."+mo;
+}
+function normKey(s){ return String(s===undefined||s===null?"":s).trim().toLowerCase(); }
+function isBlank(v){ return v===undefined||v===null||String(v).trim()===""||String(v).trim()==="-"; }
+function safeUrl(u){ u=String(u===undefined||u===null?"":u).trim(); return /^https?:\/\//i.test(u) ? u : ""; }
+
+/* Hitung kolom turunan (keterlambatan & level risiko) di sisi browser supaya tidak bergantung pada versi Code.gs */
+function applyCalc(table, rows){
+  const today = isoDate(new Date());
+  if(table.overdueField){
+    const cfg = table.overdueField;
+    rows.forEach(r=>{
+      const d = r[cfg.dateField];
+      const closed = (cfg.statusField && (cfg.closedValues||[]).includes(r[cfg.statusField])) || (cfg.doneField && !isBlank(r[cfg.doneField]));
+      r._overdue = !!(d && String(d) < today && !closed);
+    });
+  }
+  if(table.riskCalc){
+    rows.forEach(r=>{
+      const l = Number(r[table.riskCalc.likelihood])||0, i = Number(r[table.riskCalc.impact])||0, s = l*i;
+      r.Level_Risiko = s;
+      r.Level_Risiko_Label = s===0 ? "-" : s<=5 ? "Rendah" : s<=14 ? "Sedang" : "Tinggi";
+    });
+  }
+  return rows;
+}
+function normalizeRows(tableName, rows){
+  const table = SCHEMA.tables[tableName];
+  const out = (rows||[]).map(r=>{
+    if(!Object.keys(r).some(k=>k!==k.trim())) return r;
+    const o = {}; Object.keys(r).forEach(k=>{ o[k.trim()] = r[k]; }); return o;   /* header sheet berspasi: " Merek & Tipe/Model" */
+  });
+  if(!table) return out;
+  const clauseCols = table.fields.filter(isClauseField).map(f=>f.name);
+  if(clauseCols.length){
+    out.forEach(r=>{ clauseCols.forEach(n=>{ if(/^\d{4}-\d{2}-\d{2}/.test(String(r[n]===undefined?"":r[n]))) r[n] = clauseFromIso(r[n]); }); });
+  }
+  return applyCalc(table, out);
+}
+
 function resolveRef(tableName,key){
-  if(!key) return "";
+  if(key===undefined||key===null||key==="") return "";
   const t = SCHEMA.tables[tableName]; if(!t) return key;
   const rows = STATE.allData[tableName]||[];
-  const row = rows.find(r=>String(r[t.key])===String(key));
+  let row = rows.find(r=>String(r[t.key])===String(key));
+  /* Sebagian data lama di sheet berisi NAMA (mis. "HRD"), bukan ID -> cocokkan juga lewat kolom tampilan */
+  if(!row) row = rows.find(r=>normKey(r[t.display])===normKey(key));
   return row ? (row[t.display]||key) : key;
 }
 function resolveRefMulti(tableName,val){
@@ -926,7 +1094,8 @@ const BADGE_MAP = {
   "Open":"indigo","Draft":"indigo","Terjadwal":"indigo",
   "In Progress":"amber","Berlangsung":"amber","Tindakan":"amber","Analisa":"amber","Review":"amber","Investigasi":"amber","Verifikasi":"amber",
   "Overdue":"rose","Ditunda":"rose","Reject":"rose","Obsolete":"rose","Tidak":"rose",
-  "Baik":"emerald","Rusak":"rose","Perlu Perbaikan":"amber"
+  "Baik":"emerald","Rusak":"rose","Perlu Perbaikan":"amber",
+  "Aktif":"emerald","Tidak Aktif":"slate","Menunggu":"amber","Diproses":"indigo","Selesai":"emerald","Dibatalkan":"slate","Urgent":"rose"
 };
 function badgeClass(v){
   const s = String(v||"").trim();
@@ -957,47 +1126,89 @@ const api = {
     if(params) Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
     const res = await fetchWithTimeout(url.toString());
     let json;
-    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON."); }
+    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON. Pastikan Web App di-deploy dengan akses \"Anyone\"."); }
     if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
     return json;
   },
   async post(payload){
     if(!CONFIG.API_URL) throw new Error("URL Web App belum diisi.");
+    if(STATE.token) payload = Object.assign({}, payload, {token:STATE.token});
     const res = await fetchWithTimeout(CONFIG.API_URL, {
       method:"POST",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
     let json;
-    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON."); }
-    if(!json.ok) throw new Error(json.error||"Terjadi kesalahan pada server");
+    try{ json = await res.json(); }catch(e){ throw new Error("Respons bukan JSON. Pastikan Web App di-deploy dengan akses \"Anyone\"."); }
+    if(!json.ok){
+      if(/Sesi berakhir/i.test(json.error||"")) handleSessionExpired();
+      throw new Error(json.error||"Terjadi kesalahan pada server");
+    }
     return json;
   }
 };
 
+let loadInFlight = null;
 async function loadAll(silent){
   if(!CONFIG.API_URL) return;
-  try{
-    const res = await api.get("getAll");
-    STATE.allData = res.data;
-    STATE.lastSync = new Date();
-    updateSyncIndicator(true);
-  }catch(err){
-    updateSyncIndicator(false);
-    if(!silent) toast("Gagal memuat data: "+err.message,"error");
-  }
+  if(loadInFlight) return loadInFlight;
+  const epoch = STATE.epoch;
+  loadInFlight = (async function(){
+    try{
+      const res = await api.get("getAll");
+      const data = {};
+      Object.keys(res.data||{}).forEach(t=>{ data[t] = normalizeRows(t, res.data[t]); });
+      /* Tabel yang ada di HTML tetapi tidak dikirim backend (mis. Code.gs versi lama) -> ambil satu per satu */
+      const missing = Object.keys(SCHEMA.tables).filter(t=>!(t in data) && !SCHEMA.tables[t].secret);
+      if(missing.length){
+        const got = await Promise.allSettled(missing.map(t=>api.get("getData",{table:t})));
+        got.forEach((g,i)=>{
+          const t = missing[i];
+          data[t] = g.status==="fulfilled" ? normalizeRows(t, g.value.data) : (STATE.allData[t]||[]);
+        });
+      }
+      /* Ada simpan/hapus selagi permintaan berjalan -> hasil ini basi, buang (polling berikutnya akan menyegarkan) */
+      if(epoch!==STATE.epoch) return;
+      STATE.allData = data;
+      STATE.lastSync = new Date();
+      updateSyncIndicator(true);
+    }catch(err){
+      updateSyncIndicator(false);
+      if(!silent) toast("Gagal memuat data: "+err.message,"error");
+    }finally{
+      loadInFlight = null;
+    }
+  })();
+  return loadInFlight;
+}
+/* Segarkan SATU tabel saja (dipakai setelah simpan/hapus supaya cepat dan konsisten dengan sheet) */
+async function loadTable(tableName){
+  const res = await api.get("getData",{table:tableName});
+  STATE.allData[tableName] = normalizeRows(tableName, res.data);
+  STATE.lastSync = new Date();
+  updateSyncIndicator(true);
 }
 function updateSyncIndicator(ok){
+  STATE.syncOk = !!ok;
   $syncIndicator.className = "sync-pill "+(ok?"sync-ok":"sync-off");
   $syncIndicator.innerHTML = '<span class="dot"></span>'+(ok && STATE.lastSync ? "Tersinkron · "+timeAgo(STATE.lastSync) : "Tidak tersambung");
 }
-setInterval(()=>{ if(STATE.lastSync) updateSyncIndicator(true); }, 15000);
+setInterval(()=>{ if(STATE.lastSync) updateSyncIndicator(STATE.syncOk); }, 15000);
 
 async function pollTick(){
-  if(!CONFIG.API_URL) return;
+  if(!CONFIG.API_URL || document.hidden || !STATE.authenticated) return;
   await loadAll(true);
   if(STATE.view==="dashboard") renderDashboard();
-  else if(STATE.view==="table" && STATE.currentTable) renderTableView(STATE.currentTable);
+  else if(STATE.view==="table" && STATE.currentTable){
+    /* hanya segarkan baris -> kotak pencarian tidak ikut dibuat ulang (fokus & ketikan tidak hilang) */
+    refreshTableRows(STATE.currentTable, buildColumns(SCHEMA.tables[STATE.currentTable], STATE.currentTable));
+  }
+}
+function handleSessionExpired(){
+  if(STATE.viewOnly || !STATE.authenticated) return;
+  closeModal();
+  logout();
+  toast("Sesi berakhir, silakan login ulang.","error");
 }
 
 // ==========================================================================
@@ -1079,8 +1290,11 @@ function computeDashboardClient(){
   const temuan = T.Audit_Temuan||[], capa = T.CAPA_Register||[], risk = T.Risk_Register||[],
         jadwal = T.Audit_Jadwal||[], kalibrasi = T.Kalibrasi_Alat_Ukur||[], sertifikat = T.Sertifikasi_ISO||[],
         komplain = T.Komplain_Pelanggan||[];
-  const today = new Date(); const in30 = new Date(); in30.setDate(in30.getDate()+30);
+  const todayStr = isoDate(new Date());
+  const in30 = new Date(); in30.setDate(in30.getDate()+30);
   const in30Str = isoDate(in30);
+  const calCfg = SCHEMA.tables.Kalibrasi_Alat_Ukur.overdueField;
+  const kalibrasiBelumSelesai = r => !((calCfg.closedValues||[]).includes(r[calCfg.statusField]) || !isBlank(r[calCfg.doneField]));
   return {
     temuan_open: temuan.filter(r=>["Open","In Progress"].includes(r.Status)).length,
     temuan_overdue: temuan.filter(r=>r._overdue).length,
@@ -1090,8 +1304,8 @@ function computeDashboardClient(){
     capa_overdue: capa.filter(r=>r._overdue).length,
     capa_total: capa.length,
     risk_tinggi: risk.filter(r=>r.Level_Risiko_Label==="Tinggi" && r.Status!=="Closed").length,
-    audit_bulan_ini: jadwal.filter(r=>{ if(!r.Tgl_Rencana) return false; const d=new Date(r.Tgl_Rencana); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).length,
-    kalibrasi_jatuh_tempo: kalibrasi.filter(r=> r.Tgl_Jatuh_Tempo_Berikutnya && String(r.Tgl_Jatuh_Tempo_Berikutnya)<=in30Str).length,
+    audit_bulan_ini: jadwal.filter(r=> r.Tgl_Rencana && String(r.Tgl_Rencana).slice(0,7)===todayStr.slice(0,7)).length,
+    kalibrasi_belum_selesai: kalibrasi.filter(kalibrasiBelumSelesai).length,
     sertifikat_akan_expired: sertifikat.filter(r=> r.Tgl_Kadaluarsa && String(r.Tgl_Kadaluarsa)<=in30Str).length,
     komplain_open: komplain.filter(r=>r.Status!=="Closed").length
   };
@@ -1165,7 +1379,7 @@ function renderDashboard(){
         ${kpiCard("clock-alert","CAPA Terlambat",d.capa_overdue,"rose","CAPA_Register")}
         ${kpiCard("shield-alert","Risiko Level Tinggi",d.risk_tinggi,"amber","Risk_Register")}
         ${kpiCard("calendar-check","Audit Bulan Ini",d.audit_bulan_ini,"cyan","Audit_Jadwal")}
-        ${kpiCard("gauge","Kalibrasi Jatuh Tempo",d.kalibrasi_jatuh_tempo,"amber","Kalibrasi_Alat_Ukur")}
+        ${kpiCard("gauge","Kalibrasi Belum Selesai",d.kalibrasi_belum_selesai,"amber","Kalibrasi_Alat_Ukur")}
         ${kpiCard("award","Sertifikat Akan Expired",d.sertifikat_akan_expired,"amber","Sertifikasi_ISO")}
         ${kpiCard("message-square-warning","Komplain Open",d.komplain_open,"indigo","Komplain_Pelanggan")}
       </div>
@@ -1187,64 +1401,112 @@ function kpiCard(icon,label,value,color,table){
 // ==========================================================================
 // TABLE VIEW
 // ==========================================================================
-function buildColumns(table){
-  const cols = table.fields.filter(f=>!f.hidden).map(f=>({name:f.name,label:f.label,type:f.type,ref:f.ref}));
+function canCreate(t){ return !t.readonly && !t.noCreate && !STATE.viewOnly; }
+function canEdit(t){ return !t.readonly && !STATE.viewOnly; }
+function canDelete(t){ return !t.readonly && !t.noDelete && !STATE.viewOnly; }
+function showActions(t){ return canEdit(t) || canDelete(t); }
+
+/* Kolom yang tampil di tabel. Kolom lainnya tetap bisa dilihat lewat klik baris (detail) atau tombol "Semua kolom".
+   Tabel yang tidak tercantum di sini menampilkan seluruh kolomnya. Ubah daftar ini bila kolom penting berubah. */
+const LIST_COLS = {
+  Master_Alat:["Kode Alat","Nama Alat","Kategori","Merk","Model/Tipe","Lokasi","Departemen","Status","Tanggal PM Berikutnya"],
+  Master_Mesin:["Kode Mesin","Nama Mesin","Kategori","Merk","Lokasi","Departemen","Status","Tanggal PM Berikutnya"],
+  Kalibrasi_Alat_Ukur:["ID Kalibrasi","Tanggal","Nama Alat/Mesin","Departemen","Lembaga Kalibrasi","Tingkat Urgensi","Status Kalibrasi","Target Tanggal Selesai"],
+  Audit_Temuan:["ID_Temuan","Klausul_Terkait","Deskripsi_Temuan","Klasifikasi","Departemen_Terkait","PIC_Tindak_Lanjut","Batas_Waktu","Status"]
+};
+
+function buildColumns(table, tableName){
+  let fields = table.fields.filter(f=>!f.hidden);
+  const subset = LIST_COLS[tableName];
+  if(subset && !STATE.fullCols[tableName]){
+    const picked = subset.map(n=>fields.find(f=>f.name===n)).filter(Boolean);
+    if(picked.length) fields = picked;
+  }
+  const cols = fields.map(f=>({name:f.name,label:f.label,type:f.type,ref:f.ref}));
   if(table.riskCalc) cols.push({name:"Level_Risiko_Label",label:"Level Risiko",type:"computed_risk"});
   if(table.overdueField) cols.push({name:"_overdue",label:"Keterangan Waktu",type:"computed_overdue"});
   return cols;
 }
 
+/* class kolom: kolom pertama menempel; angka rata kanan; tanggal/badge tidak dipatahkan */
+function colClass(col, idx){
+  let c = idx===0 ? "c-sticky" : "";
+  if(col.type==="number" || col.type==="currency") c += " c-num";
+  else if(["date","enum","badge","yesno","file","computed_risk","computed_overdue"].includes(col.type)) c += " c-nowrap";
+  return c.trim();
+}
+
 function renderCell(col, row, tableName){
+  const v = row[col.name];
   switch(col.type){
     case "appsheet_image": {
-      const v = row[col.name];
-      if(!v) return "—";
-      let imgUrl = v;
+      if(isBlank(v)) return "—";
+      let imgUrl = String(v);
       // Membaca path gambar dan membuat URL ke AppSheet dengan App ID yang diminta
-      if(!v.startsWith("http")){
-        const encodedFile = encodeURIComponent(v);
+      if(!/^https?:\/\//i.test(imgUrl)){
+        const encodedFile = encodeURIComponent(imgUrl);
         const appSheetTable = tableName === "Master_Karyawan" ? "Karyawan" : tableName;
         imgUrl = `https://www.appsheet.com/template/gettablefileurl?appName=MSBHumanResource-310640119&tableName=${appSheetTable}&fileName=${encodedFile}`;
       }
-      return `<span class="employee-photo-wrap"><img class="employee-photo" src="${imgUrl}" alt="Foto" title="Klik untuk memperbesar" tabindex="0" data-action="view-photo" data-img="${imgUrl}"/></span>`;
+      return `<span class="employee-photo-wrap"><img class="employee-photo" src="${esc(imgUrl)}" alt="Foto" title="Klik untuk memperbesar" tabindex="0" data-action="view-photo" data-img="${esc(imgUrl)}"/></span>`;
     }
-    case "ref": return row[col.name] ? esc(resolveRef(col.ref,row[col.name])) : "—";
-    case "refmulti": { const arr=resolveRefMulti(col.ref,row[col.name]); return arr.length? arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join(""):"—"; }
-    case "enum": return row[col.name] ? '<span class="badge badge-'+badgeClass(row[col.name])+'">'+esc(row[col.name])+"</span>" : "—";
-    case "enumlist": { const arr=String(row[col.name]||"").split(",").map(s=>s.trim()).filter(Boolean); return arr.length? arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join(""):"—"; }
-    case "yesno": return row[col.name]==="Ya" ? '<span class="badge badge-emerald">Ya</span>' : row[col.name]==="Tidak" ? '<span class="badge badge-slate">Tidak</span>' : "—";
-    case "date": return fmtDate(row[col.name]);
-    case "file": return row[col.name] ? '<a class="file-link" href="'+esc(row[col.name])+'" target="_blank" rel="noopener"><i data-lucide="paperclip"></i>Lihat</a>' : "—";
-    case "number": return (row[col.name]!==undefined && row[col.name]!=="") ? row[col.name] : "—";
-    case "textarea": { const v=row[col.name]||""; return v? '<span title="'+esc(v)+'">'+esc(truncate(v,70))+"</span>" : "—"; }
+    case "ref": return isBlank(v) ? "—" : '<div class="cell-text">'+esc(resolveRef(col.ref,v))+"</div>";
+    case "refmulti": { const arr=resolveRefMulti(col.ref,v); return arr.length? '<div class="cell-chips">'+arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join("")+"</div>":"—"; }
+    case "enum": case "badge": return isBlank(v) ? "—" : '<span class="badge badge-'+badgeClass(v)+'">'+esc(v)+"</span>";
+    case "enumlist": { const arr=String(v===undefined||v===null?"":v).split(",").map(s=>s.trim()).filter(Boolean); return arr.length? '<div class="cell-chips">'+arr.map(x=>'<span class="chip">'+esc(x)+"</span>").join("")+"</div>":"—"; }
+    case "yesno": return v==="Ya" ? '<span class="badge badge-emerald">Ya</span>' : v==="Tidak" ? '<span class="badge badge-slate">Tidak</span>' : "—";
+    case "date": return fmtDate(v);
+    case "file": {
+      if(isBlank(v)) return "—";
+      const u = safeUrl(v);
+      /* Kolom file di sheet bisa berisi URL atau hanya nama file (mis. MAN-QMS-001_Manual_SMM.pdf) */
+      return u ? '<a class="file-link" href="'+esc(u)+'" target="_blank" rel="noopener"><i data-lucide="paperclip"></i>Lihat</a>'
+               : '<span title="'+esc(v)+'">'+esc(truncate(v,34))+"</span>";
+    }
+    case "number": return (v===undefined||v===null||v==="") ? "—" : esc(v);
+    case "currency": {
+      if(v===undefined||v===null||v==="") return "—";
+      const n = Number(v);
+      return isFinite(n) ? "Rp "+n.toLocaleString("id-ID") : esc(v);
+    }
+    case "textarea": return isBlank(v) ? "—" : '<div class="cell-clamp" title="'+esc(truncate(v,400))+'">'+esc(v)+"</div>";
     case "computed_risk": { const l=row.Level_Risiko_Label; return l && l!=="-" ? '<span class="badge badge-'+badgeClass(l)+'">'+esc(l)+" ("+row.Level_Risiko+")</span>" : "—"; }
     case "computed_overdue": {
       if(row._overdue) return '<span class="badge badge-rose">Terlambat</span>';
       return '<span class="badge badge-emerald">Sesuai Jadwal</span>';
     }
-    default: return row[col.name] ? esc(row[col.name]) : "—";
+    default: {   /* angka 0 tetap tampil */
+      if(v===undefined||v===null||String(v)==="") return "—";
+      const t = String(v);
+      return '<div class="cell-text"'+(t.length>40?' title="'+esc(truncate(t,400))+'"':"")+">"+esc(t)+"</div>";
+    }
   }
 }
 
 function renderTableView(tableName){
   STATE.view = "table"; STATE.currentTable = tableName;
   const table = SCHEMA.tables[tableName];
-  const columns = buildColumns(table);
+  const columns = buildColumns(table, tableName);
   const group = SCHEMA.groups.find(g=>g.key===table.group);
+  const note = table.sourceNote ? '<div class="glass setup-banner info"><i data-lucide="info"></i><p>'+esc(table.sourceNote)+'</p></div>' : "";
+  const colToggle = LIST_COLS[tableName]
+    ? `<button class="btn btn-ghost" data-action="toggle-cols" data-table="${tableName}"><i data-lucide="table"></i>${STATE.fullCols[tableName] ? "Kolom penting" : "Semua kolom"}</button>` : "";
 
   $content.innerHTML = `
     <div class="view-header">
       <div><div class="breadcrumb">${esc(group.label)}</div><h1>${esc(table.label)}</h1></div>
       <div class="view-actions">
         <div class="search-box"><i data-lucide="search"></i><input id="tableSearchInput" placeholder="Cari di ${esc(table.label)}..." value="${esc(STATE.tableSearch)}"/></div>
+        ${colToggle}
         <button class="btn btn-ghost" data-action="export-csv" data-table="${tableName}"><i data-lucide="download"></i>Export CSV</button>
         <button class="btn btn-ghost" data-action="print-view"><i data-lucide="printer"></i>Cetak</button>
-        ${STATE.viewOnly ? "" : `<button class="btn btn-primary" data-action="add-record" data-table="${tableName}"><i data-lucide="plus"></i>Tambah Data</button>`}
+        ${canCreate(table) ? `<button class="btn btn-primary" data-action="add-record" data-table="${tableName}"><i data-lucide="plus"></i>Tambah Data</button>` : ""}
       </div>
     </div>
+    ${note}
     <div class="glass table-wrap">
       <table>
-        <thead><tr>${columns.map(c=>"<th>"+esc(c.label)+"</th>").join("")}${STATE.viewOnly?"":'<th class="col-actions">Aksi</th>'}</tr></thead>
+        <thead><tr>${columns.map((c,i)=>'<th class="'+colClass(c,i)+'">'+esc(c.label)+"</th>").join("")}<th class="col-actions">${showActions(table)?"Aksi":"Detail"}</th></tr></thead>
         <tbody id="tbody-${tableName}"></tbody>
       </table>
     </div>
@@ -1260,29 +1522,133 @@ function renderTableView(tableName){
 function refreshTableRows(tableName, columns){
   const table = SCHEMA.tables[tableName];
   const rows = (STATE.allData[tableName]||[]).slice();
+  const idxOf = new Map(rows.map((r,i)=>[r,i]));   /* posisi asli baris (ID tertentu, mis. Kalibrasi, bisa muncul berulang) */
   const q = STATE.tableSearch.trim().toLowerCase();
-  const filtered = q ? rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(q))) : rows;
-  const display = filtered.slice().reverse();
+  const refCols = table.fields.filter(f=>f.type==="ref"||f.type==="refmulti");
+  const rowText = r=>{
+    let s = Object.values(r).join(" ");
+    refCols.forEach(f=>{ s += " " + (f.type==="ref" ? resolveRef(f.ref,r[f.name]) : resolveRefMulti(f.ref,r[f.name]).join(" ")); });
+    return s.toLowerCase();
+  };
+  const filtered = q ? rows.filter(r=>rowText(r).includes(q)) : rows;
+  /* tabel transaksi (audit, CAPA, dst): data terbaru di atas; tabel master & sumber IMPORTRANGE: ikuti urutan sheet */
+  const newestFirst = table.group!=="master" && !table.readonly && !table.noCreate;
+  const display = newestFirst ? filtered.slice().reverse() : filtered;
   const tbody = document.getElementById("tbody-"+tableName);
   const footer = document.getElementById("tableFooter-"+tableName);
   if(!tbody) return;
-  
+
   if(display.length===0){
-    tbody.innerHTML = '<tr><td colspan="'+(columns.length+(STATE.viewOnly?0:1))+'" class="empty-state">'+
-      (rows.length===0 ? "Belum ada data. Pastikan Sheet diisi atau klik Tambah Data." : "Tidak ada data yang cocok dengan pencarian.")+"</td></tr>";
+    tbody.innerHTML = '<tr><td colspan="'+(columns.length+1)+'" class="empty-state">'+
+      (rows.length===0 ? (table.readonly ? "Belum ada data di sheet sumber." : "Belum ada data. Pastikan Sheet diisi atau klik Tambah Data.") : "Tidak ada data yang cocok dengan pencarian.")+"</td></tr>";
   } else {
     tbody.innerHTML = display.map(r=>{
       const keyVal = r[table.key];
-      return '<tr class="'+(r._overdue?"row-overdue":"")+'">'+
-        columns.map(c=>"<td>"+renderCell(c, r, tableName)+"</td>").join("")+
-        (STATE.viewOnly ? "" :
+      const ref = 'data-table="'+tableName+'" data-key="'+esc(keyVal)+'" data-idx="'+idxOf.get(r)+'"';
+      return '<tr class="'+(r._overdue?"row-overdue":"")+'" data-action="view-detail" '+ref+'>'+
+        columns.map((c,i)=>{
+          const h = renderCell(c, r, tableName);
+          return '<td class="'+colClass(c,i)+'">'+(h==="—" ? '<span class="cell-muted">—</span>' : h)+"</td>";
+        }).join("")+
         '<td class="col-actions">'+
-        '<button class="icon-btn" data-action="edit-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Edit"><i data-lucide="pencil"></i></button> '+
-        '<button class="icon-btn icon-btn-danger" data-action="delete-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Hapus"><i data-lucide="trash-2"></i></button>'+
-        "</td>")+"</tr>";
+        '<button class="icon-btn" data-action="view-detail" '+ref+' title="Lihat detail"><i data-lucide="eye"></i></button> '+
+        (canEdit(table) ? '<button class="icon-btn" data-action="edit-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Edit"><i data-lucide="pencil"></i></button> ' : "")+
+        (canDelete(table) ? '<button class="icon-btn icon-btn-danger" data-action="delete-record" data-table="'+tableName+'" data-key="'+esc(keyVal)+'" title="Hapus"><i data-lucide="trash-2"></i></button>' : "")+
+        "</td></tr>";
     }).join("");
   }
-  if(footer) footer.textContent = display.length+" dari "+rows.length+" data";
+  if(footer){
+    const subsetOn = !!LIST_COLS[tableName] && !STATE.fullCols[tableName];
+    footer.innerHTML = "<span>"+display.length+" dari "+rows.length+" data</span>"+
+      "<span>Klik baris untuk melihat detail. Geser ke samping untuk kolom lainnya.</span>"+
+      (subsetOn ? '<span>Hanya kolom penting yang ditampilkan. Pilih "Semua kolom" untuk selengkapnya.</span>' : "");
+  }
+  renderIcons();
+}
+
+// ==========================================================================
+// MODAL — DETAIL RECORD (klik baris)
+// ==========================================================================
+function findRecord(tableName, key, idx){
+  const table = SCHEMA.tables[tableName];
+  const rows = STATE.allData[tableName]||[];
+  const i = Number(idx);
+  if(Number.isInteger(i) && rows[i] && String(rows[i][table.key])===String(key)) return rows[i];
+  return rows.find(r=>String(r[table.key])===String(key)) || null;
+}
+
+function detailValueHtml(f, row, tableName){
+  const v = row[f.name];
+  const empty = '<span class="dv-empty">—</span>';
+  switch(f.type){
+    case "textarea": return isBlank(v) ? empty : '<div class="is-long">'+esc(v)+"</div>";
+    case "ref": return isBlank(v) ? empty : esc(resolveRef(f.ref,v));
+    case "file": {
+      if(isBlank(v)) return empty;
+      const u = safeUrl(v);
+      return u ? '<a class="file-link" href="'+esc(u)+'" target="_blank" rel="noopener"><i data-lucide="paperclip"></i>Buka file</a>' : esc(v);
+    }
+    case "appsheet_image": {
+      if(isBlank(v)) return empty;
+      /* foto dibesarkan di sini; tanpa lightbox agar modal detail tidak tertutup */
+      return '<div class="detail-photo">'+renderCell({name:f.name,type:f.type}, row, tableName).replace(' data-action="view-photo"',"").replace(' title="Klik untuk memperbesar"',"")+"</div>";
+    }
+    case "text": case "email": {
+      if(isBlank(v)) return empty;
+      const u = safeUrl(v);
+      return u ? '<a class="file-link" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(v)+"</a>" : esc(v);
+    }
+    default: {
+      const h = renderCell({name:f.name,label:f.label,type:f.type,ref:f.ref}, row, tableName);
+      return h==="—" ? empty : h;
+    }
+  }
+}
+
+function openDetailModal(tableName, key, idx){
+  const table = SCHEMA.tables[tableName];
+  if(!table || table.secret) return;
+  const row = findRecord(tableName, key, idx);
+  if(!row){ toast("Data tidak ditemukan. Coba muat ulang halaman.","error"); return; }
+  const fields = table.fields.filter(f=>!f.hidden);
+
+  const dispField = fields.find(f=>f.name===table.display);
+  const rawTitle = (dispField && dispField.type==="ref") ? resolveRef(dispField.ref, row[dispField.name]) : row[table.display];
+  const title = isBlank(rawTitle) ? (isBlank(row[table.key]) ? table.label : String(row[table.key])) : String(rawTitle);
+
+  const keyField = fields.find(f=>f.name===table.key);
+  const statusField = fields.find(f=>/^Status/.test(f.name) && (f.type==="enum"||f.type==="badge"));
+  let badges = "";
+  if(keyField && !isBlank(row[table.key]) && String(row[table.key])!==title) badges += '<span class="detail-id">'+esc(keyField.label)+": "+esc(row[table.key])+"</span>";
+  if(statusField && !isBlank(row[statusField.name])) badges += renderCell(statusField, row, tableName);
+  if(table.riskCalc) { const h = renderCell({type:"computed_risk"}, row, tableName); if(h!=="—") badges += h; }
+  if(table.overdueField) badges += renderCell({type:"computed_overdue"}, row, tableName);
+
+  const FULL = ["textarea","refmulti","enumlist","file","appsheet_image"];
+  const items = fields.map(f=>
+    '<div class="dv-item'+(FULL.includes(f.type)?" full":"")+'"><div class="dv-label">'+esc(f.label)+'</div><div class="dv-value">'+detailValueHtml(f,row,tableName)+"</div></div>"
+  ).join("");
+
+  const keyAttr = 'data-table="'+tableName+'" data-key="'+esc(row[table.key])+'"';
+  $modalRoot.innerHTML = `
+    <div class="modal-overlay">
+      <div class="modal modal-detail glass" role="dialog" aria-modal="true" aria-label="Detail ${esc(table.label)}">
+        <div class="modal-header detail-head">
+          <div class="detail-head-main">
+            <div class="breadcrumb">${esc(table.label)}</div>
+            <h2 class="detail-title">${esc(title)}</h2>
+            ${badges ? '<div class="detail-badges">'+badges+"</div>" : ""}
+          </div>
+          <button class="icon-btn" data-action="close-modal" aria-label="Tutup"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body"><div class="detail-grid">${items}</div></div>
+        <div class="modal-footer">
+          ${canDelete(table) ? `<button class="btn btn-danger btn-push-left" data-action="delete-record" ${keyAttr}><i data-lucide="trash-2"></i>Hapus</button>` : ""}
+          <button class="btn btn-ghost" data-action="close-modal">Tutup</button>
+          ${canEdit(table) ? `<button class="btn btn-primary" data-action="edit-record" ${keyAttr}><i data-lucide="pencil"></i>Edit</button>` : ""}
+        </div>
+      </div>
+    </div>`;
   renderIcons();
 }
 
@@ -1290,74 +1656,92 @@ function refreshTableRows(tableName, columns){
 // MODAL — FORM RECORD
 // ==========================================================================
 function fieldInputHtml(table, field, record, isEdit){
-  const val = record ? record[field.name] : "";
+  const raw = record ? record[field.name] : "";
+  const val = (raw===undefined||raw===null) ? "" : raw;
   const isKey = field.name === table.key;
-  const req = field.required ? '<span class="req">*</span>' : "";
+  const req = field.required && !field.locked ? '<span class="req">*</span>' : "";
   const lockedKey = isKey && (field.auto || isEdit);
+  const dis = (lockedKey || field.locked) ? "disabled" : "";
   let input = "";
-  
+
   switch(field.type){
     case "text": case "email":
-      input = '<input type="'+(field.type==="email"?"email":"text")+'" name="'+field.name+'" value="'+esc(val)+'" '+(lockedKey?"disabled":"")+' '+(isKey&&!field.auto&&!isEdit?"required":(field.required?"required":""))+' placeholder="'+(field.note?esc(field.note):(isKey&&field.auto?"(dibuat otomatis)":""))+'"/>';
+      input = '<input type="'+(field.type==="email"?"email":"text")+'" name="'+field.name+'" value="'+esc(val)+'" '+dis+' '+(!dis && (isKey&&!field.auto&&!isEdit || field.required)?"required":"")+' placeholder="'+(field.note?esc(field.note):(isKey&&field.auto?"(dibuat otomatis)":""))+'"/>';
       break;
-    case "number":
-      input = '<input type="number" name="'+field.name+'" value="'+(val!==undefined&&val!==null?val:"")+'" '+(field.min!==undefined?'min="'+field.min+'"':"")+' '+(field.max!==undefined?'max="'+field.max+'"':"")+' '+(field.required?"required":"")+'/>';
+    case "number": case "currency":
+      input = '<input type="number" step="any" name="'+field.name+'" value="'+esc(val)+'" '+(field.min!==undefined?'min="'+field.min+'"':"")+' '+(field.max!==undefined?'max="'+field.max+'"':"")+' '+(field.required?"required":"")+'/>';
       break;
     case "date":
-      input = '<input type="date" name="'+field.name+'" value="'+esc(val)+'" '+(field.required?"required":"")+'/>';
+      input = '<input type="date" name="'+field.name+'" value="'+esc(String(val).slice(0,10))+'" '+(field.required?"required":"")+'/>';
       break;
     case "textarea":
       input = '<textarea name="'+field.name+'" '+(field.required?"required":"")+'>'+esc(val)+"</textarea>";
       break;
-    case "enum": {
-      const opts = field.options.map(o=>'<option value="'+esc(o)+'" '+(o===val?"selected":"")+'>'+esc(o)+"</option>").join("");
-      input = '<select name="'+field.name+'" '+(field.required?"required":"")+'><option value="">— pilih —</option>'+opts+"</select>";
+    case "enum": case "badge": {
+      const options = field.options || [];
+      /* nilai di sheet yang belum ada di daftar pilihan tetap ditampilkan agar tidak hilang saat edit */
+      const extra = (val!=="" && !options.includes(val)) ? '<option value="'+esc(val)+'" selected>'+esc(val)+' (nilai di sheet)</option>' : "";
+      const opts = options.map(o=>'<option value="'+esc(o)+'" '+(o===val?"selected":"")+'>'+esc(o)+"</option>").join("");
+      input = '<select name="'+field.name+'" '+(field.required?"required":"")+'><option value="">— pilih —</option>'+opts+extra+"</select>";
       break;
     }
     case "yesno":
       input = '<select name="'+field.name+'"><option value="">— pilih —</option><option value="Ya" '+(val==="Ya"?"selected":"")+'>Ya</option><option value="Tidak" '+(val==="Tidak"?"selected":"")+'>Tidak</option></select>';
       break;
     case "enumlist": {
-      const selected = String(val||"").split(",").map(s=>s.trim());
+      const selected = String(val).split(",").map(s=>s.trim());
       const boxes = field.options.map(o=>'<label class="chk"><input type="checkbox" name="'+field.name+'[]" value="'+esc(o)+'" '+(selected.includes(o)?"checked":"")+'/> '+esc(o)+"</label>").join("");
       input = '<div class="checklist">'+boxes+"</div>";
       break;
     }
     case "ref": {
       const refT = SCHEMA.tables[field.ref];
-      const opts = (STATE.allData[field.ref]||[]).map(o=>'<option value="'+esc(o[refT.key])+'" '+(String(o[refT.key])===String(val)?"selected":"")+'>'+esc(o[refT.display]||o[refT.key])+"</option>").join("");
+      const list = STATE.allData[field.ref]||[];
+      let hit = false;
+      let opts = list.map(o=>{
+        const isSel = String(o[refT.key])===String(val) || (val!=="" && !list.some(x=>String(x[refT.key])===String(val)) && normKey(o[refT.display])===normKey(val));
+        if(isSel) hit = true;
+        return '<option value="'+esc(o[refT.key])+'" '+(isSel?"selected":"")+'>'+esc(o[refT.display]||o[refT.key])+"</option>";
+      }).join("");
+      if(val!=="" && !hit) opts += '<option value="'+esc(val)+'" selected>'+esc(val)+' (nilai di sheet)</option>';
       input = '<select name="'+field.name+'" '+(field.required?"required":"")+'><option value="">— pilih '+esc(refT.label)+' —</option>'+opts+"</select>";
       break;
     }
     case "refmulti": {
       const refT = SCHEMA.tables[field.ref];
-      const selected = String(val||"").split(",").map(s=>s.trim());
-      const boxes = (STATE.allData[field.ref]||[]).map(o=>{
+      const list = STATE.allData[field.ref]||[];
+      const selected = String(val).split(",").map(s=>normKey(s)).filter(Boolean);
+      const boxes = list.map(o=>{
         const kv = o[refT.key];
-        return '<label class="chk"><input type="checkbox" name="'+field.name+'[]" value="'+esc(kv)+'" '+(selected.includes(String(kv))?"checked":"")+'/> '+esc(o[refT.display]||kv)+"</label>";
+        const isSel = selected.includes(normKey(kv)) || selected.includes(normKey(o[refT.display]));
+        return '<label class="chk"><input type="checkbox" name="'+field.name+'[]" value="'+esc(kv)+'" '+(isSel?"checked":"")+'/> '+esc(o[refT.display]||kv)+"</label>";
       }).join("");
       input = '<div class="checklist">'+(boxes||'<span class="hint">Belum ada data '+esc(refT.label)+'</span>')+"</div>";
       break;
     }
     case "appsheet_image":
-    case "file":
+    case "file": {
+      const u = safeUrl(val);
       input = '<div class="file-field">'+
-        (val ? '<a class="file-link-existing" href="'+esc(val)+'" target="_blank" rel="noopener">File/Foto saat ini &rarr;</a>' : "")+
+        (u ? '<a class="file-link-existing" href="'+esc(u)+'" target="_blank" rel="noopener">File/Foto saat ini &rarr;</a>'
+           : (!isBlank(val) ? '<span class="hint">File saat ini: '+esc(val)+'</span>' : ""))+
         '<input type="file" data-file-field="'+field.name+'"/>'+
         '<input type="hidden" name="'+field.name+'" value="'+esc(val)+'"/>'+
         "</div>";
       break;
+    }
     default:
-      input = '<input type="text" name="'+field.name+'" value="'+esc(val)+'"/>';
+      input = '<input type="text" name="'+field.name+'" value="'+esc(val)+'" '+dis+'/>';
   }
   const full = (field.type==="textarea"||field.type==="enumlist"||field.type==="refmulti"||field.type==="file"||field.type==="appsheet_image") ? " full" : "";
   return '<div class="form-group'+full+'"><label>'+esc(field.label)+req+"</label>"+input+"</div>";
 }
 
 function openRecordModal(tableName, keyValue){
-  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
+  if(STATE.viewOnly || table.readonly) return;
   const isEdit = !!keyValue;
+  if(!isEdit && !canCreate(table)) return;
   const record = isEdit ? (STATE.allData[tableName]||[]).find(r=>String(r[table.key])===String(keyValue)) : {};
   const fieldsHtml = table.fields.filter(f=>!f.hidden).map(f=>fieldInputHtml(table,f,record,isEdit)).join("");
   $modalRoot.innerHTML = `
@@ -1406,8 +1790,8 @@ async function uploadFileToServer(file){
 }
 
 async function saveRecord(tableName, keyValue){
-  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
+  if(STATE.viewOnly || table.readonly) return;
   const form = document.getElementById("recordForm");
   const btn = document.getElementById("saveRecordBtn");
   const originalHtml = btn.innerHTML;
@@ -1415,6 +1799,7 @@ async function saveRecord(tableName, keyValue){
   try{
     const data = {};
     table.fields.forEach(f=>{
+      if(f.locked) return;                       // kolom sumber IMPORTRANGE tidak ikut dikirim
       if(f.type==="enumlist" || f.type==="refmulti"){
         const boxes = form.querySelectorAll('input[name="'+f.name+'[]"]:checked');
         data[f.name] = Array.from(boxes).map(b=>b.value).join(", ");
@@ -1422,7 +1807,7 @@ async function saveRecord(tableName, keyValue){
         // handled below
       } else {
         const el = form.elements[f.name];
-        if(el) data[f.name] = el.value;
+        if(el) data[f.name] = typeof el.value==="string" ? el.value.trim() : el.value;
       }
     });
     const fileInputs = form.querySelectorAll('input[type=file][data-file-field]');
@@ -1436,12 +1821,18 @@ async function saveRecord(tableName, keyValue){
         data[fname] = hidden ? hidden.value : "";
       }
     }
-    const missing = table.fields.filter(f=>f.required && !data[f.name]);
+    const missing = table.fields.filter(f=>f.required && !f.locked && (data[f.name]===undefined||data[f.name]===""));
     if(missing.length){
       toast("Field wajib belum diisi: "+missing.map(f=>f.label).join(", "),"error");
       btn.disabled=false; btn.innerHTML=originalHtml; renderIcons();
       return;
     }
+    if(!keyValue && data[table.key] && (STATE.allData[tableName]||[]).some(r=>String(r[table.key])===String(data[table.key]))){
+      toast("Gagal: "+table.key.replace(/_/g," ")+" '"+data[table.key]+"' sudah ada.","error");
+      btn.disabled=false; btn.innerHTML=originalHtml; renderIcons();
+      return;
+    }
+    STATE.epoch++;                                // tandai: hasil polling yang sedang berjalan jadi basi
     if(keyValue){
       await api.post({action:"update", table:tableName, key:keyValue, data});
       toast("Data berhasil diperbarui","success");
@@ -1450,7 +1841,8 @@ async function saveRecord(tableName, keyValue){
       toast("Data berhasil ditambahkan","success");
     }
     closeModal();
-    await loadAll();
+    try{ await loadTable(tableName); }
+    catch(e){ toast("Tersimpan, tetapi gagal menyegarkan data: "+e.message,"error"); }
     if(STATE.view==="table" && STATE.currentTable===tableName) renderTableView(tableName);
     else if(STATE.view==="dashboard") renderDashboard();
   }catch(err){
@@ -1460,13 +1852,16 @@ async function saveRecord(tableName, keyValue){
 }
 
 async function confirmDelete(tableName, keyValue){
-  if(STATE.viewOnly) return;
   const table = SCHEMA.tables[tableName];
+  if(STATE.viewOnly || !canDelete(table)) return;
   if(!confirm('Hapus data ini dari "'+table.label+'"? Tindakan tidak bisa dibatalkan.')) return;
   try{
+    STATE.epoch++;
     await api.post({action:"delete", table:tableName, key:keyValue});
     toast("Data berhasil dihapus","success");
-    await loadAll();
+    closeModal();
+    try{ await loadTable(tableName); }
+    catch(e){ toast("Terhapus, tetapi gagal menyegarkan data: "+e.message,"error"); }
     renderTableView(tableName);
   }catch(err){ toast("Gagal menghapus: "+err.message,"error"); }
 }
@@ -1552,22 +1947,40 @@ function showLoginError(msg){
   const el = document.getElementById("loginError");
   if(el){ el.textContent = msg; el.classList.add("show"); }
 }
-function handleLoginSubmit(e){
+async function handleLoginSubmit(e){
   e.preventDefault();
   const u = document.getElementById("loginUsername").value.trim();
   const p = document.getElementById("loginPassword").value;
-  const rows = STATE.allData.Login||[];
-  const match = rows.find(r=>String(r.Username||"").trim().toLowerCase()===u.toLowerCase() && String(r.Password||"")===p);
-  if(match){ completeAuth(match.Username, false); }
-  else { showLoginError("Username atau password salah."); }
+  const btn = document.getElementById("loginSubmitBtn");
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true; btn.textContent = "Memeriksa...";
+  try{
+    let res;
+    try{
+      res = await api.post({action:"login", username:u, password:p});
+    }catch(err){
+      if(!/Action tidak dikenal/i.test(err.message)) throw err;
+      /* Code.gs versi lama belum punya aksi login -> cek lokal dari sheet Login (cara lama) */
+      const rows = STATE.allData.Login||[];
+      const m = rows.find(r=>String(r.Username||"").trim().toLowerCase()===u.toLowerCase() && String(r.Password===undefined?"":r.Password)===p);
+      if(!m) throw new Error("Username atau password salah.");
+      res = {data:{username:m.Username, token:""}};
+    }
+    completeAuth(res.data.username, false, res.data.token||"");
+  }catch(err){
+    showLoginError(err.message);
+    btn.disabled = false; btn.innerHTML = originalHtml; renderIcons();
+  }
 }
-function enterViewOnly(){ completeAuth(null, true); }
-function completeAuth(username, viewOnly){
+function enterViewOnly(){ completeAuth(null, true, ""); }
+function completeAuth(username, viewOnly, token){
   STATE.authenticated = true;
   STATE.currentUser = username;
   STATE.viewOnly = viewOnly;
+  STATE.token = token||"";
   sessionStorage.setItem("qms_user", username||"");
   sessionStorage.setItem("qms_viewonly", viewOnly?"1":"0");
+  sessionStorage.setItem("qms_token", STATE.token);
   $loginRoot.innerHTML = "";
   renderSidebar();
   renderDashboard();
@@ -1578,8 +1991,10 @@ function logout(){
   STATE.authenticated = false;
   STATE.currentUser = null;
   STATE.viewOnly = false;
+  STATE.token = "";
   sessionStorage.removeItem("qms_user");
   sessionStorage.removeItem("qms_viewonly");
+  sessionStorage.removeItem("qms_token");
   renderLoginScreen("form");
 }
 function renderUserMenu(){
@@ -1604,8 +2019,8 @@ function retryInit(){
 function resumeAfterLoad(){
   const savedUser = sessionStorage.getItem("qms_user");
   const savedViewOnly = sessionStorage.getItem("qms_viewonly");
-  if(savedViewOnly==="1"){ completeAuth(null, true); }
-  else if(savedUser){ completeAuth(savedUser, false); }
+  if(savedViewOnly==="1"){ completeAuth(null, true, ""); }
+  else if(savedUser){ completeAuth(savedUser, false, sessionStorage.getItem("qms_token")||""); }
   else { renderLoginScreen("form"); }
 }
 
@@ -1649,11 +2064,21 @@ document.body.addEventListener("click", function(e){
     case "close-modal": closeModal(); break;
     case "save-record": saveRecord(el.dataset.table, el.dataset.key||null); break;
     case "view-photo": openPhotoLightbox(el.dataset.img); break;
+    case "view-detail": {
+      if(e.target.closest("a")) break;                                   /* tautan file jangan memicu detail */
+      if(window.getSelection && String(window.getSelection())) break;    /* sedang menyalin teks, bukan klik */
+      openDetailModal(el.dataset.table, el.dataset.key, el.dataset.idx); break;
+    }
+    case "toggle-cols": STATE.fullCols[el.dataset.table] = !STATE.fullCols[el.dataset.table]; renderTableView(el.dataset.table); break;
     case "print-view": printCurrentView(); break;
     case "logout": logout(); break;
     case "open-sidebar": document.getElementById("sidebar").classList.add("open"); document.querySelector(".sidebar-backdrop").classList.add("show"); break;
     case "close-sidebar": closeSidebarMobile(); break;
   }
+});
+document.addEventListener("keydown", function(e){
+  /* Esc menutup detail/foto saja; form edit tidak ikut tertutup agar isian tidak hilang tak sengaja */
+  if(e.key==="Escape" && $modalRoot.querySelector(".modal-detail, .photo-lightbox-overlay")) closeModal();
 });
 function closeSidebarMobile(){
   document.getElementById("sidebar").classList.remove("open");
